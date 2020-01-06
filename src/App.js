@@ -1,24 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+import {
+  SearchkitManager, SearchkitProvider, SearchBox, Hits, NoHits, SearchkitComponent, HitItemProps
+} from "searchkit";
+
+const searchkit = new SearchkitManager("http://localhost:9200/courses/");
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <SearchkitProvider searchkit={searchkit}>
+          <div>
+              <SearchBox searchOnChange={true}
+                queryOptions={{analyzer:"standard"}}
+                queryFields={["course_id"]} />
+              <Hits/>
+          </div>
+      </SearchkitProvider>
     </div>
   );
 }
