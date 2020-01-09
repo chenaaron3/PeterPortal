@@ -10,7 +10,7 @@ from selenium.webdriver import Chrome
 #     - add executable to PATH (https://selenium.dev/documentation/en/webdriver/driver_requirements/#quick-reference)
 #     - update the path below
 
-PATH_TO_SELENIUM_DRIVER = "/Users/mars/Projects/chromedriver"
+PATH_TO_SELENIUM_DRIVER = "C://Users//willi//Documents//chromedriver.exe"
 URL_TO_CATALOGUE = "http://catalogue.uci.edu/donaldbrenschoolofinformationandcomputersciences/#courseinventory"
 
 class Node:
@@ -158,6 +158,18 @@ def getAllRequirements(soup):
             print("", courseNumber, courseName, courseUnits, sep="\t")
             # get course info (0:Course Description, 1:Prerequisite)
             courseInfo = courseBlock.div.find_all("p")
+            courseDescription = courseInfo[0].getText()
+            dic = {"number":courseNumber,"name":courseName,"units":courseUnits,"description":courseDescription,
+            "prerequisite":"","repeatability":"","grading option":"","concurrent":"","same as":"","restriction":"",
+            "overlaps":"","corequisite":""}
+
+
+            for c in courseInfo:
+                for keyWord in dic.keys():
+                    if keyWord in c.getText().lower():
+                        dic[keyWord] = c.getText()
+                        break
+                    
             # try to find prerequisite
             if len(courseInfo) > 1:
                 prereqRegex = re.compile(r"Prerequisite:(.*)")
