@@ -179,14 +179,20 @@ def getAllRequirements(soup):
                 }
             }
             print(metadata)
-            object_info = {
-                "number" : courseNumber,
-                "name" : courseName,
-                "units" : [float(x) for x in unit_list],
-                "description" : courseInfo[0].get_text()
-            }
-            json_string += json.dumps(metadata) + '\n' + json.dumps(object_info) + '\n'
 
+            courseDescription = courseInfo[0].getText()
+            dic = {"number":courseNumber,"name":courseName,"units":[float(x) for x in unit_list],"description":courseDescription,
+            "prerequisite":"","repeatability":"","grading option":"","concurrent":"","same as":"","restriction":"",
+            "overlaps":"","corequisite":""}
+            
+
+            for c in courseInfo:
+                for keyWord in dic.keys():
+                    if keyWord in c.getText().lower():
+                        dic[keyWord] = c.getText()
+                        break
+            
+            json_string += json.dumps(metadata) + '\n' + json.dumps(dic) + '\n'
 
             # try to find prerequisite
             if len(courseInfo) > 1:
