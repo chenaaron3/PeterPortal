@@ -36,6 +36,7 @@ class App extends React.Component {
             <Hits hitsPerPage={10} sourceFilter={["course_id", "course_name", "department"]} itemComponent={HitItem}/>
         </div>
         </SearchkitProvider>  
+        <p>hello world</p>
       </div>
     )
   }
