@@ -157,6 +157,7 @@ def getAllRequirements(soup):
     # maps class to a Node
     graph = {}
     for course in soup.select(".courses"):
+        department = course.h3.get_text()
         print("Department:", course.h3.get_text())
         for courseBlock in course.find_all("div", "courseblock"):
             # course identification
@@ -182,8 +183,8 @@ def getAllRequirements(soup):
 
             courseDescription = courseInfo[0].getText()
             dic = {"number":courseNumber,"name":courseName,"units":[float(x) for x in unit_list],"description":courseDescription,
-            "prerequisite":"","repeatability":"","grading option":"","concurrent":"","same as":"","restriction":"",
-            "overlaps":"","corequisite":""}
+            "department": department, "prerequisite":"","repeatability":"","grading option":"","concurrent":"","same as":"",
+            "restriction":"","overlaps":"","corequisite":""}
             
 
             for c in courseInfo:

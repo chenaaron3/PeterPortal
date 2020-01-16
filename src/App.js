@@ -12,12 +12,12 @@ import {
   HitItemProps
 } from "searchkit";
 
-const searchkit = new SearchkitManager("http://localhost:9200/courses/");
+const searchkit = new SearchkitManager("http://localhost:9200/");
 
 const HitItem = (props) => (
   <div className="hits_item">
-    <div className="hits_result" dangerouslySetInnerHTML={{__html: get(props.result,"highlight.title",props.result._source.course_id)}}></div>
-    <div className="hits_result" dangerouslySetInnerHTML={{__html: get(props.result,"highlight.title",props.result._source.course_name)}}></div>
+    <div className="hits_result" dangerouslySetInnerHTML={{__html: get(props.result,"highlight.title",props.result._source.number)}}></div>
+    <div className="hits_result" dangerouslySetInnerHTML={{__html: get(props.result,"highlight.title",props.result._source.name)}}></div>
     <div className="hits_result" dangerouslySetInnerHTML={{__html: get(props.result,"highlight.title",props.result._source.department)}}></div>
   </div>
 );
@@ -31,9 +31,9 @@ class App extends React.Component {
             <SearchBox
               searchOnChange={true}
               queryOptions={{ analyzer: "standard" }}
-              queryFields={["course_id", "course_name"]}
+              queryFields={["number", "name"]}
             />
-            <Hits hitsPerPage={10} sourceFilter={["course_id", "course_name", "department"]} itemComponent={HitItem}/>
+            <Hits hitsPerPage={10} sourceFilter={["number", "name", "department"]} itemComponent={HitItem}/>
         </div>
         </SearchkitProvider>  
         <p>hello world</p>
