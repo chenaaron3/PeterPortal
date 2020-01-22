@@ -2,8 +2,7 @@ Basic Workflow:
 Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch -> View the Webpage on React
 
 How to Generate Class JSON:
-1. Change the Selenium Driver to your path in Scraper.py
-2. Run Scraper.py
+1. Run Scraper.py
 
 How to Locally Deploy Data to ElasticSearch
 1. Start the ElasticSearch instance by running the elasticsearch.bat file
