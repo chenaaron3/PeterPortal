@@ -13,14 +13,18 @@ How to Generate Class JSON:
 1. Run Scraper.py
 2. View the json named ics_courses.json at the project root directory
 
-How to Locally Deploy Data to ElasticSearch:
+Configure Data Deployment Settings:
 1. Add the following lines to the bottom of your 'path-to-elasticsearch/config/elasticsearch.yml' file.  
 http.cors.enabled : true    
 http.cors.allow-origin : "*"  
 http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE  
 http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length  
-2. Start the ElasticSearch instance by running your 'path-to-elasticsearch/bin/elasticsearch.bat' file
-3. Run elasticdemo.py
+
+Locally Deploy Data (in Bulk) to ElasticSearch:
+1. Start the ElasticSearch instance by running your 'path-to-elasticsearch/bin/elasticsearch.bat' file
+2. Uncomment r = requests.put(url, data=data, headers=headers). Comment out the other request lines (indicated by comments)
+3. Make sure the url var is set to http://localhost:9200/_bulk/
+4. Run elasticdemo.py
 
 How to Locally View Webpage on React:
 1. Run yarn start
