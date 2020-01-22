@@ -1,10 +1,10 @@
-Dependencies:
-    Do these once:
-    - pip install beautifulsoup4 selenium
-    - Install selenium Chrome driver (https://sites.google.com/a/chromium.org/chromedriver/downloads)
-        - add executable to PATH (https://selenium.dev/documentation/en/webdriver/driver_requirements/#quick-reference)
-    Do these after every pull:
-    - yarn install
+Dependencies:  
+    Do these once:  
+    - pip install beautifulsoup4 selenium  
+    - Install selenium Chrome driver (https://sites.google.com/a/chromium.org/chromedriver/downloads)  
+        - add executable to PATH (https://selenium.dev/documentation/en/webdriver/driver_requirements/#quick-reference)  
+    Do these after every pull:  
+    - yarn install  
 
 Basic Workflow:
 Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch -> View the Webpage on React
@@ -14,11 +14,11 @@ How to Generate Class JSON:
 2. View the json named ics_courses.json at the project root directory
 
 How to Locally Deploy Data to ElasticSearch:
-1. Add the following lines to the bottom of your 'path-to-elasticsearch/config/elasticsearch.yml' file.
-http.cors.enabled : true  
-http.cors.allow-origin : "*"
-http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE
-http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length
+1. Add the following lines to the bottom of your 'path-to-elasticsearch/config/elasticsearch.yml' file.  
+http.cors.enabled : true    
+http.cors.allow-origin : "*"  
+http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE  
+http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length  
 2. Start the ElasticSearch instance by running your 'path-to-elasticsearch/bin/elasticsearch.bat' file
 3. Run elasticdemo.py
 
