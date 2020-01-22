@@ -6,12 +6,6 @@ from selenium.webdriver import Chrome
 import json
 import os
 
-# Dependencies:
-# - pip install beautifulsoup4 selenium
-# - Install selenium Chrome driver (https://sites.google.com/a/chromium.org/chromedriver/downloads)
-#     - add executable to PATH (https://selenium.dev/documentation/en/webdriver/driver_requirements/#quick-reference)
-#     - update the path below
-
 # DO NOT CHANGE
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver.exe'))
 URL_TO_CATALOGUE = "http://catalogue.uci.edu/donaldbrenschoolofinformationandcomputersciences/#courseinventory"
