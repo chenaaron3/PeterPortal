@@ -3,6 +3,8 @@ import requests
 import re
 from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
+import json
+import os
 
 # Dependencies:
 # - pip install beautifulsoup4 selenium
@@ -10,7 +12,8 @@ from selenium.webdriver import Chrome
 #     - add executable to PATH (https://selenium.dev/documentation/en/webdriver/driver_requirements/#quick-reference)
 #     - update the path below
 
-PATH_TO_SELENIUM_DRIVER = "/Users/mars/Projects/chromedriver"
+# DO NOT CHANGE
+PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver.exe'))
 URL_TO_CATALOGUE = "http://catalogue.uci.edu/donaldbrenschoolofinformationandcomputersciences/#courseinventory"
 
 class Node:
@@ -148,16 +151,50 @@ def getAllRequirements(soup):
     specialRequirements = set()
     # set of class requirements that aren't listed on the page
     otherDepartmentRequirements = set()
+    #school name
+    school_name = re.sub('\s', '', soup.select("#content")[0].h1.get_text()).lower()
+    print(school_name)
+
+    json_string = ""
     # maps class to a Node
     graph = {}
     for course in soup.select(".courses"):
+        department = course.h3.get_text()
         print("Department:", course.h3.get_text())
         for courseBlock in course.find_all("div", "courseblock"):
             # course identification
             courseNumber, courseName, courseUnits = getCourseInfo(courseBlock)
             print("", courseNumber, courseName, courseUnits, sep="\t")
             # get course info (0:Course Description, 1:Prerequisite)
+            unit_list = courseUnits.split(" ")[0]
+            if "-" in courseUnits:
+                unit_list = unit_list.split("-")
+            else:
+                unit_list = [unit_list] * 2
+            
             courseInfo = courseBlock.div.find_all("p")
+
+            metadata = {
+                "index" : {
+                    "_index" : school_name,
+                    "_id" : courseNumber
+                }
+            }
+            print(metadata)
+
+            courseDescription = courseInfo[0].getText()
+            dic = {"number":courseNumber,"name":courseName,"units":[float(x) for x in unit_list],"description":courseDescription,
+            "department": department, "prerequisite":"","repeatability":"","grading option":"","concurrent":"","same as":"",
+            "restriction":"","overlaps":"","corequisite":""}
+            
+            for c in courseInfo:
+                for keyWord in dic.keys():
+                    if re.match("^" + keyWord + ".*", c.getText().lower()):
+                        dic[keyWord] = c.getText()
+                        break
+            
+            json_string += json.dumps(metadata) + '\n' + json.dumps(dic) + '\n'
+
             # try to find prerequisite
             if len(courseInfo) > 1:
                 prereqRegex = re.compile(r"Prerequisite:(.*)")
@@ -207,6 +244,9 @@ def getAllRequirements(soup):
                 graph[courseNumber] = None
     print("Special Requirements:", sorted(specialRequirements))
     print("Other Requirements:", sorted(otherDepartmentRequirements))
+
+    with open("ics_courses.json", "w") as f:
+        f.write(json_string)
     return graph
 
 # targetClass: the class to test requirements for
