@@ -5,7 +5,7 @@ import {
   SearchkitManager, SearchkitProvider, SearchBox, Hits, NoHits, SearchkitComponent, HitItemProps
 } from "searchkit";
 
-const searchkit = new SearchkitManager("http://localhost:9200/courses/");
+const searchkit = new SearchkitManager("http://localhost:9200/accounts/");
 
 function App() {
   return (
