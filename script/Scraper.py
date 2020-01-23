@@ -7,6 +7,7 @@ import json
 import os
 
 # DO NOT CHANGE
+
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver.exe'))
 URL_TO_CATALOGUE = "http://catalogue.uci.edu/donaldbrenschoolofinformationandcomputersciences/#courseinventory"
 
@@ -171,7 +172,7 @@ def getAllRequirements(soup):
             metadata = {
                 "index" : {
                     "_index" : school_name,
-                    "_id" : courseNumber
+                    "_id" : courseNumber.replace(" ", "")
                 }
             }
             print(metadata)
