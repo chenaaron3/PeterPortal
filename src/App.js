@@ -1,49 +1,28 @@
 import React from "react";
 import "./App.css";
-import { get } from "lodash";
-import { ReactiveBase, DataSearch, ReactiveList } from '@appbaseio/reactivesearch';
+import SearchPage from "./Components/SearchPage"
+import CoursePage from "./Components/CoursePage";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
-
-
-const HitItem = (props) => (
-  <div className="hits_item">
-    <div className="hits_result" dangerouslySetInnerHTML={{__html: get(props.result,"highlight.number",props.result._source.number)}}></div>
-    <div className="hits_result" dangerouslySetInnerHTML={{__html: get(props.result,"highlight.name",props.result._source.name)}}></div>
-    <div className="hits_result" dangerouslySetInnerHTML={{__html: get(props.result,"highlight.department",props.result._source.department)}}></div>
-  </div>
-);
 
 class App extends React.Component {
-  constructor(props){
-    super(props);
-
-    this.state = {
-      query: ""
-    }
-
-  }
-
   render() {
       return (
-        <ReactiveBase
-          app="donaldbrenschoolofinformationandcomputersciences"
-          url="http://localhost:9200/"
-			  >
-        <div className="App">
-        <DataSearch componentId="q" autosuggest={true} dataField={['number', 'name', 'description']} autosuggest={false} URLParams={true}/>
+        <Router>
+          <h5 style={{textAlign: "center", color: "gray"}}>UCI Catalogue Search - alpha v1.0</h5>
+          <Switch>
+            <Route exact path="/">
+              <SearchPage />
+            </Route>
+            <Route path="/course/:id" component={CoursePage} />
 
-        <ReactiveList
-            componentId="SearchResult"
-            dataField="ratings"
-            react={{
-              and: ["q"],
-            }}
-          renderItem={res => <div><a href={"/course?id=" + res._id}>{res.number}&nbsp;&nbsp;{res.name}</a><br/><p style={{width: "500px", margin: "auto"}}>{res.description}</p><br/><br/></div>}
-          />
-
-          
-        </div>
-        </ReactiveBase>
+          </Switch>
+        </Router>
     )
   }
 };
