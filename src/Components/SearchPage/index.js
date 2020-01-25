@@ -11,15 +11,17 @@ class SearchPage extends React.Component {
 			  >
         <div className="App">
         <DataSearch style={{width: "500px", margin: "auto"}} componentId="q"  dataField={['number', 'name', 'description']} autosuggest={false} URLParams={true}/>
-
+        <div style={{maxHeight: "80vh", overflowY: "scroll"}}>
         <ReactiveList
             componentId="SearchResult"
+            infiniteScroll={false}
+            size={15}
             react={{
               and: ["q"],
             }}
-          renderItem={res => <div><a href={"/course/" + res._id}>{res.number}&nbsp;&nbsp;{res.name}</a><br/> <p style={{width: "500px", margin: "auto"}}>{res.description}</p><br/><br/></div>}
+          renderItem={res => <div><a href={"/course/" + res._id}>{res.number}&nbsp;{res.name}</a><br/> <p style={{width: "500px", margin: "auto"}}>{res.description}</p><br/><br/></div>}
           />
-
+        </div>
           
         </div>
         </ReactiveBase>
