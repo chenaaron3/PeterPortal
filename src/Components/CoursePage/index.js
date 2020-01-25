@@ -32,13 +32,32 @@ class CoursePage extends React.Component {
     fetch("http://localhost:9200/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source})})
   }
 
+  componentDidMount(){
+    this.getCourseData();
+    this.getWebSOC();
+  }
+
+//   getWebSOC(){
+//       var formParams = "YearTerm=2020-03&ShowFinals=on&Dept=I%26C%20SCI&CourseNum=32"
+
+//       var requestHeader = {
+//         headers: {
+//             "Content-Type": "application/x-www-form-urlencoded",
+//             "Access-Control-Allow-Origin": "*"
+//         },
+//         body: formParams,
+//         method: "POST"
+//         };
+
+//       fetch("https://www.reg.uci.edu/perl/WebSoc/", requestHeader).then(data => {console.log(data)})
+//   }
+
   render() {
-      this.getCourseData();
       
       return (    
-        <div>{this.state.courseData.number}<br/><br/>
-        {this.state.courseData.name}<br/><br/>
-        {this.state.courseData.department}<br/><br/>
+        <div style={{width: "800px", margin: "auto"}}><h1>{this.state.courseData.number}</h1>
+        <h2>{this.state.courseData.name}</h2>
+        <h3>{this.state.courseData.department}</h3>
         {this.state.courseData.description}<br/><br/>
         {this.state.courseData.prerequisite}</div>
     )
