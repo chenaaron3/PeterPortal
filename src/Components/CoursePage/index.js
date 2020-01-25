@@ -34,7 +34,7 @@ class CoursePage extends React.Component {
 
   componentDidMount(){
     this.getCourseData();
-    this.getWebSOC();
+    // this.getWebSOC();
   }
 
 //   getWebSOC(){
