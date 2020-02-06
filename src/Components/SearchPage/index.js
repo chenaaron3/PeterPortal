@@ -14,8 +14,9 @@ class SearchPage extends React.Component {
         <div style={{maxHeight: "80vh", overflowY: "scroll"}}>
         <ReactiveList
             componentId="SearchResult"
-            infiniteScroll={false}
-            size={15}
+            infiniteScroll={true}
+            dataField={'number'}
+            size={30}
             react={{
               and: ["q"],
             }}

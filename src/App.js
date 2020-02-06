@@ -1,12 +1,11 @@
 import React from "react";
 import "./App.css";
-import SearchPage from "./Components/SearchPage"
+import SearchPage from "./Components/SearchPage";
 import CoursePage from "./Components/CoursePage";
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 
