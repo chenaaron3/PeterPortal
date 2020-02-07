@@ -3,6 +3,7 @@ ElasticSearch + Web Scraping implementation for UCI Catalogue search functionali
 
 React server should run on port 3000
 and Express server should run on port 3001
+and Elasticsearch should run on port 9200
 
 > Remember to start both apps in the client and api folder to begin working. Also remember to run yarn/npm install after each pull.
 
