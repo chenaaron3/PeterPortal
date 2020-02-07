@@ -1,34 +1,51 @@
 Dependencies:  
     Do these once:  
-    - pip install beautifulsoup4 selenium  
-    - Install selenium Chrome driver (https://sites.google.com/a/chromium.org/chromedriver/downloads)  
-        - add executable to PATH (https://selenium.dev/documentation/en/webdriver/driver_requirements/#quick-reference)  
-    Do these after every pull:  
-    - yarn install  
+    - pip install beautifulsoup4 selenium requests  
+    - Download elasticsearch (https://www.elastic.co/downloads/elasticsearch)  
+
+Possbile Errors:  
+    Error: 'chromedriver.exe' executable may have wrong permissions.  
+    Solution: run chmod 755 chromedriver.exe in the client/script directory  
 
 Basic Workflow:
 Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch -> View the Webpage on React
 
 How to Generate Class JSON:
-1. Run Scraper.py
-2. View the json named ics_courses.json at the project root directory
+1. cd into client/script
+2. Run 'python Scraper.py'
+3. View the json named ics_courses.json in the client/script folder  
+COPY PASTA:  
+```
+cd client/script  
+python Scraper.py  
+cat ics_courses.json  
+cd ../..
+```
 
 Configure Data Deployment Settings:
 1. Add the following lines to the bottom of your 'path-to-elasticsearch/config/elasticsearch.yml' file.  
+```
 http.cors.enabled : true    
 http.cors.allow-origin : "*"  
 http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE  
 http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length  
+```
 
 Locally Deploy Data (in Bulk) to ElasticSearch:
-1. Start the ElasticSearch instance by running your 'path-to-elasticsearch/bin/elasticsearch.bat' file
-2. Uncomment r = requests.put(url, data=data, headers=headers). Comment out the other request lines (indicated by comments)
-3. Make sure the url var is set to http://localhost:9200/_bulk/
-4. Run elasticdemo.py
+1. Start the ElasticSearch instance by running your 'path-to-elasticsearch/bin/elasticsearch.bat' file  
+2. cd into client/script
+3. Run 'python deployelastic.py'  
+COPY PASTA:  
+```
+cd client/script  
+python deployelastic.py  
+cd ../..
+```
 
 How to Locally View Webpage on React:
-1. Run yarn start
-2. Start searching classes on the searchbar
+1. cd into client
+2. Run yarn start or npm start
+3. Start searching classes on the searchbar
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
