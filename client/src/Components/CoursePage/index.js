@@ -47,12 +47,12 @@ class CoursePage extends React.Component {
 
       // fetch("http://localhost:3000/websoc/" + queryParams[0] + "/" + queryParams[1], requestHeader).then(data => {return data.json()}).then(res => this.setState({WebSocData: res}));
       if (queryParams.length === 2){
-        fetch("http://localhost:3000/websoc/" + queryParams[0] + "/" + queryParams[1], requestHeader).then(data => {return data.json()})
-        .then(res => this.setState({WebSocData: res}));
+        fetch("http://localhost:3001/websoc/" + queryParams[0] + "/" + queryParams[1], requestHeader).then(data => {return data.json()})
+        .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
       }
       else {
-        fetch("http://localhost:3000/websoc/" + queryParams[0] + " " + queryParams[1] + "/" + queryParams[2], requestHeader).then(data => {return data.json()})
-        .then(res => this.setState({WebSocData: res}));
+        fetch("http://localhost:3001/websoc/" + queryParams[0] + " " + queryParams[1] + "/" + queryParams[2], requestHeader).then(data => {return data.json()})
+        .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
       }
       
       
@@ -64,7 +64,16 @@ class CoursePage extends React.Component {
   
 
   render() {
-      if(this.state.WebSocData != null) this.parseWebSocData();
+      if(this.state.WebSocData != null){
+        try {
+          this.parseWebSocData();
+        }
+        catch(e){
+          console.log(e);
+        }
+
+      } 
+      
       return (    
         <div style={{width: "800px", margin: "auto"}}><h1>{this.state.courseData.number}</h1>
         <h2>{this.state.courseData.name}</h2>
