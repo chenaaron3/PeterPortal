@@ -3,18 +3,23 @@
     overflow-x: scroll; 
 }
 
-.time-header > th{
-    border-left: none !important;
+.time-header {
+    th {
+        border-left: none !important;
+        
+        span {
+            display: block;
+            transform: translateX(-25px); 
+        }
+    }
 }
 
-.time-header > th > span{
-    display: block;
-    transform: translateX(-25px);
-}
 
 .time-row > tr > td:not(.active){
-    min-width: 100px;
-    max-width: 100px;
+    min-width: 90px;
+    max-width: 90px;
+    padding: 0;
+    
 }
 
 .course-section{
