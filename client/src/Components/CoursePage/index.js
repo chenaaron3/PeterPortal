@@ -1,6 +1,8 @@
 import React from "react";
 import Timetable from "../Timetable"
 import ReviewsModule from "../ReviewsModule";
+import ElasticCloudInfo from "../../ElasticCloudInfo";
+let base64 = require('base-64');
 
 class CoursePage extends React.Component {
 
@@ -23,15 +25,16 @@ class CoursePage extends React.Component {
       }
 
     var requestHeader = {
-    headers: {
+      headers : new Headers({
+        "Authorization": `Basic ${base64.encode(`${ElasticCloudInfo.username}:${ElasticCloudInfo.password}`)}`,
         "content-type": "application/json; charset=UTF-8",
         "content-length": 140
-    },
-    body: JSON.stringify(searchParams),
-    method: "POST"
-    };
+      }),
+      body: JSON.stringify(searchParams),
+      method: "POST"
+    }
 
-    fetch("http://localhost:9200/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source}); this.getWebSOC();})
+    fetch(ElasticCloudInfo.elasticEndpointURL + "/donaldbrenschoolofinformationandcomputersciences/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source}); this.getWebSOC();})
   }
 
   componentDidMount(){
