@@ -2,23 +2,18 @@ import React from "react";
 import { Table } from "semantic-ui-react";
 import "./timetable.scss";
 
-// const colors = [
-//   "red",
-//   "orange",
-//   "yellow",
-//   "olive",
-//   "green",
-//   "teal",
-//   "blue",
-//   "violet",
-//   "purple",
-//   "pink",
-//   "brown",
-//   "grey",
-//   "black"
-// ];
+
 
 class Timeable extends React.Component {
+  componentWillReceiveProps(){
+    
+    console.log(this.props.courseSections)
+    var test = document.createElement('div')
+    test.innerHTML = '<button style="min-width: 150px" class="ui teal button course-section"><p>PSLH 100<br/>LEC[A]</p></button>'
+    document.getElementById("M-9AM").append(test.firstChild);
+  }
+
+
   render() {
     return (
       <div className={"timetable-container"}>
@@ -45,19 +40,19 @@ class Timeable extends React.Component {
           <Table.Body className={"time-row"}>
             <Table.Row>  
               <Table.Cell active>MON</Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell><button style={{minWidth: "150px"}} className={"ui teal button course-section"}><p>PSLH 100<br/>LEC[A]</p></button></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
+              <Table.Cell id={"M-8AM"}></Table.Cell>
+              <Table.Cell id={"M-9AM"}></Table.Cell>
+              <Table.Cell id={"M-10AM"}></Table.Cell>
+              <Table.Cell id={"M-11AM"}></Table.Cell>
+              <Table.Cell id={"M-12PM"}></Table.Cell>
+              <Table.Cell id={"M-1PM"}></Table.Cell>
+              <Table.Cell id={"M-2PM"}></Table.Cell>
+              <Table.Cell id={"M-3PM"}></Table.Cell>
+              <Table.Cell id={"M-4PM"}></Table.Cell>
+              <Table.Cell id={"M-5PM"}></Table.Cell>
+              <Table.Cell id={"M-6PM"}></Table.Cell>
+              <Table.Cell id={"M-7PM"}></Table.Cell>
+              <Table.Cell id={"M-8PM"}></Table.Cell>
             </Table.Row>
             <Table.Row>  
               <Table.Cell active>TUE</Table.Cell>
@@ -79,7 +74,7 @@ class Timeable extends React.Component {
               <Table.Cell active>WED</Table.Cell>
               <Table.Cell></Table.Cell>
               <Table.Cell></Table.Cell>
-              <Table.Cell><button style={{minWidth: "150px"}} className={"ui teal button"}>COMPSCI 132</button></Table.Cell>
+              <Table.Cell><button style={{minWidth: "150px"}} className={"ui teal button course-section"}><p>PSLH 100<br/>LEC[A]</p></button></Table.Cell>
               <Table.Cell></Table.Cell>
               <Table.Cell></Table.Cell>
               <Table.Cell></Table.Cell>
