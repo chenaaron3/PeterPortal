@@ -40,20 +40,24 @@ class CoursePage extends React.Component {
   }
 
   getWebSOC(){
-    var queryParams = this.state.courseData.number.split(" ");
+    var queryParams = this.state.courseData.id.split(" ");
+
     var requestHeader = {
         method: "GET"
         };
 
       // fetch("http://localhost:3000/websoc/" + queryParams[0] + "/" + queryParams[1], requestHeader).then(data => {return data.json()}).then(res => this.setState({WebSocData: res}));
-      if (queryParams.length === 2){
-        fetch("http://localhost:3001/websoc/" + queryParams[0] + "/" + queryParams[1], requestHeader).then(data => {return data.json()})
-        .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
-      }
-      else {
-        fetch("http://localhost:3001/websoc/" + queryParams[0] + " " + queryParams[1] + "/" + queryParams[2], requestHeader).then(data => {return data.json()})
-        .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
-      }
+      fetch("http://localhost:3001/websoc/" + queryParams.slice(0, -1).join(" ") + "/" + queryParams[queryParams.length - 1], requestHeader).then(data => {return data.json()})
+      .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
+
+      // if (queryParams.length === 2){
+      //   fetch("http://localhost:3001/websoc/" + queryParams[0] + "/" + queryParams[1], requestHeader).then(data => {return data.json()})
+      //   .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
+      // }
+      // else {
+      //   fetch("http://localhost:3001/websoc/" + queryParams[0] + " " + queryParams[1] + "/" + queryParams[2], requestHeader).then(data => {return data.json()})
+      //   .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
+      // }
       
       
   }
