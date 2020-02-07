@@ -1,13 +1,14 @@
 import React from "react";
 import { ReactiveBase, DataSearch, ReactiveList } from '@appbaseio/reactivesearch';
-
+import ElasticCloudInfo from "../../ElasticCloudInfo";
 
 class SearchPage extends React.Component {
   render() {
       return (
         <ReactiveBase
           app="donaldbrenschoolofinformationandcomputersciences"
-          url="http://localhost:9200/"
+          url={ElasticCloudInfo.elasticEndpointURL}
+          credentials={`${ElasticCloudInfo.username}:${ElasticCloudInfo.password}`}
 			  >
         <div className="App">
         <DataSearch style={{width: "500px", margin: "auto"}} componentId="q"  dataField={['number', 'name', 'description']} autosuggest={false} URLParams={true}/>

@@ -42,6 +42,9 @@ python deployelastic.py
 cd ../..
 ```
 
+Cloud Deploy Data (in Bulk) to ElasticSearch:  
+1. Look into the client/script/deployelasticcloud.py file for instructions
+
 How to Locally View Webpage on React:
 1. cd into client
 2. Run yarn start or npm start
