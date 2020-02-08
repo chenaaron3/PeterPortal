@@ -11,7 +11,8 @@ class CoursePage extends React.Component {
 
       this.state = {
           WebSocData: null,
-          courseData: {}
+          courseData: {},
+          parseCourseScheduleData: {M:[], Tu:[], W:[], Th:[], F:[]}
       }
   }
 
@@ -48,24 +49,42 @@ class CoursePage extends React.Component {
         method: "GET"
         };
 
-      // fetch("http://localhost:3000/websoc/" + queryParams[0] + "/" + queryParams[1], requestHeader).then(data => {return data.json()}).then(res => this.setState({WebSocData: res}));
+
       fetch("http://localhost:3001/websoc/" + queryParams.slice(0, -1).join(" ") + "/" + queryParams[queryParams.length - 1], requestHeader).then(data => {return data.json()})
       .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
 
-      // if (queryParams.length === 2){
-      //   fetch("http://localhost:3001/websoc/" + queryParams[0] + "/" + queryParams[1], requestHeader).then(data => {return data.json()})
-      //   .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
-      // }
-      // else {
-      //   fetch("http://localhost:3001/websoc/" + queryParams[0] + " " + queryParams[1] + "/" + queryParams[2], requestHeader).then(data => {return data.json()})
-      //   .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
-      // }
-      
-      
   }
 
   parseWebSocData() {
+    
+    console.log(this.state.WebSocData);
     console.log(this.state.WebSocData.schools[0].departments[0].courses[0].sections);
+    
+    for (var s in this.state.WebSocData.schools[0].departments[0].courses[0].sections){
+      var sections = this.state.WebSocData.schools[0].departments[0].courses[0].sections[s];
+      for(var m in sections.meetings) {
+        var meeting = sections.meetings[m];
+        if(/M/.test(meeting.days)){
+          this.state.parseCourseScheduleData.M.push({sectionType: sections.sectionType, instructors: sections.instructors, sectionNum: sections.sectionNum, bldg: sections.bldg, time:meeting.time})
+        }
+        if(/Tu/.test(meeting.days)){
+          this.state.parseCourseScheduleData.Tu.push({sectionType: sections.sectionType, instructors: sections.instructors, sectionNum: sections.sectionNum, bldg: sections.bldg, time:meeting.time})
+        }
+        if(/W/.test(meeting.days)){
+          this.state.parseCourseScheduleData.W.push({sectionType: sections.sectionType, instructors: sections.instructors, sectionNum: sections.sectionNum, bldg: sections.bldg, time:meeting.time})
+        }
+        if(/Th/.test(meeting.days)){
+          this.state.parseCourseScheduleData.Th.push({sectionType: sections.sectionType, instructors: sections.instructors, sectionNum: sections.sectionNum, bldg: sections.bldg, time:meeting.time})
+        }
+        if(/F/.test(meeting.days)){
+          this.state.parseCourseScheduleData.F.push({sectionType: sections.sectionType, instructors: sections.instructors, sectionNum: sections.sectionNum, bldg: sections.bldg, time:meeting.time})
+        }
+      }
+    }
+
+    // this.setState({test:"hello world"})
+
+    console.log(this.state.parseCourseScheduleData);
   }
   
 
@@ -82,13 +101,13 @@ class CoursePage extends React.Component {
       
       return (    
         <div style={{width: "800px", margin: "auto"}}><h1>{this.state.courseData.number}</h1>
-        <h2>{this.state.courseData.name}</h2>
+        <h2>{this.state.courseData.id}</h2>
         <h3>{this.state.courseData.department}</h3>
         {this.state.courseData.description}<br/><br/>
         {this.state.courseData.prerequisite}
         <br/>
         <br/>
-        <Timetable />
+        <Timetable courseSections={this.state.parseCourseScheduleData} />
         <ReviewsModule />
         </div>
     )
