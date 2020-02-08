@@ -5,10 +5,11 @@ from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
 import json
 import os
+import platform
 
 # DO NOT CHANGE
-
-PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver'))
+# Automatically determines the path based on your operating system
+PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
 URL_TO_CATALOGUE = "http://catalogue.uci.edu/donaldbrenschoolofinformationandcomputersciences/#courseinventory"
 
 class Node:
@@ -178,7 +179,10 @@ def getAllRequirements(soup):
             print(metadata)
 
             courseDescription = courseInfo[0].getText()
-            dic = {"number":courseNumber,"name":courseName,"units":[float(x) for x in unit_list],"description":courseDescription,
+            splitID = courseNumber.split()
+            id_department = " ".join(splitID[0:-1])
+            id_number = splitID[-1]
+            dic = {"id":courseNumber, "id_department": id_department, "id_number": id_number,"name":courseName,"units":[float(x) for x in unit_list],"description":courseDescription,
             "department": department, "prerequisite":"","repeatability":"","grading option":"","concurrent":"","same as":"",
             "restriction":"","overlaps":"","corequisite":""}
             
