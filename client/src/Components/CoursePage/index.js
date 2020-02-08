@@ -11,7 +11,8 @@ class CoursePage extends React.Component {
 
       this.state = {
           WebSocData: null,
-          courseData: {}
+          courseData: {},
+          parseCourseScheduleData: {M:[], Tu:[], W:[], Th:[], F:[]}
       }
   }
 
@@ -55,7 +56,35 @@ class CoursePage extends React.Component {
   }
 
   parseWebSocData() {
+    
+    console.log(this.state.WebSocData);
     console.log(this.state.WebSocData.schools[0].departments[0].courses[0].sections);
+    
+    for (var s in this.state.WebSocData.schools[0].departments[0].courses[0].sections){
+      var sections = this.state.WebSocData.schools[0].departments[0].courses[0].sections[s];
+      for(var m in sections.meetings) {
+        var meeting = sections.meetings[m];
+        if(/M/.test(meeting.days)){
+          this.state.parseCourseScheduleData.M.push({sectionType: sections.sectionType, instructors: sections.instructors, sectionNum: sections.sectionNum, bldg: sections.bldg, time:meeting.time})
+        }
+        if(/Tu/.test(meeting.days)){
+          this.state.parseCourseScheduleData.Tu.push({sectionType: sections.sectionType, instructors: sections.instructors, sectionNum: sections.sectionNum, bldg: sections.bldg, time:meeting.time})
+        }
+        if(/W/.test(meeting.days)){
+          this.state.parseCourseScheduleData.W.push({sectionType: sections.sectionType, instructors: sections.instructors, sectionNum: sections.sectionNum, bldg: sections.bldg, time:meeting.time})
+        }
+        if(/Th/.test(meeting.days)){
+          this.state.parseCourseScheduleData.Th.push({sectionType: sections.sectionType, instructors: sections.instructors, sectionNum: sections.sectionNum, bldg: sections.bldg, time:meeting.time})
+        }
+        if(/F/.test(meeting.days)){
+          this.state.parseCourseScheduleData.F.push({sectionType: sections.sectionType, instructors: sections.instructors, sectionNum: sections.sectionNum, bldg: sections.bldg, time:meeting.time})
+        }
+      }
+    }
+
+    // this.setState({test:"hello world"})
+
+    console.log(this.state.parseCourseScheduleData);
   }
   
 
@@ -78,7 +107,7 @@ class CoursePage extends React.Component {
         {this.state.courseData.prerequisite}
         <br/>
         <br/>
-        <Timetable />
+        <Timetable courseSections={this.state.parseCourseScheduleData} />
         <ReviewsModule />
         </div>
     )
