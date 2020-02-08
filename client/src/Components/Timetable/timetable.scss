@@ -1,0 +1,25 @@
+.timetable-container{
+    min-width: 800px;
+    overflow-x: scroll; 
+}
+
+.time-header > th{
+    border-left: none !important;
+}
+
+.time-header > th > span{
+    display: block;
+    transform: translateX(-25px);
+}
+
+.time-row > tr > td:not(.active){
+    min-width: 100px;
+    max-width: 100px;
+}
+
+.course-section{
+    padding: 8px !important;
+    text-align: left !important;
+    font-size: 12px !important;
+    height: 60px;
+}
