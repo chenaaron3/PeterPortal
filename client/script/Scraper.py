@@ -218,21 +218,20 @@ def getAllRequirements(soup):
                             otherDepartmentRequirements.add(extractedReqs[i])
                         # does the actual replacement
                         tokenizedReqs = tokenizedReqs.replace(extractedReqs[i], str(i), 1)
-                    if special:
-                        continue
-                    # place a space between parentheses to tokenize
-                    tokenizedReqs = tokenizedReqs.replace("(", "( ").replace(")", " )")
-                    # tokenize each item
-                    tokens = tokenizedReqs.split()
-                    # get the requirement Node
-                    node = nodify(tokens, extractedReqs)
-                    # maps the course to its requirement Node
-                    graph[courseNumber] = node
-                    # debug information
-                    print("\t\tREQS:", rawReqs)
-                    print("\t\tREQSTOKENS:", tokens)
-                    print("\t\tNODE:",node)
-                    dic["prerequisiteJSON"] = str(node)
+                    if not special:
+                        # place a space between parentheses to tokenize
+                        tokenizedReqs = tokenizedReqs.replace("(", "( ").replace(")", " )")
+                        # tokenize each item
+                        tokens = tokenizedReqs.split()
+                        # get the requirement Node
+                        node = nodify(tokens, extractedReqs)
+                        # maps the course to its requirement Node
+                        graph[courseNumber] = node
+                        # debug information
+                        print("\t\tREQS:", rawReqs)
+                        print("\t\tREQSTOKENS:", tokens)
+                        print("\t\tNODE:",node)
+                        dic["prerequisiteJSON"] = str(node)
                 # doesn't match Requirements description                    
                 else:
                     print("\t\tNOREQS")
