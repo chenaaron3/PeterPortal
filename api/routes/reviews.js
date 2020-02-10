@@ -13,4 +13,24 @@ router.get('/professor', function(req, res, next)  {
     });
 })
 
+router.post('/addReview', function(req, res) {
+  const data = {
+    text: req.body.text,
+    rating: req.body.rating,
+    userID: req.body.userID,
+    courseID: req.body.courseID,
+    profID: req.body.profID,
+    date: req.body.date,  //format: "2020-02-10"
+    grade: req.body.grade,
+    forCredit: req.body.forCredit,
+  }
+  let sql = `INSERT INTO Reviews 
+  (reviewText, rating, userID, courseID, profID, dateSubmitted, grade, forCredit, flagged)
+  VALUES( "${data.text}", ${data.rating}, ${data.userID}, ${data.courseID}, ${data.profID}, "${data.date}", "${data.grade}", ${data.forCredit}, False)`
+  res.locals.connection.query(sql , function(error, results, fields) {
+    if(error) throw error;
+    res.send(JSON.stringify(results));
+  });
+})
+
 module.exports = router;

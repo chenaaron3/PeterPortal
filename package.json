@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/icssc-projects/uci-catalogue-search#readme",
   "dependencies": {
-    "body-parser": "^1.19.0"
+    "body-parser": "^1.19.0",
+    "websoc-api": "0.0.5"
   }
 }
