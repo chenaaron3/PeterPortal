@@ -53,27 +53,27 @@ class Node:
     def __str__(self):
         # if origin only has 1 value
         if self.type == "?":
-            return "[" + str(self.values[0]) + "]"
+            return "{AND:[" + str(self.values[0]) + "]}"
         # if is value node
         elif self.type == "#":
-            return str(self.values[0])
+            return "'" + str(self.values[0]) + "'"
         # if is and node
         elif self.type == "&":
             # print within []
-            res = "["
+            res = "{AND:["
             for i in range(len(self.values)):
                 res += "," if i != 0 else ""
                 res += str(self.values[i])
-            res += "]"
+            res += "]}"
             return res
         # if is or node    
         elif self.type == "|":
             # print within {}
-            res = "{"
+            res = "{OR:["
             for i in range(len(self.values)):
                 res += "," if i != 0 else ""
                 res += str(self.values[i])
-            res += "}"
+            res += "]}"
             return res
         # should never reach here
         else:
@@ -151,8 +151,12 @@ def getAllRequirements(soup):
     school_name = re.sub('\s', '', soup.select("#content")[0].h1.get_text()).lower()
     print(school_name)
 
+    # string that represents the JSON file we want to generate
     json_string = ""
-    # maps class to a Node
+    # maps class to its json data
+    # {STATS 280: {metadata: {...}, data: {...}}}
+    json_data = {}
+    # maps class to a prerequisite Node
     graph = {}
     for course in soup.select(".courses"):
         department = course.h3.get_text()
@@ -162,41 +166,71 @@ def getAllRequirements(soup):
             courseNumber, courseName, courseUnits = getCourseInfo(courseBlock)
             print("", courseNumber, courseName, courseUnits, sep="\t")
             # get course info (0:Course Description, 1:Prerequisite)
+            courseInfo = courseBlock.div.find_all("p")
+            # parse course description
+            courseDescription = courseInfo[0].getText()
+
+            # parse units
             unit_list = courseUnits.split(" ")[0]
             if "-" in courseUnits:
                 unit_list = unit_list.split("-")
             else:
                 unit_list = [unit_list] * 2
-            
-            courseInfo = courseBlock.div.find_all("p")
-
-            metadata = {
-                "index" : {
-                    "_index" : school_name,
-                    "_id" : courseNumber.replace(" ", "")
-                }
-            }
-            print(metadata)
-
-            courseDescription = courseInfo[0].getText()
+            # parse course ID
             splitID = courseNumber.split()
             id_department = " ".join(splitID[0:-1])
             id_number = splitID[-1]
-            dic = {"id":courseNumber, "id_department": id_department, "id_number": id_number,"name":courseName,"units":[float(x) for x in unit_list],"description":courseDescription,
-            "department": department, "prerequisite":"","repeatability":"","grading option":"","concurrent":"","same as":"",
-            "restriction":"","overlaps":"","corequisite":""}
+
+            # store meta data for Elasticsearch
+            metadata = {
+                "index" : {
+                    "_index" : "courses",
+                    "_id" : courseNumber.replace(" ", "")
+                }
+            }
+            # store class data into dictionary
+            dic = {"id":courseNumber, "id_department": id_department, "id_number": id_number,"name": courseName,
+                    "units":[float(x) for x in unit_list],"description":courseDescription, "department": department, "school": school_name, 
+                    "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"", "dependencies":[],"repeatability":"","grading option":"",
+                    "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":""}
+            # EXAMPLE
+            """
+            {
+             "id": "COMPSCI 111", 
+             "id_department": "COMPSCI", 
+             "id_number": "111", 
+             "name": "Digital Image Processing", 
+             "units": [4.0, 4.0], 
+             "description": "Introduction to the fundamental concepts of digital...", 
+             "department": "Computer Science Courses", 
+             "school": "donaldbrenschoolofinformationandcomputersciences", 
+             "prerequisiteJSON": "{AND:[{OR:['I&C SCI 46','CSE 46']},'I&C SCI 6D',{OR:['MATH 3A','I&C SCI 6N']}]}", 
+             "prerequisiteList": ["I&C SCI 46", "CSE 46", "I&C SCI 6D", "MATH 3A", "I&C SCI 6N"], 
+             "prerequisite": "Prerequisite: (I&C\u00a0SCI\u00a046 or CSE 46) and I&C\u00a0SCI\u00a06D..."}
+             "dependencies": [], 
+             "repeatability": "", 
+             "grading option": "", 
+             "concurrent": "", 
+             "same as": "", 
+             "restriction": "Restriction: School of Info & Computer Sci...",              
+             "overlaps": "", 
+             "corequisite": "", 
+            """
+            # stores dictionaries in json_data to add dependencies later 
+            json_data[courseNumber] = {}
+            json_data[courseNumber]["metadata"] = metadata
+            json_data[courseNumber]["data"] = dic
             
+            # try to match keywords to extract course data
             for c in courseInfo:
                 for keyWord in dic.keys():
                     if re.match("^" + keyWord + ".*", c.getText().lower()):
                         dic[keyWord] = c.getText()
                         break
             
-            json_string += json.dumps(metadata) + '\n' + json.dumps(dic) + '\n'
-
             # try to find prerequisite
             if len(courseInfo) > 1:
-                prereqRegex = re.compile(r"Prerequisite:(.*)")
+                prereqRegex = re.compile(r"Prerequisite.*:(.*)")
                 possibleReq = prereqRegex.match(courseInfo[1].get_text())
                 # if matches prereq structure
                 if possibleReq:
@@ -204,6 +238,8 @@ def getAllRequirements(soup):
                     rawReqs = unicodedata.normalize("NFKD",possibleReq.group(1).split(".")[0].rstrip().lstrip())
                     # get all the individual class names                    
                     extractedReqs = re.split(r' and | or ', rawReqs.replace("(","").replace(")",""))
+                    # add class names to prerequisiteList
+                    dic["prerequisiteList"] = extractedReqs
                     # tokenized version: replace each class by an integer
                     tokenizedReqs = rawReqs
                     special = False
@@ -219,20 +255,20 @@ def getAllRequirements(soup):
                             otherDepartmentRequirements.add(extractedReqs[i])
                         # does the actual replacement
                         tokenizedReqs = tokenizedReqs.replace(extractedReqs[i], str(i), 1)
-                    if special:
-                        continue
-                    # place a space between parentheses to tokenize
-                    tokenizedReqs = tokenizedReqs.replace("(", "( ").replace(")", " )")
-                    # tokenize each item
-                    tokens = tokenizedReqs.split()
-                    # get the requirement Node
-                    node = nodify(tokens, extractedReqs)
-                    # maps the course to its requirement Node
-                    graph[courseNumber] = node
-                    # debug information
-                    print("\t\tREQS:", rawReqs)
-                    print("\t\tREQSTOKENS:", tokens)
-                    print("\t\tNODE:",node)
+                    if not special:
+                        # place a space between parentheses to tokenize
+                        tokenizedReqs = tokenizedReqs.replace("(", "( ").replace(")", " )")
+                        # tokenize each item
+                        tokens = tokenizedReqs.split()
+                        # get the requirement Node
+                        node = nodify(tokens, extractedReqs)
+                        # maps the course to its requirement Node
+                        graph[courseNumber] = node
+                        # debug information
+                        print("\t\tREQS:", rawReqs)
+                        print("\t\tREQSTOKENS:", tokens)
+                        print("\t\tNODE:",node)
+                        dic["prerequisiteJSON"] = str(node)
                 # doesn't match Requirements description                    
                 else:
                     print("\t\tNOREQS")
@@ -241,6 +277,16 @@ def getAllRequirements(soup):
             else:
                 print("\t\tNOREQS")
                 graph[courseNumber] = None
+
+    # go through each prerequisiteList to add dependencies
+    for courseNumber in json_data:
+        # iterate prerequisiteList
+        for prerequisite in json_data[courseNumber]["data"]["prerequisiteList"]:
+            # prereq needs to exist as a class
+            if prerequisite in json_data:
+                json_data[prerequisite]["data"]["dependencies"].append(courseNumber)
+        json_string += json.dumps(json_data[courseNumber]["metadata"]) + '\n' + json.dumps(json_data[courseNumber]["data"]) + '\n'
+
     print("Special Requirements:", sorted(specialRequirements))
     print("Other Requirements:", sorted(otherDepartmentRequirements))
 
@@ -259,7 +305,7 @@ if __name__ == "__main__":
     soup = scrape()
     requirements = getAllRequirements(soup)
     print()
-    testRequirements("COMPSCI 103", [""], False)
-    testRequirements("COMPSCI 103", ["I&C SCI 45C"], True)
-    testRequirements("COMPSCI 111", ["I&C SCI 46", "I&C SCI 6N"], False)
-    testRequirements("COMPSCI 111", ["I&C SCI 46", "I&C SCI 6D", "I&C SCI 6N"], True)
+    # testRequirements("COMPSCI 103", [""], False)
+    # testRequirements("COMPSCI 103", ["I&C SCI 45C"], True)
+    # testRequirements("COMPSCI 111", ["I&C SCI 46", "I&C SCI 6N"], False)
+    # testRequirements("COMPSCI 111", ["I&C SCI 46", "I&C SCI 6D", "I&C SCI 6N"], True)
