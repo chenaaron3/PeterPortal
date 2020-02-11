@@ -58,7 +58,13 @@ router.get('/getFlagged', function(req, res) {
   })
 })
 
-
+router.delete('/deleteReview', function(req, res) {
+  let sql = `DELETE FROM Reviews WHERE reviewID = ${req.body.reviewID}`
+  res.locals.connection.query(sql, function(error, results, fields) {
+    if(error) throw error;
+    res.send(JSON.stringify(results));
+  })
+})
 
 
 module.exports = router;
