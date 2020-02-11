@@ -7,7 +7,16 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/professor', function(req, res, next)  {
-    res.locals.connection.query('select * from Reviews', function (error, results, fields) {
+  let sql = `SELECT * FROM Reviews AS r WHERE r.profID = "${req.query.profID}" ORDER BY r.dateSubmitted DESC`
+    res.locals.connection.query(sql, function (error, results, fields) {
+        if(error) throw error;
+        res.send(JSON.stringify(results));
+    });
+})
+
+router.get('/course', function(req, res, next)  {
+  let sql = `SELECT * FROM Reviews AS r WHERE r.courseID = "${req.query.courseID}" ORDER BY r.dateSubmitted DESC`
+    res.locals.connection.query(sql, function (error, results, fields) {
         if(error) throw error;
         res.send(JSON.stringify(results));
     });
@@ -32,5 +41,16 @@ router.post('/addReview', function(req, res) {
     res.send(JSON.stringify(results));
   });
 })
+
+router.put('/flagReview', function(req, res) {  
+  let sql = `UPDATE Reviews SET flagged=true WHERE reviewID = ${req.body.reviewID}`
+  res.locals.connection.query(sql, function (error, results, fields) {
+    if(error) throw error;
+    res.send(JSON.stringify(results));
+  });
+});
+
+
+
 
 module.exports = router;
