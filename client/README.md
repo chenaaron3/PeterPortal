@@ -8,6 +8,8 @@ Possbile Errors:
     Solution: run chmod 755 chromedriver.exe in the client/script directory  
     Error: Failed at the camaro@3.0.16 install script.
     Solution: update npm to latest version
+    Error: UnicodeEncodeError: 'charmap' codec can't encode character '\u2013' in position 105: character maps to <undefined>
+    Solution: run 'chcp 65001' in terminal
 
 Basic Workflow:
 Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch -> View the Webpage on React

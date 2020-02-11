@@ -6,7 +6,7 @@ class SearchPage extends React.Component {
   render() {
       return (
         <ReactiveBase
-          app="donaldbrenschoolofinformationandcomputersciences"
+          app="courses"
           url={ElasticCloudInfo.elasticEndpointURL}
 			  >
         <div className="App">
