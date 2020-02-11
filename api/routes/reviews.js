@@ -50,6 +50,14 @@ router.put('/flagReview', function(req, res) {
   });
 });
 
+router.get('/getFlagged', function(req, res) {
+  let sql = `SELECT * FROM Reviews AS r WHERE r.flagged = true`
+  res.locals.connection.query(sql, function(error, results, fields) {
+    if(error) throw error;
+    res.send(JSON.stringify(results));
+  })
+})
+
 
 
 
