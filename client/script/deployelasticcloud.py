@@ -12,11 +12,12 @@ Deploying to AWS
 """
 
 elasticEndpointURL = 'https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com'
+jsonToUpload = "all_courses.json"
 
 headers = {
     'Content-type' : 'application/json'
 }
-path_to_json = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'ics_courses.json'))
+path_to_json = os.path.abspath(os.path.join(os.path.dirname( __file__ ), jsonToUpload))
 
 url = elasticEndpointURL + "/_bulk/"
 
