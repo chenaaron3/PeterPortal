@@ -34,7 +34,7 @@ class CoursePage extends React.Component {
       method: "POST"
     }
 
-    fetch(ElasticCloudInfo.elasticEndpointURL + "/donaldbrenschoolofinformationandcomputersciences/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source}); this.getWebSOC();})
+    fetch(ElasticCloudInfo.elasticEndpointURL + "/courses/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source}); this.getWebSOC();})
   }
 
   componentDidMount(){
@@ -49,6 +49,9 @@ class CoursePage extends React.Component {
         method: "GET"
         };
 
+
+      // fetch("http://localhost:3001/websoc/" + queryParams.slice(0, -1).join(" ") + "/" + queryParams[queryParams.length - 1], requestHeader).then(data => {return data.json()})
+      // .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
 
       fetch("http://localhost:3001/websoc/" + queryParams.slice(0, -1).join(" ") + "/" + queryParams[queryParams.length - 1], requestHeader).then(data => {return data.json()})
       .then(res => this.setState({WebSocData: res})).catch(() => {console.log("no course found")});
