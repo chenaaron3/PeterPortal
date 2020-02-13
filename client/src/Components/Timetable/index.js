@@ -22,11 +22,11 @@ class Timeable extends React.Component {
   // }
 
   componentWillMount(){
-    this.getWebSOC()
+    this.getWebSoC()
 
   }
 
-  getWebSOC() {
+  getWebSoC() {
     var requestHeader = {
       method: "GET"
     };
@@ -47,8 +47,39 @@ class Timeable extends React.Component {
       });
   }
 
+  drawSectionsOnTable() {
+
+    for(var s in this.state.WebSocData.M){
+      var test = document.createElement('div')
+      test.innerHTML = '<button style="min-width:' + this.state.WebSocData.M[s].time.sessionDuration * 1.5 + 'px" class="ui teal button course-section"><p>PSLH 100<br/>LEC[A]</p></button>'
+      document.getElementById("M-"+this.state.WebSocData.M[s].time.beginHour).append(test.firstChild);
+    }
+    for(var s in this.state.WebSocData.Tu){
+      var test = document.createElement('div')
+      test.innerHTML = '<button style="min-width:' + this.state.WebSocData.Tu[s].time.sessionDuration * 1.5 + 'px" class="ui teal button course-section"><p>PSLH 100<br/>LEC[A]</p></button>'
+      document.getElementById("Tu-"+this.state.WebSocData.Tu[s].time.beginHour).append(test.firstChild);
+    }
+    for(var s in this.state.WebSocData.W){
+      var test = document.createElement('div')
+      test.innerHTML = '<button style="min-width:' + this.state.WebSocData.W[s].time.sessionDuration * 1.5 + 'px" class="ui teal button course-section"><p>PSLH 100<br/>LEC[A]</p></button>'
+      document.getElementById("W-"+this.state.WebSocData.W[s].time.beginHour).append(test.firstChild);
+    }
+    for(var s in this.state.WebSocData.Th){
+      var test = document.createElement('div')
+      test.innerHTML = '<button style="min-width:' + this.state.WebSocData.Th[s].time.sessionDuration * 1.5 + 'px" class="ui teal button course-section"><p>PSLH 100<br/>LEC[A]</p></button>'
+      document.getElementById("Th-"+this.state.WebSocData.Th[s].time.beginHour).append(test.firstChild);
+    }
+    for(var s in this.state.WebSocData.F){
+      var test = document.createElement('div')
+      test.innerHTML = '<button style="min-width:' + this.state.WebSocData.F[s].time.sessionDuration * 1.5 + 'px" class="ui teal button course-section"><p>PSLH 100<br/>LEC[A]</p></button>'
+      document.getElementById("F-"+this.state.WebSocData.F[s].time.beginHour).append(test.firstChild);
+    }
+  }
 
   render() {
+    if(this.state.WebSocData != null){
+      this.drawSectionsOnTable();
+    }
     return (
       <div className={"timetable-container"}>
         <Table celled className={"unstackable"}>
@@ -74,83 +105,84 @@ class Timeable extends React.Component {
           <Table.Body className={"time-row"}>
             <Table.Row>  
               <Table.Cell active>MON</Table.Cell>
-              <Table.Cell id={"M-8AM"}></Table.Cell>
-              <Table.Cell id={"M-9AM"}></Table.Cell>
-              <Table.Cell id={"M-10AM"}></Table.Cell>
-              <Table.Cell id={"M-11AM"}></Table.Cell>
-              <Table.Cell id={"M-12PM"}></Table.Cell>
-              <Table.Cell id={"M-1PM"}></Table.Cell>
-              <Table.Cell id={"M-2PM"}></Table.Cell>
-              <Table.Cell id={"M-3PM"}></Table.Cell>
-              <Table.Cell id={"M-4PM"}></Table.Cell>
-              <Table.Cell id={"M-5PM"}></Table.Cell>
-              <Table.Cell id={"M-6PM"}></Table.Cell>
-              <Table.Cell id={"M-7PM"}></Table.Cell>
-              <Table.Cell id={"M-8PM"}></Table.Cell>
+              <Table.Cell id={"M-8"}></Table.Cell>
+              <Table.Cell id={"M-9"}></Table.Cell>
+              <Table.Cell id={"M-10"}></Table.Cell>
+              <Table.Cell id={"M-11"}></Table.Cell>
+              <Table.Cell id={"M-12"}></Table.Cell>
+              <Table.Cell id={"M-13"}></Table.Cell>
+              <Table.Cell id={"M-14"}></Table.Cell>
+              <Table.Cell id={"M-15"}></Table.Cell>
+              <Table.Cell id={"M-16"}></Table.Cell>
+              <Table.Cell id={"M-17"}></Table.Cell>
+              <Table.Cell id={"M-18"}></Table.Cell>
+              <Table.Cell id={"M-19"}></Table.Cell>
+              <Table.Cell id={"M-20"}></Table.Cell>
             </Table.Row>
             <Table.Row>  
               <Table.Cell active>TUE</Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
+              <Table.Cell id={"Tu-8"}></Table.Cell>
+              <Table.Cell id={"Tu-9"}></Table.Cell>
+              <Table.Cell id={"Tu-10"}></Table.Cell>
+              <Table.Cell id={"Tu-11"}></Table.Cell>
+              <Table.Cell id={"Tu-12"}></Table.Cell>
+              <Table.Cell id={"Tu-13"}></Table.Cell>
+              <Table.Cell id={"Tu-14"}></Table.Cell>
+              <Table.Cell id={"Tu-15"}></Table.Cell>
+              <Table.Cell id={"Tu-16"}></Table.Cell>
+              <Table.Cell id={"Tu-17"}></Table.Cell>
+              <Table.Cell id={"Tu-18"}></Table.Cell>
+              <Table.Cell id={"Tu-19"}></Table.Cell>
+              <Table.Cell id={"Tu-20"}></Table.Cell>
             </Table.Row>
             <Table.Row>  
               <Table.Cell active>WED</Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell><button style={{minWidth: "150px"}} className={"ui teal button course-section"}><p>PSLH 100<br/>LEC[A]</p></button></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
+              <Table.Cell id={"W-8"}></Table.Cell>
+              <Table.Cell id={"W-9"}></Table.Cell>
+              <Table.Cell id={"W-10"}></Table.Cell>
+              <Table.Cell id={"W-11"}></Table.Cell>
+              <Table.Cell id={"W-12"}></Table.Cell>
+              <Table.Cell id={"W-13"}></Table.Cell>
+              <Table.Cell id={"W-14"}></Table.Cell>
+              <Table.Cell id={"W-15"}></Table.Cell>
+              <Table.Cell id={"W-16"}></Table.Cell>
+              <Table.Cell id={"W-17"}></Table.Cell>
+              <Table.Cell id={"W-18"}></Table.Cell>
+              <Table.Cell id={"W-19"}></Table.Cell>
+              <Table.Cell id={"W-20"}></Table.Cell>
             </Table.Row>
             <Table.Row>  
               <Table.Cell active>THU</Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
+              <Table.Cell id={"Th-8"}></Table.Cell>
+              <Table.Cell id={"Th-9"}></Table.Cell>
+              <Table.Cell id={"Th-10"}></Table.Cell>
+              <Table.Cell id={"Th-11"}></Table.Cell>
+              <Table.Cell id={"Th-12"}></Table.Cell>
+              <Table.Cell id={"Th-13"}></Table.Cell>
+              <Table.Cell id={"Th-14"}></Table.Cell>
+              <Table.Cell id={"Th-15"}></Table.Cell>
+              <Table.Cell id={"Th-16"}></Table.Cell>
+              <Table.Cell id={"Th-17"}></Table.Cell>
+              <Table.Cell id={"Th-18"}></Table.Cell>
+              <Table.Cell id={"Th-19"}></Table.Cell>
+              <Table.Cell id={"Th-20"}></Table.Cell>
             </Table.Row>
             <Table.Row>  
               <Table.Cell active>FRI</Table.Cell>
               <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
+              <Table.Cell id={"F-8"}></Table.Cell>
+              <Table.Cell id={"F-9"}></Table.Cell>
+              <Table.Cell id={"F-10"}></Table.Cell>
+              <Table.Cell id={"F-11"}></Table.Cell>
+              <Table.Cell id={"F-12"}></Table.Cell>
+              <Table.Cell id={"F-13"}></Table.Cell>
+              <Table.Cell id={"F-14"}></Table.Cell>
+              <Table.Cell id={"F-15"}></Table.Cell>
+              <Table.Cell id={"F-16"}></Table.Cell>
+              <Table.Cell id={"F-17"}></Table.Cell>
+              <Table.Cell id={"F-18"}></Table.Cell>
+              <Table.Cell id={"F-19"}></Table.Cell>
+              <Table.Cell id={"F-20"}></Table.Cell>
             </Table.Row>
         </Table.Body>
 
