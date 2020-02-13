@@ -9,7 +9,7 @@ class CoursePage extends React.Component {
     super(props);
 
     this.state = {
-      courseData: {},
+      courseData: null,
     };
   }
 
@@ -50,7 +50,7 @@ class CoursePage extends React.Component {
 
   render() {
 
-
+    if (this.state.courseData != null) {
     return (
       <div style={{ width: "800px", margin: "auto" }}>
         <h1>{this.state.courseData.number}</h1>
@@ -62,10 +62,17 @@ class CoursePage extends React.Component {
         {this.state.courseData.prerequisite}
         <br />
         <br />
-        <Timetable id_department={"IN4MATX"} id_number={"151"} />
+        <Timetable id_department={this.state.courseData.id_department} id_number={this.state.courseData.id_number} />
         <ReviewsModule />
       </div>
     );
+    }
+
+    else{
+      return(<div>
+        <h1>Loading..</h1>
+      </div>)
+    }
   }
 }
 
