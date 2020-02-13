@@ -66,6 +66,7 @@ function ParsedSectionsByDay(scheduleJson) {
     .sections) {
     var sections = scheduleJson.schools[0].departments[0].courses[0]
       .sections[s];
+      console.log(sections);
     for (var m in sections.meetings) {
       var meeting = sections.meetings[m];
       if (/M/.test(meeting.days)) {
@@ -73,7 +74,7 @@ function ParsedSectionsByDay(scheduleJson) {
           sectionType: sections.sectionType,
           instructors: sections.instructors,
           sectionNum: sections.sectionNum,
-          bldg: sections.bldg,
+          bldg: meeting.bldg,
           time: ParsedCourseTime(meeting.time)
         });
       }
@@ -82,7 +83,7 @@ function ParsedSectionsByDay(scheduleJson) {
           sectionType: sections.sectionType,
           instructors: sections.instructors,
           sectionNum: sections.sectionNum,
-          bldg: sections.bldg,
+          bldg: meeting.bldg,
           time: ParsedCourseTime(meeting.time)
         });
       }
@@ -91,7 +92,7 @@ function ParsedSectionsByDay(scheduleJson) {
           sectionType: sections.sectionType,
           instructors: sections.instructors,
           sectionNum: sections.sectionNum,
-          bldg: sections.bldg,
+          bldg: meeting.bldg,
           time: ParsedCourseTime(meeting.time)
         });
       }
@@ -100,7 +101,7 @@ function ParsedSectionsByDay(scheduleJson) {
           sectionType: sections.sectionType,
           instructors: sections.instructors,
           sectionNum: sections.sectionNum,
-          bldg: sections.bldg,
+          bldg: meeting.bldg,
           time: ParsedCourseTime(meeting.time)
         });
       }
@@ -109,7 +110,7 @@ function ParsedSectionsByDay(scheduleJson) {
           sectionType: sections.sectionType,
           instructors: sections.instructors,
           sectionNum: sections.sectionNum,
-          bldg: sections.bldg,
+          bldg: meeting.bldg,
           time: ParsedCourseTime(meeting.time)
         });
       }
