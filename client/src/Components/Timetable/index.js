@@ -5,12 +5,46 @@ import "./timetable.scss";
 
 
 class Timeable extends React.Component {
-  componentWillReceiveProps(){
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      WebSocData: null
+    }
+  }
+
+  // componentWillReceiveProps(){
     
-    console.log(this.props.courseSections)
-    var test = document.createElement('div')
-    test.innerHTML = '<button style="min-width: 150px" class="ui teal button course-section"><p>PSLH 100<br/>LEC[A]</p></button>'
-    document.getElementById("M-9AM").append(test.firstChild);
+  //   console.log(this.props.courseSections)
+  //   var test = document.createElement('div')
+  //   test.innerHTML = '<button style="min-width: 150px" class="ui teal button course-section"><p>PSLH 100<br/>LEC[A]</p></button>'
+  //   document.getElementById("M-9AM").append(test.firstChild);
+  // }
+
+  componentWillMount(){
+    this.getWebSOC()
+
+  }
+
+  getWebSOC() {
+    var requestHeader = {
+      method: "GET"
+    };
+
+    fetch(
+      "http://localhost:3001/websoc/2020 Winter/" + 
+        this.props.id_department +
+        "/" +
+        this.props.id_number,
+      requestHeader
+    )
+      .then(data => {
+        return data.json();
+      })
+      .then(res => this.setState({ WebSocData: res }))
+      .catch(() => {
+        console.log("no course found");
+      });
   }
 
 
