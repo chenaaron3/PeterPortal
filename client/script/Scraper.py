@@ -7,6 +7,9 @@ import json
 import os
 import platform
 
+from RequirementNode import Node, nodify
+from Alias import ALIASES
+
 # DO NOT CHANGE
 # Automatically determines the path based on your operating system
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
@@ -19,104 +22,6 @@ GENERATE_JSON_NAME = "all_courses.json"
 SPECIAL_PREREQUISITE_WHITE_LIST = ["SAT ", "ACT ", "AP "]
 # tokenize these separately because they contain 'and' or 'or'
 PRETOKENIZE = ["AP Physics C: Electricity and Magnetism"]
-
-class Node:
-    def __init__(self, type = "?"):
-        # holds other nodes
-        self.values = []
-        # can be ?|&,|,#
-        self.type = type
-    
-    # classHistory: list of classes taken
-    # return whether or not this requirement is met
-    def prereqsMet(self, classHistory : list):
-        # if origin only has 1 value
-        if self.type == "?":
-            return self.values[0].prereqsMet(classHistory)
-        # if is value node
-        elif self.type == "#":
-            return self.values[0] in classHistory
-        # if is and node
-        elif self.type == "&":
-            # every sub requirement must be met
-            for subReq in self.values:
-                if not subReq.prereqsMet(classHistory):
-                    return False
-            return True
-        # if is or node
-        elif self.type == "|":
-            # at least 1 sub requirement must be met
-            for subReq in self.values:
-                if subReq.prereqsMet(classHistory):
-                    return True
-            return False
-        # should never reach here       
-        else:
-            print("prereqsMet::Invalid Node Type", self.type)   
-    
-    # and nodes are surrounded with []
-    # or nodes are surrounded with {}
-    # Example: 1 and 2 and (3 or (4 and 5)) and 6 -> [1,2,{3,[4,5]},6]
-    # returns a string representation of this requirement
-    def __str__(self):
-        # if origin only has 1 value
-        if self.type == "?":
-            return "{AND:[" + str(self.values[0]) + "]}"
-        # if is value node
-        elif self.type == "#":
-            return "'" + str(self.values[0]) + "'"
-        # if is and node
-        elif self.type == "&":
-            # print within []
-            res = "{AND:["
-            for i in range(len(self.values)):
-                res += "," if i != 0 else ""
-                res += str(self.values[i])
-            res += "]}"
-            return res
-        # if is or node    
-        elif self.type == "|":
-            # print within {}
-            res = "{OR:["
-            for i in range(len(self.values)):
-                res += "," if i != 0 else ""
-                res += str(self.values[i])
-            res += "]}"
-            return res
-        # should never reach here
-        else:
-            print("Node:__str__::Invalid Node Type", self.type)  
-
-# tokens: list of tokens that represent a class requirement. Consist of integers, 'and', 'or', '(', ')'
-# lookup: list of classes that the integers in the tokens list represent
-# returns a Node representing the requirements                 
-def nodify(tokens, lookup):
-    # uses stack to see which and/or node to add a value in
-    stack = [Node("?")]
-    for token in tokens:
-        # create a new sub requirement
-        if token == "(":
-            stack.insert(0, Node())
-        # adds the sub requirement
-        elif token == ")":
-            subNode = stack.pop(0)
-            stack[0].values.append(subNode)
-        # sets the type to &
-        elif token == "and":
-            stack[0].type = "&"
-        # sets the type to |
-        elif token == "or":
-            stack[0].type = "|"
-        # adds a class requirement
-        else: 
-            newNode = Node("#")
-            newNode.values.append(lookup[int(token)])
-            stack[0].values.append(newNode)
-    # is something went wrong
-    if len(stack) != 1:
-        print("Non Matching Parentheses!")
-        return None
-    return stack[0]       
             
 # driver: the Selenium Chrome driver
 # returns the Beautiful Soup Object for a page url
@@ -144,7 +49,6 @@ def getAllCoursesURLS(driver):
             courseURLS.append(CATALOGUE_BASE_URL + courseURL['href'])
     return courseURLS
 
-
 # soup: the Beautiful Soup object returned from scrape()
 # returns set of all course names
 def getAllClasses(soup):
@@ -160,9 +64,9 @@ def getAllClasses(soup):
 # Example: ('I&C SCI 6B', "Boolean Logic and Discrete Structures", "4 Units.")
 def getCourseInfo(courseBlock):
                          # id has number         # name fille   # units has word "Unit"
-    courseInfoPatternWithUnits = "(?P<id>.*[0-9]+[^.]*)\.[ ]+(?P<name>.*)\.[ ]+(?P<units>\d*\.?\d.*Units?)\."
-    courseInfoPatternWithoutUnits = "(?P<id>.*[0-9]+[^.]*)\. (?P<name>.*)\."
-    courseBlockString = unicodedata.normalize("NFKD", courseBlock.p.get_text().rstrip().lstrip())
+    courseInfoPatternWithUnits = r"(?P<id>.*[0-9]+[^.]*)\.[ ]+(?P<name>.*)\.[ ]+(?P<units>\d*\.?\d.*Units?)\."
+    courseInfoPatternWithoutUnits = r"(?P<id>.*[0-9]+[^.]*)\. (?P<name>.*)\."
+    courseBlockString = unicodedata.normalize("NFKD", courseBlock.p.get_text().strip())
     if "Unit" in courseBlockString:
         res = re.match(courseInfoPatternWithUnits, courseBlockString)
         return (res.group("id").strip(), res.group("name").strip(), res.group("units").strip())
@@ -176,9 +80,9 @@ def getCourseInfo(courseBlock):
 # returns nothing, stores information into objects passed in
 def getAllRequirements(soup, json_data:dict, specialRequirements:set):
     # department name
-    department = soup.find(id="content").h1.get_text().strip()
+    department = soup.find(id="content").h1.get_text()
     # strip off department id
-    department = department[:department.find("(")]
+    department = department[:department.find("(")].strip()
     if debug: print("Department:", department)
 
     for course in soup.select(".courses"):
@@ -200,7 +104,7 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
                 unit_list = unit_list.split("-")
             else:
                 unit_list = [unit_list] * 2
-            # parse course ID
+            # parse course number and department
             splitID = courseNumber.split()
             id_department = " ".join(splitID[0:-1])
             id_number = splitID[-1]
@@ -213,10 +117,11 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
                 }
             }
             # store class data into dictionary
-            dic = {"id":courseNumber, "id_department": id_department, "id_number": id_number,"name": courseName,
+            dic = {"id":courseNumber, "id_department": id_department, "id_number": id_number,"name": courseName, 
+                    "dept_alias": ALIASES[id_department] if id_department in ALIASES else [],
                     "units":[float(x) for x in unit_list],"description":courseDescription, "department": department, 
                     "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"", "dependencies":[],"repeatability":"","grading option":"",
-                    "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":""}
+                    "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":"","ge_types":[],"ge_string":""}
             # EXAMPLE
             """
             {
@@ -227,7 +132,6 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
              "units": [4.0, 4.0], 
              "description": "Introduction to the fundamental concepts of digital...", 
              "department": "Computer Science Courses", 
-             "school": "donaldbrenschoolofinformationandcomputersciences", 
              "prerequisiteJSON": "{AND:[{OR:['I&C SCI 46','CSE 46']},'I&C SCI 6D',{OR:['MATH 3A','I&C SCI 6N']}]}", 
              "prerequisiteList": ["I&C SCI 46", "CSE 46", "I&C SCI 6D", "MATH 3A", "I&C SCI 6N"], 
              "prerequisite": "Prerequisite: (I&C\u00a0SCI\u00a046 or CSE 46) and I&C\u00a0SCI\u00a06D..."}
@@ -239,6 +143,8 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
              "restriction": "Restriction: School of Info & Computer Sci...",              
              "overlaps": "", 
              "corequisite": "", 
+             "ge_types": [],
+             "ge_string": ""
             """
             # stores dictionaries in json_data to add dependencies later 
             json_data[courseNumber] = {}
@@ -246,19 +152,34 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
             json_data[courseNumber]["data"] = dic
             json_data[courseNumber]["node"] = None
             
-            # try to match keywords to extract course data
+            # iterate through each p tag for the course
             for c in courseInfo:
+                pTagText = c.getText().strip()
+                # if starts with ( and has I or V in it, probably a GE tag
+                if len(pTagText) > 0 and pTagText[0] == "(" and ("I" in pTagText or "V" in pTagText):
+                    dic["ge_string"] = pTagText
+                    # try to parse GE types
+                    ges = re.findall("[IV]+", pTagText)
+                    if debug: print("\t\tGE:", end="")
+                    for ge in ges:
+                        dic["ge_types"].append(roman_to_int(ge))
+                        if debug: print(ge + "(" + str(roman_to_int(ge)) + ") ", end="")
+                    if debug: print()
+                # try to match keywords like "grading option", "repeatability"
                 for keyWord in dic.keys():
-                    if re.match("^" + keyWord + ".*", c.getText().lower()):
-                        dic[keyWord] = c.getText()
+                    if re.match("^" + keyWord + ".*", pTagText.lower()):
+                        dic[keyWord] = pTagText
                         break
             
             # try to find prerequisite
             if len(courseInfo) > 1:
-                prereqRegex = re.compile(r"Prerequisite[^:]*:(?P<reqs>.*)")
-                possibleReq = prereqRegex.match(courseInfo[1].get_text())
+                # sometimes prerequisites are in the same ptag as corequisites
+                prereqRegex = re.compile(r"((?P<fullcoreqs>Corequisite:[^\n]*)\n)?(?P<fullreqs>Prerequisite[^:]*:(?P<reqs>.*))")
+                possibleReq = prereqRegex.search(unicodedata.normalize("NFKD",courseInfo[1].get_text()))
                 # if matches prereq structure
                 if possibleReq:
+                    dic["corequisite"] = "" if possibleReq.group("fullcoreqs") == None else possibleReq.group("fullcoreqs")
+                    dic["prerequisite"] = "" if possibleReq.group("fullreqs") == None else possibleReq.group("fullreqs")
                     # only get the first sentence (following sentences are grade requirements like "at least C or better")
                     rawReqs = unicodedata.normalize("NFKD",possibleReq.group("reqs").split(".")[0].strip())
                     # look for pretokenized items
@@ -294,7 +215,7 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
                             # tokenize each item
                             tokens = tokenizedReqs.split()
                             # get the requirement Node
-                            node = nodify(tokens, extractedReqs)
+                            node = nodify(tokens, extractedReqs, courseNumber)
                             # stringify node
                             dic["prerequisiteJSON"] = str(node)
                             # add list of prereq classes for dependency generation
@@ -325,17 +246,38 @@ def setDependencies(json_data:dict):
                 json_data[prerequisite]["data"]["dependencies"].append(courseNumber)
 
 # json_data: collection of class information generated from getAllRequirements and setDependencies
-def writeJsonData(json_data:dict):
+def writeJsonData(json_data:dict,filename=GENERATE_JSON_NAME):
     # string that represents the JSON file we want to generate
     json_string = ""
     # loop through each course to jsonify
     for courseNumber in json_data:
         json_string += json.dumps(json_data[courseNumber]["metadata"]) + '\n' + json.dumps(json_data[courseNumber]["data"]) + '\n'
     # remove existing file
-    if os.path.exists(GENERATE_JSON_NAME):
-        os.remove(GENERATE_JSON_NAME)
-    with open(GENERATE_JSON_NAME, "a") as f:
+    if os.path.exists(filename):
+        os.remove(filename)
+    with open(filename, "a") as f:
         f.write(json_string)
+
+# json_data: collection of class information generated from getAllRequirements
+# used to create the dictionary for aliases
+def printAllDepartments(jsont_data:dict):
+    departments = {}
+    for c in json_data:
+        d = json_data[c]["data"]["id_department"]
+        if d not in departments:
+            departments[d] = []
+    print("{" + "\n".join("{!r}: {!r},".format(k, departments[k]) for k in sorted(departments)) + "}")
+
+# Used for GEs to convert Roman Numeral to integers
+def roman_to_int(s):
+        rom_val = {'I': 1, 'V': 5}
+        int_val = 0
+        for i in range(len(s)):
+            if i > 0 and rom_val[s[i]] > rom_val[s[i - 1]]:
+                int_val += rom_val[s[i]] - 2 * rom_val[s[i - 1]]
+            else:
+                int_val += rom_val[s[i]]
+        return int_val
 
 # targetClass: the class to test requirements for
 # takenClasses: the classes that have been taken
@@ -361,15 +303,16 @@ if __name__ == "__main__":
     setDependencies(json_data)
     writeJsonData(json_data)
     # 2. SCRAPE ICS CATALOGUE
-    # getAllRequirements(scrape(driver, "http://catalogue.uci.edu/allcourses/i_c_sci/"), json_data, specialRequirements)
+    # getAllRequirements(scrape(driver, "http://catalogue.uci.edu/allcourses/art/"), json_data, specialRequirements)
     # setDependencies(json_data)
+    # writeJsonData(json_data, "test.json")
 
-    print("Special Requirements:")
-    for sReq in sorted(specialRequirements):
-        print(sReq)
-    print()
-    testRequirements("I&C SCI 33", [""], False)
-    testRequirements("I&C SCI 33", ["I&C SCI 32A"], True)
-    testRequirements("I&C SCI 163", ["I&C SCI 61"], False)
-    testRequirements("I&C SCI 163", ["I&C SCI 61", "I&C SCI 10"], True)
+    # print("Special Requirements:")
+    # for sReq in sorted(specialRequirements):
+    #     print(sReq)
+    # print()
+    # testRequirements("I&C SCI 33", [""], False)
+    # testRequirements("I&C SCI 33", ["I&C SCI 32A"], True)
+    # testRequirements("I&C SCI 163", ["I&C SCI 61"], False)
+    # testRequirements("I&C SCI 163", ["I&C SCI 61", "I&C SCI 10"], True)
     driver.quit()
