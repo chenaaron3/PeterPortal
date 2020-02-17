@@ -10,7 +10,7 @@ class SearchPage extends React.Component {
           url={ElasticCloudInfo.elasticEndpointURL}
 			  >
         <div className="App">
-        <DataSearch style={{width: "500px", margin: "auto"}} componentId="q"  dataField={['id', "dept_alias", 'name', 'description']} autosuggest={false} URLParams={true}/>
+        <DataSearch style={{width: "500px", margin: "auto"}} componentId="q"  dataField={["dept_alias", 'id', 'name', 'description']} autosuggest={false} URLParams={true}/>
         <div style={{maxHeight: "80vh", overflowY: "scroll"}}>
         <ReactiveList
             componentId="SearchResult"

@@ -80,7 +80,7 @@ def getCourseInfo(courseBlock):
 # returns nothing, stores information into objects passed in
 def getAllRequirements(soup, json_data:dict, specialRequirements:set):
     # department name
-    department = soup.find(id="content").h1.get_text()
+    department = unicodedata.normalize("NFKD", soup.find(id="content").h1.get_text())
     # strip off department id
     department = department[:department.find("(")].strip()
     if debug: print("Department:", department)
@@ -96,7 +96,7 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
             # get course info (0:Course Description, 1:Prerequisite)
             courseInfo = courseBlock.div.find_all("p")
             # parse course description
-            courseDescription = courseInfo[0].getText()
+            courseDescription = unicodedata.normalize("NFKD", courseInfo[0].getText())
 
             # parse units
             unit_list = courseUnits.split(" ")[0]
@@ -154,7 +154,7 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
             
             # iterate through each p tag for the course
             for c in courseInfo:
-                pTagText = c.getText().strip()
+                pTagText = unicodedata.normalize("NFKD", c.getText().strip())
                 # if starts with ( and has I or V in it, probably a GE tag
                 if len(pTagText) > 0 and pTagText[0] == "(" and ("I" in pTagText or "V" in pTagText):
                     dic["ge_string"] = pTagText
