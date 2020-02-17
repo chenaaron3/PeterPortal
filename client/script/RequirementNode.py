@@ -84,7 +84,7 @@ def nodify(tokens, lookup, courseNumber):
         elif token == "and":
             # if has conflicting logic (eg. A or B and C)
             if stack[0].type == "|":
-                print("\t\tCONFLICT!!", courseNumber)
+                print("\t\tCONFLICT WARNING IN NODIFY!!", courseNumber)
                 # wrap the previous values into a subnode (eg. (A or B) and C)
                 subNode = Node(stack[0].type, stack[0].values.copy())
                 # set context node to just the subnode
@@ -94,7 +94,7 @@ def nodify(tokens, lookup, courseNumber):
         elif token == "or":
             # if has conflicting logic (eg. A and B or C)
             if stack[0].type == "&":
-                print("\t\tCONFLICT!!", courseNumber)
+                print("\t\tCONFLICT WARNING IN NODIFY!!", courseNumber)
                 # wrap the previous values into a subnode (eg. (A and B) or C)
                 subNode = Node(stack[0].type, stack[0].values.copy())
                 # set context node to just the subnode

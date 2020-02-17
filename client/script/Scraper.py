@@ -157,14 +157,19 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
                 pTagText = unicodedata.normalize("NFKD", c.getText().strip())
                 # if starts with ( and has I or V in it, probably a GE tag
                 if len(pTagText) > 0 and pTagText[0] == "(" and ("I" in pTagText or "V" in pTagText):
-                    dic["ge_string"] = pTagText
                     # try to parse GE types
-                    ges = re.findall("[IV]+", pTagText)
+                    ges = re.compile("(?P<type>[IV]+)(?P<subtype>[abAB]?)")
                     if debug: print("\t\tGE:", end="")
-                    for ge in ges:
-                        dic["ge_types"].append(roman_to_int(ge))
-                        if debug: print(ge + "(" + str(roman_to_int(ge)) + ") ", end="")
+                    for ge in ges.finditer(pTagText):
+                        # normalize IA and VA to Ia and Va
+                        extractedGE = ge.group("type") + ge.group("subtype").lower()
+                        # normalize in full string also
+                        pTagText = pTagText.replace(ge.group("type") + ge.group("subtype"), extractedGE)
+                        dic["ge_types"].append(extractedGE)
+                        if debug: print(extractedGE + " ", end="")
                     if debug: print()
+                    # store the full string
+                    dic["ge_string"] = pTagText
                 # try to match keywords like "grading option", "repeatability"
                 for keyWord in dic.keys():
                     if re.match("^" + keyWord + ".*", pTagText.lower()):
@@ -267,17 +272,6 @@ def printAllDepartments(jsont_data:dict):
         if d not in departments:
             departments[d] = []
     print("{" + "\n".join("{!r}: {!r},".format(k, departments[k]) for k in sorted(departments)) + "}")
-
-# Used for GEs to convert Roman Numeral to integers
-def roman_to_int(s):
-        rom_val = {'I': 1, 'V': 5}
-        int_val = 0
-        for i in range(len(s)):
-            if i > 0 and rom_val[s[i]] > rom_val[s[i - 1]]:
-                int_val += rom_val[s[i]] - 2 * rom_val[s[i - 1]]
-            else:
-                int_val += rom_val[s[i]]
-        return int_val
 
 # targetClass: the class to test requirements for
 # takenClasses: the classes that have been taken
