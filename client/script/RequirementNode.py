@@ -39,14 +39,14 @@ class Node:
     def __str__(self):
         # if origin only has 1 value
         if self.type == "?":
-            return "{AND:[" + str(self.values[0]) + "]}"
+            return '{"AND":[' + str(self.values[0]) + "]}"
         # if is value node
         elif self.type == "#":
-            return "'" + str(self.values[0]) + "'"
+            return '"' + str(self.values[0]) + '"'
         # if is and node
         elif self.type == "&":
             # print within []
-            res = "{AND:["
+            res = '{"AND":['
             for i in range(len(self.values)):
                 res += "," if i != 0 else ""
                 res += str(self.values[i])
@@ -55,7 +55,7 @@ class Node:
         # if is or node    
         elif self.type == "|":
             # print within {}
-            res = "{OR:["
+            res = '{"OR":['
             for i in range(len(self.values)):
                 res += "," if i != 0 else ""
                 res += str(self.values[i])

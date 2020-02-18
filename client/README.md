@@ -14,6 +14,10 @@ Possbile Errors:
 Basic Workflow:
 Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch -> View the Webpage on React
 
+Generate JSON:
+1. cd into client
+2. Run 'npm run genJSON'
+
 Cloud Deploy Data (in Bulk) to AWS ElasticSearch:  
 1. cd into client
 2. Run 'npm run deployElastic'

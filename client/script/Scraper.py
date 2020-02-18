@@ -16,6 +16,16 @@ PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__
 URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
 GENERATE_JSON_NAME = "all_courses.json"
+GE_DICTIONARY = {"Ia":"GE Ia: Lower Division Writing",
+                 "Ib":"GE Ib: Upper Division Writing",
+                 "II":"GE II: Science and Technology",
+                 "III":"GE III: Social & Behavioral Sciences",
+                 "IV":"GE IV: Arts and Humanities",
+                 "Va":"GE Va: Quantitative Literacy",
+                 "Vb":"GE Vb: Formal Reasoning",
+                 "VI":"GE VI: Language Other Than English",
+                 "VII":"GE VII: Multicultural Studies",
+                 "VIII":"GE VIII: International/Global Issues"}
 
 # allow non-digit prerequisite tokens if they contain one of these words 
 # Example: Allow CHEM 1A to have "CHEM 1P or SAT Mathematics"
@@ -49,6 +59,62 @@ def getAllCoursesURLS(driver):
             courseURLS.append(CATALOGUE_BASE_URL + courseURL['href'])
     return courseURLS
 
+# driver: the Selenium Chrome driver
+# returns a mapping from department code to school name. Uses the catalogue.
+def getDepartmentToSchoolMapping(driver):
+    # some need to be hard coded (These are mentioned in All Courses but not listed in their respective school catalogue)
+    mapping = {"FIN":"The Paul Merage School of Business",
+               "ARMN":"School of Humanities",
+               "BSEMD":"School of Biological Sciences",
+               "ECPS":"The Henry Samueli School of Engineering",
+               "BANA":"The Paul Merage School of Business"}
+    # get the soup object for catalogue
+    catalogueSoup = scrape(driver, URL_TO_ALL_COURSES)
+    # look through all the links in the sidebar
+    for possibleSchoolLink in catalogueSoup.find(id="/").find_all("li"):
+        # create school soup
+        schoolUrl = CATALOGUE_BASE_URL + possibleSchoolLink.a['href'] + "#courseinventory"
+        schoolSoup = scrape(driver, schoolUrl)
+        # get the school name
+        school = unicodedata.normalize("NFKD", schoolSoup.find(id="content").h1.getText())
+        print("School:", school)
+        # if this school has the "Courses" tab
+        if schoolSoup.find(id="courseinventorytab") != None:
+            # map school soup
+            mapSoup(mapping, school, schoolSoup)   
+        # look for department links
+        departmentLinks = schoolSoup.find(class_="levelone")
+        if departmentLinks != None:
+            # go through each department link
+            for departmentLink in departmentLinks.find_all("li"):
+                # create department soup
+                departmentUrl = CATALOGUE_BASE_URL + departmentLink.a["href"] + "#courseinventory"
+                departmentSoup = scrape(driver, departmentUrl)
+                # if this department has the "Courses" tab
+                if departmentSoup.find(id="courseinventorytab") != None:
+                    # map department soup
+                    mapSoup(mapping, school, departmentSoup)
+    return mapping
+
+# mapping: the dictionary used to map department code to school name
+# school: the school to map to
+# soup: a soup that is loaded into a Courses page
+# returns a mapping from department code to school name. Uses the catalogue.
+def mapSoup(mapping:dict, school:str, soup):
+    # get all the departments under this school
+    for schoolDepartment in soup.find(id="courseinventorycontainer").find_all(class_="courses"):
+        # if department is not empty (why tf is Chemical Engr and Materials Science empty)
+        if schoolDepartment.h3 != None:
+            # get the department name
+            department = unicodedata.normalize("NFKD", schoolDepartment.h3.getText())
+            print("\tDepartment:", department)
+            # extract the first department code
+            courseNumber, _, _ =  getCourseInfo(schoolDepartment.div)
+            id_dept = " ".join(courseNumber.split()[0:-1])
+            print("\tDepartment Code:", id_dept)
+            # set the mapping
+            mapping[id_dept] = school   
+
 # soup: the Beautiful Soup object returned from scrape()
 # returns set of all course names
 def getAllClasses(soup):
@@ -74,11 +140,25 @@ def getCourseInfo(courseBlock):
         res = re.match(courseInfoPatternWithoutUnits, courseBlockString)
         return (res.group("id").strip(), res.group("name").strip(), "0 Units")
 
+# id_number: the number part of a course id (122A)
+# returns one of the three strings: (Lower Division (1-99), Upper Division (100-199), Graduate/Professional Only (200+))
+def determineCourseLevel(id_number:str):
+    # extract only the number 122A => 122
+    courseNumber = int(re.sub(r"[^0-9]", "", id_number))
+    if courseNumber < 100:
+        return "Lower Division (1-99)"
+    elif courseNumber < 200:
+        return "Upper Division (100-199)"
+    elif courseNumber >= 200:
+        return "Graduate/Professional Only (200+)"
+    else:
+        print("COURSE LEVEL ERROR", courseNumber)
+
 # soup: the Beautiful Soup object for a catalogue page
 # json_data: maps class to its json data ({STATS 280: {metadata: {...}, data: {...}, node: Node}})
-# specialRequirements: set of special requirements that doesn't involve a class
+# departmentToSchoolMapping: maps department code to its school (I&C SCI: Donald Bren School of Information and Computer Sciences)
 # returns nothing, stores information into objects passed in
-def getAllRequirements(soup, json_data:dict, specialRequirements:set):
+def getAllRequirements(soup, json_data:dict, departmentToSchoolMapping:dict):
     # department name
     department = unicodedata.normalize("NFKD", soup.find(id="content").h1.get_text())
     # strip off department id
@@ -116,8 +196,13 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
                     "_id" : courseNumber.replace(" ", "")
                 }
             }
+            if id_department not in departmentToSchoolMapping:
+                noSchoolDepartment.add(id_department)
             # store class data into dictionary
-            dic = {"id":courseNumber, "id_department": id_department, "id_number": id_number,"name": courseName, 
+            dic = {"id":courseNumber, "id_department": id_department, "id_number": id_number, 
+                    "id_school": departmentToSchoolMapping[id_department] if id_department in departmentToSchoolMapping else "", 
+                    "name": courseName, 
+                    "course_level": determineCourseLevel(courseNumber),
                     "dept_alias": ALIASES[id_department] if id_department in ALIASES else [],
                     "units":[float(x) for x in unit_list],"description":courseDescription, "department": department, 
                     "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"", "dependencies":[],"repeatability":"","grading option":"",
@@ -158,15 +243,16 @@ def getAllRequirements(soup, json_data:dict, specialRequirements:set):
                 # if starts with ( and has I or V in it, probably a GE tag
                 if len(pTagText) > 0 and pTagText[0] == "(" and ("I" in pTagText or "V" in pTagText):
                     # try to parse GE types
-                    ges = re.compile("(?P<type>[IV]+)(?P<subtype>[abAB]?)")
+                    ges = re.compile("(?P<type>[IV]+)\.?(?P<subtype>[abAB]?)")
                     if debug: print("\t\tGE:", end="")
                     for ge in ges.finditer(pTagText):
                         # normalize IA and VA to Ia and Va
                         extractedGE = ge.group("type") + ge.group("subtype").lower()
                         # normalize in full string also
                         pTagText = pTagText.replace(ge.group("type") + ge.group("subtype"), extractedGE)
-                        dic["ge_types"].append(extractedGE)
-                        if debug: print(extractedGE + " ", end="")
+                        # add to ge_types
+                        dic["ge_types"].append(GE_DICTIONARY[extractedGE])
+                        if debug: print(GE_DICTIONARY[extractedGE] + " ", end="")
                     if debug: print()
                     # store the full string
                     dic["ge_string"] = pTagText
@@ -287,19 +373,29 @@ if __name__ == "__main__":
     driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER)
     # store all of the data
     json_data = {}
+    # maps department code to school 
+    departmentToSchoolMapping = getDepartmentToSchoolMapping(driver)
     # debugging information
     specialRequirements = set()
+    noSchoolDepartment = set()
 
     # UNCOMMENT ONE OF THE FOLLOWING 
     # 1. SCRAPE ALL CLASSES
     for classURL in getAllCoursesURLS(driver):
-        getAllRequirements(scrape(driver, classURL), json_data, specialRequirements)
+        getAllRequirements(scrape(driver, classURL), json_data, departmentToSchoolMapping)
     setDependencies(json_data)
     writeJsonData(json_data)
+
     # 2. SCRAPE ICS CATALOGUE
-    # getAllRequirements(scrape(driver, "http://catalogue.uci.edu/allcourses/art/"), json_data, specialRequirements)
+    # getAllRequirements(scrape(driver, "http://catalogue.uci.edu/allcourses/art/"), json_data, departmentToSchoolMapping)
     # setDependencies(json_data)
     # writeJsonData(json_data, "test.json")
+
+    print("List of Schools:", sorted(list(set(departmentToSchoolMapping.values()))))
+    if len(noSchoolDepartment) == 0:
+        print("SUCCESS! ALL DEPARTMENTS HAVE A SCHOOL!")
+    else:
+        print("FAILED!", noSchoolDepartment, "DO NOT HAVE A SCHOOL!! MUST HARD CODE IT AT getDepartmentToSchoolMapping")
 
     # print("Special Requirements:")
     # for sReq in sorted(specialRequirements):
