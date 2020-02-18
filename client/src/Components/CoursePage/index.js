@@ -34,7 +34,7 @@ class CoursePage extends React.Component {
       method: "POST"
     }
 
-    fetch(ElasticCloudInfo.elasticEndpointURL + "/donaldbrenschoolofinformationandcomputersciences/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source}); this.getWebSOC();})
+    fetch(ElasticCloudInfo.elasticEndpointURL + "/courses/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source}); this.getWebSOC();})
   }
 
   componentDidMount(){
