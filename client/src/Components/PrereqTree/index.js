@@ -1,37 +1,40 @@
 import React from "react";
+import { Button } from 'semantic-ui-react';
+import "./prereq-tree.scss"
 
 const horizontalStyle = {display: "flex", 
                    flexDirection: "row"};
 const dependencyStyle = {backgroundColor: "lightBlue"}
-const originStyle = {backgroundColor: "pink"}
-const treeStyle = {border: "2px solid red", margin: "15px"}
+const treeStyle = { margin: "15px"}
 const nodeStyle = {backgroundColor: "yellow"}
-const leafStyle = {backgroundColor: "lightGreen"}
-const branchStyle = {listStyleType: "none"}
+// const leafStyle = {backgroundColor: "lightGreen"}
+const branchStyle = {listStyleType: "none", margin: "10px"}
 
 class Tree extends React.Component{
     render(){
         let prerequisite = this.props.prerequisiteJSON;
         let isValueNode = typeof prerequisite === 'string';
         return (
-            <div style={treeStyle}>
+            <div style={{margin: "auto"}}>
                 {/* If is just a value node */}
                 {isValueNode && 
-                <div>
-                    <span style={leafStyle}>
-                        {prerequisite}
+
+                    <span>
+                        <a href="" role="button" className={"node ui basic button"} basic>
+                         {prerequisite}
+                         </a>
                     </span>                    
-                </div>
+        
                 }
                 {/* If is a subtree */}
                 {!isValueNode && 
                 <div style={horizontalStyle}>
-                    <div>
-                        <span style={nodeStyle}>
-                            {prerequisite.hasOwnProperty('OR') ? 'ONE OF' : 'ALL OF'}
+
+                        <span style={{margin: "auto"}}>
+                            <p>{prerequisite.hasOwnProperty('OR') ? 'one of' : 'all of'}</p>
                         </span>                        
-                    </div>
-                    <div>
+   
+                    
                         <ul style={branchStyle}>
                             {prerequisite[Object.keys(prerequisite)[0]].map((child, index) => (
                             <li key={index}>
@@ -39,7 +42,7 @@ class Tree extends React.Component{
                             </li>
                             ))}
                         </ul>
-                    </div>
+                 
                 </div>
                 }
             </div>
@@ -58,25 +61,32 @@ class PrereqTree extends React.Component {
         return (
             <div style={horizontalStyle}>
                 {/* Display dependencies */}
-                <div>
+                <div style={{margin: "auto"}}>
                     <ul>
                         {this.props.dependencies.map((dependency, index) => (
-                        <li key={index}>
-                            <span style={dependencyStyle}>
+                        <div>
+                            <span>
+                            <Button className={"node"} basic color='teal'>
                                 {dependency}
+                            </Button>
                             </span>                            
-                        </li>
+                        </div>
                         ))}
                     </ul>
                 </div>
                 {/* Display the class id */}
-                <div>
-                    <span style={originStyle}>
-                        {this.props.id}
-                    </span>                    
+                <div style={horizontalStyle}>
+                    <span style={{margin: "auto", padding: "0 40px 0 40px"}}>
+                        <p>needs</p>
+                    </span> 
+                </div>
+                <div style={{margin: "auto"}}>                 
+                    <span>
+                        <Button className={"node"} basic color='blue'>{this.props.id}</Button>
+                    </span>  
                 </div>
                 {/* Spawns the root of the prerequisite tree */}
-                <div>
+                <div style={{display: 'flex'}}>
                     <Tree prerequisiteJSON={this.props.prerequisiteJSON}/>
                 </div>
             </div>
