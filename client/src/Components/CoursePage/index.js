@@ -1,6 +1,7 @@
 import React from "react";
 import Timetable from "../Timetable"
 import ReviewsModule from "../ReviewsModule";
+import PrereqTree from "../PrereqTree";
 import ElasticCloudInfo from "../../ElasticCloudInfo";
 let base64 = require('base-64');
 
@@ -105,9 +106,13 @@ class CoursePage extends React.Component {
         <h3>{this.state.courseData.department}</h3>
         {this.state.courseData.description}<br/><br/>
         {this.state.courseData.prerequisite}
+        {console.log(this.state.courseData)}
         <br/>
         <br/>
-        <Timetable courseSections={this.state.parseCourseScheduleData} />
+        {this.state.courseData.id && <PrereqTree id={this.state.courseData.id} 
+                                                  dependencies={this.state.courseData.dependencies} 
+                                                  prerequisiteJSON={JSON.parse(this.state.courseData.prerequisiteJSON)}/>}
+        <Timetable courseSections={this.state.parseCourseScheduleData} />0
         <ReviewsModule />
         </div>
     )
