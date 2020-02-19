@@ -53,27 +53,27 @@ class Node:
     def __str__(self):
         # if origin only has 1 value
         if self.type == "?":
-            return "[" + str(self.values[0]) + "]"
+            return "{AND:[" + str(self.values[0]) + "]}"
         # if is value node
         elif self.type == "#":
-            return str(self.values[0])
+            return "'" + str(self.values[0]) + "'"
         # if is and node
         elif self.type == "&":
             # print within []
-            res = "["
+            res = "{AND:["
             for i in range(len(self.values)):
                 res += "," if i != 0 else ""
                 res += str(self.values[i])
-            res += "]"
+            res += "]}"
             return res
         # if is or node    
         elif self.type == "|":
             # print within {}
-            res = "{"
+            res = "{OR:["
             for i in range(len(self.values)):
                 res += "," if i != 0 else ""
                 res += str(self.values[i])
-            res += "}"
+            res += "]}"
             return res
         # should never reach here
         else:
@@ -183,17 +183,16 @@ def getAllRequirements(soup):
             id_department = " ".join(splitID[0:-1])
             id_number = splitID[-1]
             dic = {"id":courseNumber, "id_department": id_department, "id_number": id_number,"name":courseName,"units":[float(x) for x in unit_list],"description":courseDescription,
-            "department": department, "prerequisite":"","repeatability":"","grading option":"","concurrent":"","same as":"",
+            "department": department, "prerequisiteJSON":"", "prerequisite":"","repeatability":"","grading option":"","concurrent":"","same as":"",
             "restriction":"","overlaps":"","corequisite":""}
             
+            # try to match keywords
             for c in courseInfo:
                 for keyWord in dic.keys():
                     if re.match("^" + keyWord + ".*", c.getText().lower()):
                         dic[keyWord] = c.getText()
                         break
             
-            json_string += json.dumps(metadata) + '\n' + json.dumps(dic) + '\n'
-
             # try to find prerequisite
             if len(courseInfo) > 1:
                 prereqRegex = re.compile(r"Prerequisite:(.*)")
@@ -219,20 +218,20 @@ def getAllRequirements(soup):
                             otherDepartmentRequirements.add(extractedReqs[i])
                         # does the actual replacement
                         tokenizedReqs = tokenizedReqs.replace(extractedReqs[i], str(i), 1)
-                    if special:
-                        continue
-                    # place a space between parentheses to tokenize
-                    tokenizedReqs = tokenizedReqs.replace("(", "( ").replace(")", " )")
-                    # tokenize each item
-                    tokens = tokenizedReqs.split()
-                    # get the requirement Node
-                    node = nodify(tokens, extractedReqs)
-                    # maps the course to its requirement Node
-                    graph[courseNumber] = node
-                    # debug information
-                    print("\t\tREQS:", rawReqs)
-                    print("\t\tREQSTOKENS:", tokens)
-                    print("\t\tNODE:",node)
+                    if not special:
+                        # place a space between parentheses to tokenize
+                        tokenizedReqs = tokenizedReqs.replace("(", "( ").replace(")", " )")
+                        # tokenize each item
+                        tokens = tokenizedReqs.split()
+                        # get the requirement Node
+                        node = nodify(tokens, extractedReqs)
+                        # maps the course to its requirement Node
+                        graph[courseNumber] = node
+                        # debug information
+                        print("\t\tREQS:", rawReqs)
+                        print("\t\tREQSTOKENS:", tokens)
+                        print("\t\tNODE:",node)
+                        dic["prerequisiteJSON"] = str(node)
                 # doesn't match Requirements description                    
                 else:
                     print("\t\tNOREQS")
@@ -241,6 +240,8 @@ def getAllRequirements(soup):
             else:
                 print("\t\tNOREQS")
                 graph[courseNumber] = None
+
+            json_string += json.dumps(metadata) + '\n' + json.dumps(dic) + '\n'
     print("Special Requirements:", sorted(specialRequirements))
     print("Other Requirements:", sorted(otherDepartmentRequirements))
 
