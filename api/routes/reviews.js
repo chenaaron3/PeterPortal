@@ -6,6 +6,10 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource reviews');
 });
 
+router.post("/post", function(req, res, next){
+  console.log("Hi Poster!", JSON.stringify(req.body));
+})
+
 router.get('/professor', function(req, res, next)  {
   let sql = `SELECT * FROM Reviews AS r WHERE r.profID = "${req.query.profID}" ORDER BY r.dateSubmitted DESC`
     res.locals.connection.query(sql, function (error, results, fields) {
@@ -15,7 +19,9 @@ router.get('/professor', function(req, res, next)  {
 })
 
 router.get('/course', function(req, res, next)  {
+  console.log(req.query.courseID)
   let sql = `SELECT * FROM Reviews AS r WHERE r.courseID = "${req.query.courseID}" ORDER BY r.dateSubmitted DESC`
+  console.log(sql)
     res.locals.connection.query(sql, function (error, results, fields) {
         if(error) throw error;
         res.send(JSON.stringify(results));
@@ -23,6 +29,9 @@ router.get('/course', function(req, res, next)  {
 })
 
 router.post('/addReview', function(req, res) {
+  
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+  console.log("this is the body", req.body);
   const data = {
     text: req.body.text,
     rating: req.body.rating,
@@ -35,7 +44,7 @@ router.post('/addReview', function(req, res) {
   }
   let sql = `INSERT INTO Reviews 
   (reviewText, rating, userID, courseID, profID, dateSubmitted, grade, forCredit, flagged)
-  VALUES( "${data.text}", ${data.rating}, ${data.userID}, ${data.courseID}, ${data.profID}, "${data.date}", "${data.grade}", ${data.forCredit}, False)`
+  VALUES( "${data.text}", ${data.rating}, "${data.userID}", "${data.courseID}", "${data.profID}", "${data.date}", "${data.grade}", ${data.forCredit}, False)`
   res.locals.connection.query(sql , function(error, results, fields) {
     if(error) throw error;
     res.send(JSON.stringify(results));
