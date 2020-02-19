@@ -39,7 +39,7 @@ class CoursePage extends React.Component {
 
   componentDidMount(){
     this.getCourseData();
-    
+    console.log("sdfs",  this.state.courseData)
   }
 
   getWebSOC(){
@@ -108,7 +108,7 @@ class CoursePage extends React.Component {
         <br/>
         <br/>
         <Timetable courseSections={this.state.parseCourseScheduleData} />
-        <ReviewsModule />
+        <ReviewsModule courseID={this.state.courseData.id} />
         </div>
     )
   }
