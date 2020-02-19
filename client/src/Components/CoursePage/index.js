@@ -1,6 +1,7 @@
 import React from "react";
 import Timetable from "../Timetable";
 import ReviewsModule from "../ReviewsModule";
+import PrereqTree from "../PrereqTree";
 import ElasticCloudInfo from "../../ElasticCloudInfo";
 let base64 = require("base-64");
 
@@ -31,9 +32,9 @@ class CoursePage extends React.Component {
       method: "POST"
     };
 
-    fetch(ElasticCloudInfo.elasticEndpointURL + "/courses/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source}); this.getWebSOC();})
-
+    fetch(ElasticCloudInfo.elasticEndpointURL + "/courses/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source});})
   }
+
 
   componentDidMount() {
     this.getCourseData();
@@ -52,10 +53,13 @@ class CoursePage extends React.Component {
         <br />
         <br />
         {this.state.courseData.prerequisite}
-
-        <br />
-        <br />
-        <Timetable id_department={this.state.courseData.id_department} id_number={this.state.courseData.id_number} />
+        {console.log(this.state.courseData)}
+        <br/>
+        <br/>
+        {this.state.courseData.id && <PrereqTree id={this.state.courseData.id} 
+                                                  dependencies={this.state.courseData.dependencies} 
+                                                  prerequisiteJSON={JSON.parse(this.state.courseData.prerequisiteJSON)}/>}
+        <Timetable id_department={this.state.courseData.id_department} id_number={this.state.courseData.id_number}/>
         <ReviewsModule />
       </div>
     );
