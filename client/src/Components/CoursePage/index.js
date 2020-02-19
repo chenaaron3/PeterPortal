@@ -31,16 +31,8 @@ class CoursePage extends React.Component {
       method: "POST"
     };
 
-    fetch(
-      ElasticCloudInfo.elasticEndpointURL + "/courses/_search",
-      requestHeader
-    )
-      .then(data => {
-        return data.json();
-      })
-      .then(res => {
-        this.setState({ courseData: res.hits.hits[0]._source });
-      });
+    fetch(ElasticCloudInfo.elasticEndpointURL + "/courses/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source}); this.getWebSOC();})
+
   }
 
   componentDidMount() {
@@ -60,6 +52,7 @@ class CoursePage extends React.Component {
         <br />
         <br />
         {this.state.courseData.prerequisite}
+
         <br />
         <br />
         <Timetable id_department={this.state.courseData.id_department} id_number={this.state.courseData.id_number} />
@@ -73,6 +66,7 @@ class CoursePage extends React.Component {
         <h1>Loading..</h1>
       </div>)
     }
+
   }
 }
 

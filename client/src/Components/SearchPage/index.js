@@ -9,8 +9,13 @@ import ElasticCloudInfo from "../../ElasticCloudInfo";
 
 class SearchPage extends React.Component {
   render() {
-    return (
-      <ReactiveBase app="courses" url={ElasticCloudInfo.elasticEndpointURL}>
+
+      return (
+        <ReactiveBase
+          app="courses"
+          url={ElasticCloudInfo.elasticEndpointURL}
+			  >
+
         <div className="App">
           <DataSearch
             style={{ width: "500px", margin: "auto" }}
