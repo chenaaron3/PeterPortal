@@ -13,7 +13,7 @@ import './filter.scss';
 class SearchPage extends React.Component {
   render() {
     return (
-      <ReactiveBase app="courses" url={ElasticCloudInfo.elasticEndpointURL}>
+      
         <div className="App" style={{ display: "flex", flexDirection: "row" }}>
           <div style={{ width: "220px", marginLeft: "36px" }}>
             {/* <SelectedFilters /> */}
@@ -75,13 +75,7 @@ class SearchPage extends React.Component {
             />
           </div>
           <div style={{ width: "40%", marginLeft: "36px" }}>
-            <DataSearch
-              style={{ width: "100%", margin: "auto" }}
-              componentId="q"
-              dataField={["dept_alias", "id", "description"]}
-              autosuggest={false}
-              URLParams={true}
-            />
+
             <div style={{ }}>
               <ReactiveList
                 componentId="SearchResult"
@@ -89,7 +83,7 @@ class SearchPage extends React.Component {
                 dataField={"id"}
                 size={30}
                 react={{
-                  and: ["DeptFilter", "GEFilter", "CourseLevelFilter", "SchoolFilter"]
+                  and: ["DeptFilter", "GEFilter", "CourseLevelFilter", "SchoolFilter", "q"]
                 }}
                 renderItem={res => (
                   <div>
@@ -107,7 +101,7 @@ class SearchPage extends React.Component {
             </div>
           </div>
         </div>
-      </ReactiveBase>
+
     );
   }
 }
