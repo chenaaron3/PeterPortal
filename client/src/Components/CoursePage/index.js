@@ -35,7 +35,7 @@ class CoursePage extends React.Component {
     fetch(ElasticCloudInfo.elasticEndpointURL + "/courses/_search", requestHeader)
     .then(data => {return data.json()})
     .then(res => {this.setState({courseData: res.hits.hits[0]._source});})
-    .catch(e => console.log(e0))
+    .catch(e => console.log(e))
 
   }
 
