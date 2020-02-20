@@ -32,7 +32,10 @@ class CoursePage extends React.Component {
       method: "POST"
     };
 
-    fetch(ElasticCloudInfo.elasticEndpointURL + "/courses/_search", requestHeader).then(data => {return data.json()}).then(res => {this.setState({courseData: res.hits.hits[0]._source});})
+    fetch(ElasticCloudInfo.elasticEndpointURL + "/courses/_search", requestHeader)
+    .then(data => {return data.json()})
+    .then(res => {this.setState({courseData: res.hits.hits[0]._source});})
+    .catch(e => console.log(e0))
 
   }
 
@@ -58,7 +61,7 @@ class CoursePage extends React.Component {
         <br/>
         {this.state.courseData.id && <PrereqTree id={this.state.courseData.id} 
                                                   dependencies={this.state.courseData.dependencies} 
-                                                  prerequisiteJSON={JSON.parse(this.state.courseData.prerequisiteJSON)}/>}
+                                                  prerequisiteJSON={if(this.state.courseData.prerequisiteJSON === "") return null; else JSON.parse(this.state.courseData.prerequisiteJSON)}/>}
         <Timetable id_department={this.state.courseData.id_department} id_number={this.state.courseData.id_number} />
         <ReviewsModule />
       </div>
