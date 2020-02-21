@@ -56,42 +56,61 @@ class PrereqTree extends React.Component {
     }
 
     render() {
-        let hasPrereqs = this.props.prerequisiteJSON !== "";
+        let hasPrereqs = this.props.prerequisiteJSON != "";
+        let hasDependencies = this.props.dependencies.length != 0;
 
         if(this.props.id == undefined)
             return ""
+        else if(!hasPrereqs && !hasDependencies)
+            return (<div>
+                <span>
+                    No Dependencies or Prerequisites!
+                </span>
+            </div>)
         return (
             <div style={horizontalStyle}>
                 {/* Display dependencies */}
-                <div style={{margin: "auto"}}>
-                    <ul>
-                        {this.props.dependencies.map((dependency, index) => (
-                        <div>
-                            <span>
-                            <Button className={"node"} basic color='teal'>
-                                {dependency}
-                            </Button>
-                            </span>                            
-                        </div>
-                        ))}
-                    </ul>
-                </div>
+                {hasDependencies && <>
+                    <div style={{margin: "auto"}}>
+                        <ul>
+                            {this.props.dependencies.map((dependency, index) => (
+                            <div>
+                                <span>
+                                <Button className={"node"} basic color='teal'>
+                                    {dependency}
+                                </Button>
+                                </span>                            
+                            </div>
+                            ))}
+                        </ul>
+                    </div>
+                    <div style={horizontalStyle}>
+                        <span style={{margin: "auto", padding: "0 40px 0 40px"}}>
+                            <p>needs</p>
+                        </span> 
+                    </div>
+                </>}
+                {!hasDependencies &&                         
+                    <div style={horizontalStyle}>
+                        <span style={{margin: "auto", padding: "0 40px 0 40px"}}>
+                            <p>No Dependencies!</p>
+                        </span> 
+                    </div>}
                 {/* Display the class id */}
-                <div style={horizontalStyle}>
-                    <span style={{margin: "auto", padding: "0 40px 0 40px"}}>
-                        <p>needs</p>
-                    </span> 
-                </div>
                 <div style={{margin: "auto"}}>                 
                     <span>
                         <Button className={"node"} basic color='blue'>{this.props.id}</Button>
                     </span>  
                 </div>
                 {/* Spawns the root of the prerequisite tree */}
-                <div style={{display: 'flex'}}>
-                    {hasPrereqs && <Tree prerequisiteJSON={JSON.parse(this.props.prerequisiteJSON)}/>}
-                    {!hasPrereqs && <span>No Prerequisites!</span>}
-                </div>
+                {hasPrereqs && <div style={{display: 'flex'}}>
+                    <Tree prerequisiteJSON={JSON.parse(this.props.prerequisiteJSON)}/>
+                </div>}
+                {!hasPrereqs && <div style={horizontalStyle}>
+                        <span style={{margin: "auto", padding: "0 40px 0 40px"}}>
+                            <p>No Prerequisites!</p>
+                        </span> 
+                    </div>}
             </div>
         )
     }
