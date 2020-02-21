@@ -56,6 +56,8 @@ class PrereqTree extends React.Component {
     }
 
     render() {
+        let hasPrereqs = this.props.prerequisiteJSON !== "";
+
         if(this.props.id == undefined)
             return ""
         return (
@@ -87,7 +89,8 @@ class PrereqTree extends React.Component {
                 </div>
                 {/* Spawns the root of the prerequisite tree */}
                 <div style={{display: 'flex'}}>
-                    <Tree prerequisiteJSON={this.props.prerequisiteJSON}/>
+                    {hasPrereqs && <Tree prerequisiteJSON={JSON.parse(this.props.prerequisiteJSON)}/>}
+                    {!hasPrereqs && <span>No Prerequisites!</span>}
                 </div>
             </div>
         )

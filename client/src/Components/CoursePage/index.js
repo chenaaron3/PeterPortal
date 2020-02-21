@@ -111,7 +111,7 @@ class CoursePage extends React.Component {
         <br/>
         {this.state.courseData.id && <PrereqTree id={this.state.courseData.id} 
                                                   dependencies={this.state.courseData.dependencies} 
-                                                  prerequisiteJSON={JSON.parse(this.state.courseData.prerequisiteJSON)}/>}
+                                                  prerequisiteJSON={this.state.courseData.prerequisiteJSON}/>}
         <Timetable courseSections={this.state.parseCourseScheduleData} />
         <ReviewsModule />
         </div>
