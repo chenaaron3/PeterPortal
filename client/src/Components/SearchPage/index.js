@@ -13,8 +13,10 @@ import './filter.scss';
 class SearchPage extends React.Component {
   render() {
     return (
-      
         <div className="App" style={{ display: "flex", flexDirection: "row" }}>
+
+          <div class = "sticky">
+
           <div style={{ width: "220px", marginLeft: "36px" }}>
             {/* <SelectedFilters /> */}
             <MultiList
@@ -74,8 +76,10 @@ class SearchPage extends React.Component {
               placeholder="Show all departments"
             />
           </div>
-          <div style={{ width: "40%", marginLeft: "36px" }}>
 
+          </div>
+
+          <div style={{ width: "40%", marginLeft: "315px" ,marginRight: "10px"}}>
             <div style={{ }}>
               <ReactiveList
                 componentId="SearchResult"
@@ -101,7 +105,6 @@ class SearchPage extends React.Component {
             </div>
           </div>
         </div>
-
     );
   }
 }

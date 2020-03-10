@@ -25,3 +25,12 @@
 .filter-title {
     text-align: left;
 }
+
+div.sticky {
+    position: fixed;
+    margin-top: 0;
+    // position: -webkit-sticky;
+    // position: sticky;
+    // top: 0;
+    overflow-y: scroll;
+}
