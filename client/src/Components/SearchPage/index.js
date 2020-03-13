@@ -9,12 +9,14 @@ import {
 } from "@appbaseio/reactivesearch";
 import ElasticCloudInfo from "../../ElasticCloudInfo";
 import './filter.scss';
+import './index.scss';
 
 class SearchPage extends React.Component {
   render() {
     return (
         <div className="App" style={{ display: "flex", flexDirection: "row" }}>
-          <div style={{ width: "220px", marginLeft: "36px", marginTop: "18px" }}>
+          <div className="search-page">
+          <div className="filter-list-container" style={{  }}>
             {/* <SelectedFilters /> */}
             <MultiList
               componentId="GEFilter"
@@ -72,10 +74,11 @@ class SearchPage extends React.Component {
               }}
               placeholder="Show all departments"
             />
+
           </div>
 
 
-          <div style={{ width: "40%", marginLeft: "36px" ,marginTop: "18px"}}>
+          <div style={{ width: "40%", marginLeft: "315px" ,marginTop: "18px"}}>
             <div style={{ }}>
               <ReactiveList
                 componentId="SearchResult"
@@ -99,6 +102,7 @@ class SearchPage extends React.Component {
                 )}
               />
             </div>
+          </div>
           </div>
         </div>
     );
