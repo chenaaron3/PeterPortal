@@ -13,7 +13,6 @@ import './filter.scss';
 class SearchPage extends React.Component {
   render() {
     return (
-      
         <div className="App" style={{ display: "flex", flexDirection: "row" }}>
           <div style={{ width: "220px", marginLeft: "36px", marginTop: "18px" }}>
             {/* <SelectedFilters /> */}
@@ -74,8 +73,9 @@ class SearchPage extends React.Component {
               placeholder="Show all departments"
             />
           </div>
-          <div style={{ width: "40%", marginLeft: "36px", marginTop: "18px" }}>
 
+
+          <div style={{ width: "40%", marginLeft: "36px" ,marginRight: "18px"}}>
             <div style={{ }}>
               <ReactiveList
                 componentId="SearchResult"
@@ -101,7 +101,6 @@ class SearchPage extends React.Component {
             </div>
           </div>
         </div>
-
     );
   }
 }
