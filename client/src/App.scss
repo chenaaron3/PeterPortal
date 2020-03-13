@@ -21,6 +21,21 @@
   color: white;
 }
 
+// Hello, Ryan here. Tried making the header. CSS is neat
+.navHeader {
+  background-color: blue; // blue just so I can see what's happening
+  min-height: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  //position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
 .App-link {
   color: #61dafb;
 }
