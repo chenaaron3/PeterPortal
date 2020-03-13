@@ -24,7 +24,7 @@ class App extends React.Component {
             
             <Menu.Item 
               name="PeterPortal"
-              active={activeItem === "peterPortal"}
+              active={activeItem === "PeterPortal"}
               onClick={this.handleItemClick}
             />
 
@@ -40,6 +40,7 @@ class App extends React.Component {
               />
             </Menu.Item>
             </div>
+
             <Menu.Menu position="right">
               <Menu.Item
                 name="logout"
