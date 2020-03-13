@@ -75,7 +75,7 @@ class SearchPage extends React.Component {
           </div>
 
 
-          <div style={{ width: "40%", marginLeft: "36px" ,marginRight: "18px"}}>
+          <div style={{ width: "40%", marginLeft: "36px" ,marginTop: "18px"}}>
             <div style={{ }}>
               <ReactiveList
                 componentId="SearchResult"
