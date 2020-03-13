@@ -20,6 +20,7 @@ class App extends React.Component {
 
       <Router>
         <Sticky>
+        <div style={ {overflowX: "hidden"}}>
           <Menu secondary color={"blue"} inverted>     
             
             <Menu.Item 
@@ -49,7 +50,9 @@ class App extends React.Component {
               />
             </Menu.Menu>
           </Menu>
+          </div>
         </Sticky>
+        
 
         {/* <h5 style={{textAlign: "center", color: "gray"}}>UCI Catalogue Search - alpha v1.0</h5>
           <h5 style={{textAlign: "center", color: "light-gray"}}><a href="https://github.com/icssc-projects/uci-catalogue-search/issues/new">If you see something, say something!</a></h5> */}
