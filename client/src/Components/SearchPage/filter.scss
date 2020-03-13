@@ -26,11 +26,14 @@
     text-align: left;
 }
 
-div.sticky {
+
+.filter-list-container {
     position: fixed;
     margin-top: 0;
-    // position: -webkit-sticky;
-    // position: sticky;
-    // top: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
+    width: 220px;
+    margin-left: 36px;
+    margin-top: 18px;
+    height: 100%;
 }
+

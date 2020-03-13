@@ -10,8 +10,6 @@ import ElasticCloudInfo from "./ElasticCloudInfo";
 class App extends React.Component {
   state = { activeItem: 'home' }
 
-  handleItemClick = (e, { name }) => console.log("click")
-
   render() {
     const { activeItem } = this.state
 
@@ -19,19 +17,18 @@ class App extends React.Component {
       <ReactiveBase app="courses" url={ElasticCloudInfo.elasticEndpointURL}>
 
       <Router>
-        <Sticky>
-        <div style={ {overflowX: "hidden"}}>
+
+        <div className={"top-bar"} style={ {overflowX: "hidden"}}>
           <Menu secondary color={"blue"} inverted>     
+          <Menu.Item>
+            <div style={ {marginLeft: "36px" }}>
+            <a href="/" role="button" style={{color: "white"}}>PeterPortal</a>
+            </div>
+            </Menu.Item>
+
             
-            <Menu.Item 
-              name="PeterPortal"
-              active={activeItem === "PeterPortal"}
-              onClick={this.handleItemClick}
-            />
-
-
-            <div style={ {marginLeft: "170px" }}>
-            <Menu.Item>
+            <Menu.Item style={{marginLeft: "205px", width: "450px"}}>
+            <div style={{width: "100%"}}>
               <DataSearch
                 style={{ width: "100%", margin: "auto" }}
                 componentId="q"
@@ -39,8 +36,9 @@ class App extends React.Component {
                 autosuggest={false}
                 URLParams={true}
               />
+              </div>
             </Menu.Item>
-            </div>
+            
 
             <Menu.Menu position="right">
               <Menu.Item
@@ -51,17 +49,18 @@ class App extends React.Component {
             </Menu.Menu>
           </Menu>
           </div>
-        </Sticky>
-        
 
         {/* <h5 style={{textAlign: "center", color: "gray"}}>UCI Catalogue Search - alpha v1.0</h5>
           <h5 style={{textAlign: "center", color: "light-gray"}}><a href="https://github.com/icssc-projects/uci-catalogue-search/issues/new">If you see something, say something!</a></h5> */}
-        <Switch>
+        
+
+        <Switch >
           <Route exact path="/">
-            <SearchPage />
+            <SearchPage/>
           </Route>
           <Route path="/course/:id" component={CoursePage} />
         </Switch>
+
       </Router>
       </ReactiveBase>
     );
