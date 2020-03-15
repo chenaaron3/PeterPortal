@@ -198,6 +198,7 @@ def getAllRequirements(soup, json_data:dict, departmentToSchoolMapping:dict):
             }
             if id_department not in departmentToSchoolMapping:
                 noSchoolDepartment.add(id_department)
+            # Examples at https://github.com/icssc-projects/PeterPortal/wiki/Course-Search
             # store class data into dictionary
             dic = {"id":courseNumber, "id_department": id_department, "id_number": id_number, 
                     "id_school": departmentToSchoolMapping[id_department] if id_department in departmentToSchoolMapping else "", 
@@ -205,32 +206,8 @@ def getAllRequirements(soup, json_data:dict, departmentToSchoolMapping:dict):
                     "course_level": determineCourseLevel(courseNumber),
                     "dept_alias": ALIASES[id_department] if id_department in ALIASES else [],
                     "units":[float(x) for x in unit_list],"description":courseDescription, "department": department, 
-                    "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"", "dependencies":[],"repeatability":"","grading option":"",
+                    "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"{}", "dependencies":[],"repeatability":"","grading option":"",
                     "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":"","ge_types":[],"ge_string":""}
-            # EXAMPLE
-            """
-            {
-             "id": "COMPSCI 111", 
-             "id_department": "COMPSCI", 
-             "id_number": "111", 
-             "name": "Digital Image Processing", 
-             "units": [4.0, 4.0], 
-             "description": "Introduction to the fundamental concepts of digital...", 
-             "department": "Computer Science Courses", 
-             "prerequisiteJSON": "{AND:[{OR:['I&C SCI 46','CSE 46']},'I&C SCI 6D',{OR:['MATH 3A','I&C SCI 6N']}]}", 
-             "prerequisiteList": ["I&C SCI 46", "CSE 46", "I&C SCI 6D", "MATH 3A", "I&C SCI 6N"], 
-             "prerequisite": "Prerequisite: (I&C\u00a0SCI\u00a046 or CSE 46) and I&C\u00a0SCI\u00a06D..."}
-             "dependencies": [], 
-             "repeatability": "", 
-             "grading option": "", 
-             "concurrent": "", 
-             "same as": "", 
-             "restriction": "Restriction: School of Info & Computer Sci...",              
-             "overlaps": "", 
-             "corequisite": "", 
-             "ge_types": [],
-             "ge_string": ""
-            """
             # stores dictionaries in json_data to add dependencies later 
             json_data[courseNumber] = {}
             json_data[courseNumber]["metadata"] = metadata
