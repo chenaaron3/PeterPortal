@@ -1,0 +1,26 @@
+.course_content-container {
+    width: 50%;
+    margin-right: auto;
+    margin-left: 315px;
+    margin-top: 100px;
+    
+    .course_info-container {
+
+        #course_id {
+            color: #5E9EC1;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #course_name {
+            margin-top: 0;
+        }
+
+        #course_dept-school-unit {
+            color: gray;
+        }
+
+    }
+
+}
+

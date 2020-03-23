@@ -3,7 +3,8 @@ import Timetable from "../Timetable";
 import ReviewsModule from "../ReviewsModule";
 import PrereqTree from "../PrereqTree";
 import ElasticCloudInfo from "../../ElasticCloudInfo";
-let base64 = require("base-64");
+import { Grid, Icon, Divider } from 'semantic-ui-react';
+import "./index.scss";
 
 class CoursePage extends React.Component {
   constructor(props) {
@@ -47,23 +48,36 @@ class CoursePage extends React.Component {
 
     if (this.state.courseData != null) {
     return (
-      <div style={{ width: "800px", margin: "auto" }}>
-        <h1>{this.state.courseData.number}</h1>
-        <h2>{this.state.courseData.id}</h2>
-        <h3>{this.state.courseData.department}</h3>
-        {this.state.courseData.description}
-        <br />
-        <br />
-        {this.state.courseData.prerequisite}
-        {console.log(this.state.courseData)}
-        <br/>
-        <br/>
-        {this.state.courseData.id && <PrereqTree id={this.state.courseData.id} 
-                                                  dependencies={this.state.courseData.dependencies} 
-                                                  prerequisiteJSON={this.state.courseData.prerequisiteJSON}/>}
-        <Timetable id_department={this.state.courseData.id_department} id_number={this.state.courseData.id_number} />
-        <ReviewsModule />
+      <div className="App" style={{ display: "flex", flexDirection: "row" }}> 
+        <Grid.Row className="course_content-container">
+          <Grid.Column className="course_info-container">
+            <h1 id="course_id">{this.state.courseData.id}</h1>
+            <h2 id="course_name">{this.state.courseData.name}</h2>
+            <p id="course_dept-school-unit">{this.state.courseData.department}<br />{this.state.courseData.id_school} ･ {this.state.courseData.units[0]} units</p>
+            <Divider />
+            {this.state.courseData.description}
+          </Grid.Column>
+        </Grid.Row>
       </div>
+      
+      // <div style={{ width: "60%", margin: "auto" }}>
+        
+      //   <h1>{this.state.courseData.number}</h1>
+      //   <h2>{this.state.courseData.id}</h2>
+      //   <h3>{this.state.courseData.department}</h3>
+      //   {this.state.courseData.description}
+      //   <br />
+      //   <br />
+      //   {this.state.courseData.prerequisite}
+      //   {console.log(this.state.courseData)}
+      //   <br/>
+      //   <br/>
+      //   {this.state.courseData.id && <PrereqTree id={this.state.courseData.id} 
+      //                                             dependencies={this.state.courseData.dependencies} 
+      //                                             prerequisiteJSON={this.state.courseData.prerequisiteJSON}/>}
+      //   <Timetable id_department={this.state.courseData.id_department} id_number={this.state.courseData.id_number} />
+      //   <ReviewsModule />
+      // </div>
     );
     }
 
