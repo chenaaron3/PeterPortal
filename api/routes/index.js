@@ -71,6 +71,9 @@ function ParsedSectionsByDay(scheduleJson) {
       var meeting = sections.meetings[m];
       if (/M/.test(meeting.days)) {
         courseSections.M.push({
+          sectionCode: sections.sectionCode,
+          maxCapacity: sections.maxCapacity,
+          numCurrentlyEnrolled: sections.numCurrentlyEnrolled.totalEnrolled,
           sectionType: sections.sectionType,
           instructors: sections.instructors,
           sectionNum: sections.sectionNum,
@@ -80,6 +83,9 @@ function ParsedSectionsByDay(scheduleJson) {
       }
       if (/Tu/.test(meeting.days)) {
         courseSections.Tu.push({
+          sectionCode: sections.sectionCode,
+          maxCapacity: sections.maxCapacity,
+          numCurrentlyEnrolled: sections.numCurrentlyEnrolled.totalEnrolled,
           sectionType: sections.sectionType,
           instructors: sections.instructors,
           sectionNum: sections.sectionNum,
@@ -89,6 +95,9 @@ function ParsedSectionsByDay(scheduleJson) {
       }
       if (/W/.test(meeting.days)) {
         courseSections.W.push({
+          sectionCode: sections.sectionCode,
+          maxCapacity: sections.maxCapacity,
+          numCurrentlyEnrolled: sections.numCurrentlyEnrolled.totalEnrolled,
           sectionType: sections.sectionType,
           instructors: sections.instructors,
           sectionNum: sections.sectionNum,
@@ -98,6 +107,9 @@ function ParsedSectionsByDay(scheduleJson) {
       }
       if (/Th/.test(meeting.days)) {
         courseSections.Th.push({
+          sectionCode: sections.sectionCode,
+          maxCapacity: sections.maxCapacity,
+          numCurrentlyEnrolled: sections.numCurrentlyEnrolled.totalEnrolled,
           sectionType: sections.sectionType,
           instructors: sections.instructors,
           sectionNum: sections.sectionNum,
@@ -107,6 +119,9 @@ function ParsedSectionsByDay(scheduleJson) {
       }
       if (/F/.test(meeting.days)) {
         courseSections.F.push({
+          sectionCode: sections.sectionCode,
+          maxCapacity: sections.maxCapacity,
+          numCurrentlyEnrolled: sections.numCurrentlyEnrolled.totalEnrolled,
           sectionType: sections.sectionType,
           instructors: sections.instructors,
           sectionNum: sections.sectionNum,
