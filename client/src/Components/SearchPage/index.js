@@ -89,7 +89,7 @@ class SearchPage extends React.Component {
                   and: ["DeptFilter", "GEFilter", "CourseLevelFilter", "SchoolFilter", "q"]
                 }}
                 renderItem={res => (
-                  <div>
+                  <div key={res._id}>
                     <a href={"/course/" + res._id}>
                       {res.id}&nbsp;{res.name}
                     </a>
