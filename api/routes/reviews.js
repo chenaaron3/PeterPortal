@@ -11,7 +11,7 @@ router.post("/post", function(req, res, next){
 })
 
 router.get('/professor', function(req, res, next)  {
-  let sql = `SELECT * FROM Reviews AS r WHERE r.profID = "${req.query.profID}" ORDER BY r.dateSubmitted DESC`
+  let sql = `SELECT * FROM Reviews AS r WHERE r.profID = "${req.query.profID}" ORDER BY r.dateSubmitted DESC, r.reviewID DESC`
     res.locals.connection.query(sql, function (error, results, fields) {
         if(error) throw error;
         res.send(JSON.stringify(results));
@@ -20,7 +20,7 @@ router.get('/professor', function(req, res, next)  {
 
 router.get('/course', function(req, res, next)  {
   console.log(req.query.courseID)
-  let sql = `SELECT * FROM Reviews AS r WHERE r.courseID = "${req.query.courseID}" ORDER BY r.dateSubmitted DESC`
+  let sql = `SELECT * FROM Reviews AS r WHERE r.courseID = "${req.query.courseID}" ORDER BY r.dateSubmitted DESC, r.reviewID DESC`
   console.log(sql)
     res.locals.connection.query(sql, function (error, results, fields) {
         if(error) throw error;

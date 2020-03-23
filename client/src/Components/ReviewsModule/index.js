@@ -55,7 +55,6 @@ class ReviewsModule extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    this.setState({courseID: this.props.courseID});
     this.getReviews();
   }
 
@@ -65,7 +64,7 @@ class ReviewsModule extends React.Component {
       text: this.state.text,
       rating: this.state.rating,
       userID: this.state.userID,
-      courseID: this.state.courseID,//this.props.courseID,
+      courseID: this.props.courseID,//this.props.courseID,
       profID: this.state.profID,
       date: this.state.date,
       grade: this.state.grade,

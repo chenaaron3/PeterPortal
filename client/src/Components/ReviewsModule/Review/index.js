@@ -3,10 +3,34 @@ import avatar from "../../../assets/default_avatar.png";
 import "./review.scss";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { Button } from "semantic-ui-react";
 
 class Review extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+
+  flagReview = () => {
+
+    var queryParams = {
+      reviewID: this.props.reviewData.reviewID,
+    }
+    fetch("/reviews/flagReview", {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(queryParams),
+    }).then(data => {return data.json()})
+    .then(res => {
+      console.log("it worked");
+      console.log(this.props.reviewData.flagged);
+      
+      this.forceUpdate();
+    }).catch(() => {
+      console.log("no course found")
+    });
   }
 
   render() {
@@ -23,7 +47,7 @@ class Review extends React.Component {
                {/* review info header */}
             <div className={"review_header_info_container"}>
               <h2 id={"reviewer_name"}>{this.props.reviewData.userID}</h2>
-              <h4 id={"timestamp"}>{this.props.reviewData.dateSubmitted}</h4>
+              <h4 id={"timestamp"}>{this.props.reviewData.dateSubmitted.slice(0, 10)}</h4>
 
               <div className={"reviewer_meta_container"}>
                 <div>
@@ -53,6 +77,7 @@ class Review extends React.Component {
           </div>
 
           <div className={"review_body_container"}><p>{this.props.reviewData.reviewText}</p></div>
+          
         </div>
       </div>
     );
