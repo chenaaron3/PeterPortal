@@ -8,44 +8,19 @@ Possbile Errors:
     Solution: run chmod 755 chromedriver.exe in the client/script directory  
     Error: Failed at the camaro@3.0.16 install script.
     Solution: update npm to latest version
+    Error: UnicodeEncodeError: 'charmap' codec can't encode character '\u2013' in position 105: character maps to <undefined>
+    Solution: run 'chcp 65001' in terminal
 
 Basic Workflow:
 Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch -> View the Webpage on React
 
-How to Generate Class JSON:
-1. cd into client/script
-2. Run 'python Scraper.py'
-3. View the json named ics_courses.json in the client/script folder  
-COPY PASTA:  
-```
-cd client/script  
-python Scraper.py  
-cat ics_courses.json  
-cd ../..
-```
+Generate JSON:
+1. cd into client
+2. Run 'npm run genJSON'
 
-Configure Data Deployment Settings:
-1. Add the following lines to the bottom of your 'path-to-elasticsearch/config/elasticsearch.yml' file.  
-```
-http.cors.enabled : true    
-http.cors.allow-origin : "*"  
-http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE  
-http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length  
-```
-
-Locally Deploy Data (in Bulk) to ElasticSearch:
-1. Start the ElasticSearch instance by running your 'path-to-elasticsearch/bin/elasticsearch.bat' file  
-2. cd into client/script
-3. Run 'python deployelastic.py'  
-COPY PASTA:  
-```
-cd client/script  
-python deployelastic.py  
-cd ../..
-```
-
-Cloud Deploy Data (in Bulk) to ElasticSearch:  
-1. Look into the client/script/deployelasticcloud.py file for instructions
+Cloud Deploy Data (in Bulk) to AWS ElasticSearch:  
+1. cd into client
+2. Run 'npm run deployElastic'
 
 How to Locally View Webpage on React:
 1. cd into client
