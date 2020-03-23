@@ -89,10 +89,10 @@ class SearchPage extends React.Component {
                 dataField={"id"}
                 size={30}
                 react={{
-                  and: ["DeptFilter", "GEFilter", "CourseLevelFilter", "SchoolFilter"]
+                  and: ["DeptFilter", "GEFilter", "CourseLevelFilter", "SchoolFilter", "q"]
                 }}
                 renderItem={res => (
-                  <div>
+                  <div key={res._id}>
                     <a href={"/course/" + res._id}>
                       {res.id}&nbsp;{res.name}
                     </a>
