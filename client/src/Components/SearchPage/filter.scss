@@ -1,0 +1,39 @@
+.filter-label {
+    font-size: .75rem;
+    text-align: left;
+    margin: 0 !important;
+}
+
+.css-13r890u + label::before {
+    width: calc(.75rem + 1px) !important;
+    height: 12px !important;
+}
+
+.css-13r890u + label::after {
+    left: calc(1px + 4px / 5) !important;
+    top: calc(50px / 6) !important;
+}
+
+.css-1ltavtd li {
+    min-height: 22px !important;
+}
+
+.filter-list {
+    max-height: 100% !important;
+}
+
+.filter-title {
+    text-align: left;
+}
+
+
+.filter-list-container {
+    position: fixed;
+    margin-top: 0;
+    overflow-y: auto;
+    width: 220px;
+    margin-left: 36px;
+    margin-top: 18px;
+    height: 100%;
+}
+
