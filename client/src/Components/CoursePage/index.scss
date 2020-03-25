@@ -1,8 +1,11 @@
-.course_content-container {
-    width: 50%;
-    margin-right: auto;
-    margin-left: 315px;
+.course_page {
     margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.course_content-container {
+    width: 1000px;
+    margin: auto;
     
     .course_info-container {
 
@@ -20,7 +23,45 @@
             color: gray;
         }
 
-    }
 
+        #course_addl-info {
+            display: flex;
+            
+            #course_desc-container {
+                padding-right: 2rem;
+            }
+
+            #course_ge-info {
+                width: 75%;
+                color: gray;
+            }
+        }
+
+    }
 }
 
+.list-item{
+
+    margin-bottom: 6px;
+}
+
+.course_prereq-tree-container{
+    margin-top: 36px !important;
+
+    .ui.card {
+        width: 100%;
+    }
+}
+
+.ui.card>.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.ui.fitted.toggle.checkbox {
+    margin: auto 6px;
+}
+
+i.icon {
+    margin-top: -2px;
+}

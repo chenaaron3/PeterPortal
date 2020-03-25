@@ -126,12 +126,6 @@ class Timeable extends React.Component {
 
     return (
       <div className={"timetable-container"}>
-          <Dropdown
-    placeholder='Select Friend'
-    fluid
-    selection
-    options={friendOptions}
-  />
         <Table celled className={"unstackable"}>
           <Table.Header>
             <Table.Row className={"time-header"}>
