@@ -7,6 +7,10 @@ import { ReactiveBase, DataSearch } from "@appbaseio/reactivesearch";
 import { Input, Menu } from "semantic-ui-react";
 import ElasticCloudInfo from "./ElasticCloudInfo";
 
+import {
+  SearchkitManager, SearchkitProvider, SearchBox, Hits
+} from "searchkit";
+
 class App extends React.Component {
   state = { activeItem: "home" };
 
@@ -14,10 +18,11 @@ class App extends React.Component {
     const { activeItem } = this.state;
 
     return (
-      <ReactiveBase app="courses" url={ElasticCloudInfo.elasticEndpointURL}>
+      <SearchkitProvider searchkit={new SearchkitManager("https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/courses")}>
+      {/* <ReactiveBase app="courses" url={ElasticCloudInfo.elasticEndpointURL}> */}
         <Router>
           <div className={"top-bar"} style={{ overflowX: "hidden" }}>
-            <Menu secondary color={"blue"} inverted>
+            <Menu secondary inverted>
               <Menu.Item>
                 <div style={{ marginLeft: "36px" }}>
                   <a href="/" role="button" style={{ color: "white" }}>
@@ -26,25 +31,25 @@ class App extends React.Component {
                 </div>
               </Menu.Item>
 
-              <Menu.Item style={{ marginLeft: "205px", width: "450px" }}>
+              <Menu.Item style={{ marginLeft: "240px", width: "40%" }}>
                 <div style={{ width: "100%" }}>
-                  <DataSearch
-                    style={{ width: "100%", margin: "auto" }}
-                    componentId="q"
-                    dataField={["dept_alias", "id", "description"]}
-                    autosuggest={false}
-                    URLParams={true}
+
+                  <SearchBox
+                  searchOnChange={true}
+                  queryFields={["id_department^10", "id_number^10", "description", "dept_alias^10", "name^3"]}
+                  searchThrottleTime={300}
+                  placeholder={"Course number, title and description"}
                   />
                 </div>
               </Menu.Item>
 
-              <Menu.Menu position="right">
+              {/* <Menu.Menu position="right">
                 <Menu.Item
                   name="logout"
                   active={activeItem === "logout"}
                   onClick={this.handleItemClick}
                 />
-              </Menu.Menu>
+              </Menu.Menu> */}
             </Menu>
           </div>
 
@@ -58,7 +63,8 @@ class App extends React.Component {
             <Route path="/course/:id" component={CoursePage} />
           </Switch>
         </Router>
-      </ReactiveBase>
+      {/* </ReactiveBase> */}
+      </SearchkitProvider>
     );
   }
 }
