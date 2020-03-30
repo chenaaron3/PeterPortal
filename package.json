@@ -1,0 +1,21 @@
+{
+  "name": "peter-portal",
+  "version": "1.0.0",
+  "description": "ElasticSearch + Web Scraping implementation for UCI Catalogue search functionality",
+  "main": "index.js",
+  "scripts": {
+    "build-client": "cd client && yarn build && mv build ../server/build",
+    "update-courses-json": "cd server/script && node update-courses-json.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icssc-projects/uci-catalogue-search.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/icssc-projects/uci-catalogue-search/issues"
+  },
+  "homepage": "https://github.com/icssc-projects/uci-catalogue-search#readme"
+}
