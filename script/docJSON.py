@@ -1,7 +1,12 @@
 import json
 import pyperclip
 
-# script to convert messy JSON format to a readable one for documentation
+# Script to convert messy JSON format to a readable one for documentation.
+# HOW TO USE:
+# 1. Paste the order of JSON keys in keyOrder list
+# 2. Paste the JSON generated from Scraper.py
+# 3. Run python docJSON.py
+
 keyOrder = ["id", "id_number", "id_department", "id_school", "department", "name", "description", "dept_alias", "course_level",
             "prerequisite", "prerequisiteList", "prerequisiteJSON", "dependencies", 
             "repeatability", "corequisite", "overlaps", "restriction", "concurrent", "units", "same as", "grading option", 
