@@ -16,6 +16,8 @@ PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__
 URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
 GENERATE_JSON_NAME = "all_courses.json"
+SPECIAL_REQS_NAME = "output/special_reqs.txt"
+SCHOOL_LIST_NAME = "output/school_list.txt" 
 GE_DICTIONARY = {"Ia":"GE Ia: Lower Division Writing",
                  "Ib":"GE Ib: Upper Division Writing",
                  "II":"GE II: Science and Technology",
@@ -360,16 +362,24 @@ if __name__ == "__main__":
     # setDependencies(json_data)
     # writeJsonData(json_data, "test.json")
 
-    print("List of Schools:", sorted(list(set(departmentToSchoolMapping.values()))))
+    # Debug information about school
+    schoolFile = open(SCHOOL_LIST_NAME, "w")
+    schoolFile.write("List of Schools:\n")
+    for school in sorted(list(set(departmentToSchoolMapping.values()))):
+        schoolFile.write(school + "\n")
+    schoolFile.close()
     if len(noSchoolDepartment) == 0:
         print("SUCCESS! ALL DEPARTMENTS HAVE A SCHOOL!")
     else:
         print("FAILED!", noSchoolDepartment, "DO NOT HAVE A SCHOOL!! MUST HARD CODE IT AT getDepartmentToSchoolMapping")
 
-    # print("Special Requirements:")
-    # for sReq in sorted(specialRequirements):
-    #     print(sReq)
-    # print()
+    # Debug information about special requirements
+    specialFile = open(SPECIAL_REQS_NAME, "w")
+    specialFile.write("Special Requirements:\n")
+    for sReq in sorted(specialRequirements):
+        specialFile.write(sReq+"\n")
+    specialFile.close()
+
     # testRequirements("I&C SCI 33", [""], False)
     # testRequirements("I&C SCI 33", ["I&C SCI 32A"], True)
     # testRequirements("I&C SCI 163", ["I&C SCI 61"], False)
