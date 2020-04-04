@@ -23,6 +23,6 @@ Cloud Deploy Data (in Bulk) to AWS ElasticSearch:
 2. Run 'npm run deployElastic'
 
 How to Locally View Webpage on React:
-1. cd into script
+1. cd into client
 2. Run yarn start or npm start
 3. Start searching classes on the searchbar
