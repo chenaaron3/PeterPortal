@@ -1,22 +1,19 @@
 Special Requirements:
-((PSYCH 9A and PSYCH 9B and PSYCH 9C) or (PSY BEH 11A and PSY BEH 11B 
-and PSY BEH 11C)) and ((PSYCH 10A and 10B and 10C) or (MATH 2A and MATH 2B and (MATH 7 or STATS 7)))
+((PSYCH 9A and PSYCH 9B and PSYCH 9C) or (PSY BEH 11A and PSY BEH 11B and PSY BEH 11C)) and ((PSYCH 10A and 10B and 10C) or (MATH 2A and MATH 2B and (MATH 7 or STATS 7)))
 (DANCE 30A and DANCE 30B and DANCE 30C) or audition
-(ENGLISH 101W or WRITING 101W) and (ENGLISH 100 and 102A) or (ENGLISH 
-100 and 102B) or (ENGLISH 100 and 102C) or (ENGLISH 100 and 102D) or (ENGLISH 102A and 102B) or (ENGLISH 102A and 102C) or (ENGLISH 102A and 102D) or (ENGLISH 102B and 102C) or (ENGLISH 102C and 102D) or (ENGLISH 103 and 102A) or (ENGLISH 103 and 102B) or (ENGLISH 103 and 102C) or (ENGLISH 103 and 102D) or (ENGLISH 105 and 102A) or (ENGLISH 105 and 102B) or (ENGLISH 105 and 102C) or (ENGLISH 105 and 102D) or (ENGLISH 100 and 103) or (ENGLISH 103 and 105) or (ENGLISH 100 and 105)       
+(ENGLISH 101W or WRITING 101W) and (ENGLISH 100 and 102A) or (ENGLISH 100 and 102B) or (ENGLISH 100 and 102C) or (ENGLISH 100 and 102D) or (ENGLISH 102A and 102B) or (ENGLISH 102A and 102C) or (ENGLISH 102A and 102D) or (ENGLISH 102B and 102C) or (ENGLISH 102C and 102D) or (ENGLISH 103 and 102A) or (ENGLISH 103 and 102B) or (ENGLISH 103 and 102C) or (ENGLISH 103 and 102D) or (ENGLISH 105 and 102A) or (ENGLISH 105 and 102B) or (ENGLISH 105 and 102C) or (ENGLISH 105 and 102D) or (ENGLISH 100 and 103) or (ENGLISH 103 and 105) or (ENGLISH 100 and 105)
 12 units of DRAMA 254
-A Basic course in algorithms, or a basic course in molecular biology  
+A Basic course in algorithms, or a basic course in molecular biology
 A basic course in probability
 A biochemistry course
 ANATOMY 202A
 AP Computer Science A
-Admission is by audition and the following prerequisites: DRAMA 30C and two quarters of DRAMA 148A, DRAMA 148B, or DRAMA 148C (if the 148 prerequisite is not complete at the time of auditions, student must enroll during the fall and winter quarters in the same year as the trip to New York); senior Drama majors must have successfully completed DRAMA 40C and DRAMA 120C; non-Drama majors must have sophomore standing or 
-higher and must carefully plan their course schedule as many spring quarter classes cannot be taken while part of the NYSP
+Admission is by audition and the following prerequisites: DRAMA 30C and two quarters of DRAMA 148A, DRAMA 148B, or DRAMA 148C (if the 148 prerequisite is not complete at the time of auditions, student must enroll during the fall and winter quarters in the same year as the trip to New York); senior Drama majors must have successfully completed DRAMA 40C and DRAMA 120C; non-Drama majors must have sophomore standing or higher and must carefully plan their course schedule as many spring quarter classes cannot be taken while part of the NYSP
 Advancement to Candidacy
 Advancement to Ph
 Advancement to candidacy
-An undergraduate-level course in operating systems and networks       
-At least one upper-division course in the field of Neuroscience or one upper-division course in Cognitive Science or Machine Learning       
+An undergraduate-level course in operating systems and networks
+At least one upper-division course in the field of Neuroscience or one upper-division course in Cognitive Science or Machine Learning
 Audition required
 B
 Background in Art History or Legal Studies
@@ -28,14 +25,13 @@ Basic knowledge of multivariate calculus, linear algebra, and familiarity with M
 C++ programming skills, understanding of Data Structures and Algorithms
 CBEMS 240
 CHEM 131A and CHEM 131B and CHEM 131C
-Completion of at least one quarter of statistics including regression 
-and analysis of variance
+Completion of at least one quarter of statistics including regression and analysis of variance
 Completion of the M
 Consent of instructor required to enroll
 Consent of the instructor is required
 Courses in basic statistics with probability
 DRAMA 30A and DRAMA 30B and DRAMA 30C with an average grade of B or better
-Does not serve as prerequisite for any higher-level Spanish courses   
+Does not serve as prerequisite for any higher-level Spanish courses
 EARTHSS 282B
 EDUC 281
 ENGRMAE 230A is recommended
@@ -49,6 +45,8 @@ Familiarity with basic statistics is required
 Familiarity with linear algebra is required
 For B
 Graduate advisor approval required
+HUMAN 1AS or HUMAN H1AS or HUMAN 1AES or HUMAN 1BS or HUMAN H1BS or HUMAN 1BES with a grade of C or better
+HUMAN 1BES with a grade of C- or lower
 High school mathematics through trigonometry
 ITALIAN 1A or placement into ITALIAN 1B
 Identification of a graduate student (who is in good standing) as a mentor
@@ -61,11 +59,10 @@ Knowledge of Python or C++ programming is required
 Knowledge of basic statistics (at the level of STATS 7), calculus, and linear algebra
 Knowledge of basic statistics, calculus, linear algebra
 Knowledge of undergraduate-level basic physics is required
-Limited to students accepted into the Teacher Credential Program      
+Limited to students accepted into the Teacher Credential Program
 Medical degree
 Must be able to communicate in Spanish
-One course in general science, anthropology, economics, geography, or 
-sociology
+One course in general science, anthropology, economics, geography, or sociology
 One upper-division course in environmental science, public health, environmental policy, and/or environmental management
 Only open to students in the Political Science Honors Program
 PCSI P280A
@@ -76,21 +73,21 @@ PSYCH 215L
 PSYCH 216
 PUBH 206
 PUBHLTH 203 or EPIDEM 203 or PUBH 206
+Passing score on the UCI Physics Placement Exam
 Permission of faculty advisor
 Placement into AC ENG 20A
 Placement into AC ENG 22A is required
 Placement into ARABIC 1A
 Placement into ARMN 1A
 Placement into CHINESE 1A is also accepted
-Placement into CHINESE 1A or CHINESE 1B or CHINESE 1MA or CHINESE 1MB 
-or CHINESE 1DA or CHINESE 1DB
+Placement into CHINESE 1A or CHINESE 1B or CHINESE 1MA or CHINESE 1MB or CHINESE 1DA or CHINESE 1DB
 Placement into CHINESE 1MA
 Placement into GERMAN 1AB
 Placement into HEBREW 1A is also accepted
 Placement into JAPANSE 1A
 Placement into JAPANSE 1A is accepted
 Placement into KOREAN 1A
-Placement into KOREAN 1A or KOREAN 1KA or KOREAN 1B or KOREAN 1KB     
+Placement into KOREAN 1A or KOREAN 1KA or KOREAN 1B or KOREAN 1KB
 Placement into KOREAN 1KA
 Placement into MUSIC 201
 Placement into PERSIAN 1A
@@ -102,12 +99,10 @@ Placement into SPANISH 3H
 Placement into SPANISH 3J
 Placement into VIETMSE 1A is required
 Placement via the UC Analytical Writing Placement Examination is required
-Prerequisites for non-Dance majors: DANCE 50A and DANCE 50B and DANCE 
-50C
+Prerequisites for non-Dance majors: DANCE 50A and DANCE 50B and DANCE 50C
 Prerequisites vary
 Prior coursework in statistics, and experience with statistical software such as SPSS
-Project must be approved by a Student Affairs Department head and the 
-instructor
+Project must be approved by a Student Affairs Department head and the instructor
 Proposal submission required
 Python programming knowledge is required
 Reading knowledge of Portuguese
@@ -127,18 +122,19 @@ STATS 7 or STATS 8 or AP90 or (STATS 120A and STATS 120B and STATS 120C)
 Satisfaction of the UC Entry Level Writing Requirement
 Satisfaction of the UC Entry Level Writing requirement
 Satisfactory completion of lower-division writing requirement
-Satisfactory completion of the Lower-Division Writing requirement     
-Satisfactory completion of the Lower-Division writing requirement     
-Satisfactory completion of the Upper-Division Writing requirement     
+Satisfactory completion of the Lower-Division Writing requirement
+Satisfactory completion of the Lower-Division writing requirement
+Satisfactory completion of the Upper-Division Writing requirement
 Satisfactory completion of the lower-division Writing requirement
-Satisfactory completion of the lower-division writing requirement     
+Satisfactory completion of the lower-division writing requirement
 Selected for Washington DC Center Program
 Senior standing in the Honors Program in Music and Culture
 Some familiarity with HCI principles
 Students must have taken the UC Analytical Writing Placement Examination
 Students must have taken the UC Analytical Writing Placement Examination and the Academic English Placement Test
 Students should have taken introductory courses before enrolling in these seminars
-Students who meet the requirements for taking Chem 1A through their SAT, ACT, or AP test scores are not eligible for enrollment in Chem 1X  
+Students who meet the requirements for taking Chem 1A through their SAT, ACT, or AP test scores are not eligible for enrollment in Chem 1X
+Successful completion of 24 units in the Master of Computer Science program
 Teaching experience
 Three courses selected from ENGLISH 8, ENGLISH 10, ENGLISH 11, ENGLISH 12, ENGLISH 15, ENGLISH 16, ENGLISH 17, ENGLISH 28A, ENGLISH 28B, ENGLISH 28C, ENGLISH 28D, ENGLISH 28E, LIT JRN 20, LIT JRN 21
 Three courses selected from ENGLISH 8, ENGLISH 10, ENGLISH 11, ENGLISH 12, ENGLISH 15, ENGLISH 16, ENGLISH 17, ENGLISH 28A, ENGLISH 28B, ENGLISH 28C, ENGLISH 28D, or ENGLISH 28E; or LIT JRN 20 and LIT JRN 21 and one course selected from the above list
@@ -147,8 +143,7 @@ Two courses from DRAMA 148A or DRAMA 148B or DRAMA 148C
 Two quarters of EARTHSS 199
 Two quarters of upper-division or graduate training in probability and statistics
 Two quarters of upper-division or graduate training in statistical methods
-Two years of high school Spanish, one semester of college Spanish, or 
-heritage speaker of Spanish
+Two years of high school Spanish, one semester of college Spanish, or heritage speaker of Spanish
 Undergraduate advisor approval required
 Undergraduate course in political theory or equivalent
 Undergraduate course work in electromagnetic theory and atomic physics
