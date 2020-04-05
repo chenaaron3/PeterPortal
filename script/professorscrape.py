@@ -8,8 +8,11 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 import boto3
 import json
+import urllib
 import time
-
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # Dependencies:
 # - pip install beautifulsoup4 selenium
@@ -18,12 +21,13 @@ import time
 #     - update the path below
 
 PATH_TO_SELENIUM_DRIVER = "C:\\WebDriver\\bin\\chromedriver.exe"
-URL_TO_CATALOGUE = "https://www.faculty.uci.edu/act_advanced_search.cfm?type_of_search=department"
 URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
 URL_TO_CATALOGUE = "http://catalogue.uci.edu/donaldbrenschoolofinformationandcomputersciences/#faculty"
 URL_TO_DIRECTORY = "https://directory.uci.edu/"
 
+hits = 0
+misses = 0
 
 def scrape(driver, url):
     # Use Selenium to load entire page
@@ -59,13 +63,45 @@ def getAllCoursesURLS(driver):
     print(courseURLS)
     return courseURLS
 
-def getDirectoryInfo(query):
+def getDirectoryInfo(driver, query):
     data = {'uciKey': query}
     response = requests.post(URL_TO_DIRECTORY, data = data, headers = {'Content-Type': 'application/x-www-form-urlencoded'})
     json_data = response.json()
-    return json_data
+    info = {"name":"","ucinetid":"","phone":"","title":"","department":""}
+    if (len(json_data) > 1):
+        results = [x for x in json_data if type(x) is list and x[1]['type'] != 'student']
+        if len(results) < 1:
+            return None
+        result = results[0][1]
+        # print('name', result['Name'], 'UCInetID', result['UCInetID'], 'dep', result['Department'])
+        info = {"name":result['Name'],"ucinetid":result['UCInetID'], "phone":result['Phone Number'],"title":result['Title'],"department":result['Department']}
 
-def getDepartmentToSchoolMapping(driver):
+    else:
+        #making a get request with 
+        #use selenium to make a request
+        new_url = URL_TO_DIRECTORY +'query/'+ urllib.parse.quote(query)
+        driver.get(new_url)
+        time.sleep(0.1)
+        try:
+            WebDriverWait(driver, 1).until(
+                EC.presence_of_element_located((By.TAG_NAME, "tr"))
+            )
+            html = driver.page_source
+            search_soup = BeautifulSoup(html, 'html.parser')
+            txt_url = search_soup.find("tbody").tr.td.find('a').get('href') + '.txt'
+            info_soup = BeautifulSoup(requests.get(URL_TO_DIRECTORY + txt_url).text, 'html.parser')
+            # name, netid, phone, title, department
+            for line in info_soup.body.text.strip().split("\n"):
+                segments = line.split(": ")
+                category, entry = segments[0].lower(), segments[1]
+                if category in info:
+                    info[category] = entry
+        except Exception:
+            return None
+    return info
+
+
+def getFacultyLinks(driver):
     # some need to be hard coded (These are mentioned in All Courses but not listed in their respective school catalogue)
     mapping = {"FIN":"The Paul Merage School of Business",
                "ARMN":"School of Humanities",
@@ -74,43 +110,56 @@ def getDepartmentToSchoolMapping(driver):
                "BANA":"The Paul Merage School of Business"}
     # get the soup object for catalogue
     catalogueSoup = scrape(driver, URL_TO_ALL_COURSES)
+    faculty_links = []
     # look through all the links in the sidebar
     for possibleSchoolLink in catalogueSoup.find(id="/").find_all("li"):
         # create school soup
-        schoolUrl = CATALOGUE_BASE_URL + possibleSchoolLink.a['href'] + "#courseinventory"
+        schoolUrl = CATALOGUE_BASE_URL + possibleSchoolLink.a['href'] + "#faculty"
         schoolSoup = scrape(driver, schoolUrl)
         # get the school name
         school = unicodedata.normalize("NFKD", schoolSoup.find(id="content").h1.getText())
         print("School:", school)
         # if this school has the "Courses" tab
-        if schoolSoup.find(id="facultytab") != None:
+        if schoolSoup.find(id="facultytab") == None:
             # map school soup
-            print(school, " has tab")
+            continue
         # look for department links
         departmentLinks = schoolSoup.find(class_="levelone")
-        if departmentLinks != None:
+        if departmentLinks == None:
+            #scrape the school faculty page
+            faculty_links.append(schoolUrl)
+        else:
             # go through each department link
             for departmentLink in departmentLinks.find_all("li"):
                 # create department soup
-                departmentUrl = CATALOGUE_BASE_URL + departmentLink.a["href"] + "#courseinventory"
+                departmentUrl = CATALOGUE_BASE_URL + departmentLink.a["href"] + "#faculty"
                 departmentSoup = scrape(driver, departmentUrl)
                 # if this department has the "Courses" tab
                 if departmentSoup.find(id="facultytab") != None:
                     # map department soup
-                    
+                    faculty_links.append(departmentUrl)
                     print(departmentUrl, " has tab")
-    return 0
+    return faculty_links
 
 def getAllProfessors(soup, json_data):
-
+    global hits
+    global misses
+    f = open('missing_prof.txt', 'a')
     for faculty in soup.select(".faculty"):
         name = faculty.find("span", class_="name")
         title = faculty.find("span", class_="title")
-        results = getDirectoryInfo(name.text.replace(".",""))
-        results = [x for x in results if type(x) is list and x[1]['type'] != 'student']
-        if len(results) == 0:
-            print(name.text, title.text)
-            print(results)
+        results = getDirectoryInfo(driver, name.text.replace(".",""))
+        if results == None:
+            print(name.text)
+            misses += 1
+        else:
+            hits += 1
+    print("Hits:", hits, "Misses:", misses)
+    # print("HIT RATIO:", hits/(hits + misses))
+    f.close()
+
+        
+            
 
     # for school, soup in soup_dict.items():
     #     emailRegex = re.compile(r"\s+(?P<email>(?P<ucinetid>.*)(@|at|_AT_).*uci\.edu)")
@@ -156,10 +205,14 @@ if __name__ == "__main__":
     # store all of the data
     json_data = {}
     # maps department code to school 
-    getDepartmentToSchoolMapping(driver)
-
-    # school_soup = scrape(driver, URL_TO_CATALOGUE)
-    # getAllProfessors(school_soup, json_data)
+    faculty_links = getFacultyLinks(driver)
+    print(faculty_links)
+    for link in faculty_links:
+        school_soup = scrape(driver, link)
+        getAllProfessors(school_soup, json_data)
+    # print(getDirectoryInfo(driver, 'Alexander T Ihler'))
 
     # print(json_data)
+    print(hits, misses)
+    print(hits / (hits + misses))
     driver.quit()
