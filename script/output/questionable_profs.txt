@@ -1,0 +1,219 @@
+David Allan:{'name': 'David Allan Gabriel Abriz', 'ucinetid': 'dabriz', 'phone': '(714) 456-5264', 'title': 'CN II', 'department': 'Recovery Room - Surgery'}
+Anna Bosler:{'name': 'Deborah Ann Boyle', 'ucinetid': 'daboyle', 'phone': '', 'title': 'UCI Retiree', 'department': 'Nursing Education'}
+Douglas S. Goheen:{'name': 'Douglas-Scott Goheen', 'ucinetid': 'goheen', 'phone': '(949) 823-9500', 'title': 'Professor Emeritus of Drama', 'department': 'Arts-Drama'}
+Bryan Jackson:{'name': 'James Bryan Jackson', 'ucinetid': 'jack', 'phone': '', 'title': 'Lecturer', 'department': "Arts-Dean's Office"}
+Sarah Koo:{'name': 'Sarah H Yoo', 'ucinetid': 'sarahhy', 'phone': '(949) 824-3161', 'title': 'Associate Director, Undergraduate Career Services', 'department': 'Paul Merage School of Business'}
+Nicole Mitchell:{'name': 'Michelle Nicole Battenschlag', 'ucinetid': 'mbattens', 'phone': '(714) 456-5672', 'title': 'Per Diem Nurse', 'department': 'Trauma Neuro (DH58)'}
+H. Colin Slim:{'name': 'H Colin Slim', 'ucinetid': 'hcslim', 'phone': '(510) 486-0867', 'title': 'Professor Emeritus', 'department': 'Arts-Music'}
+S. Ama Wray:{'name': 'S Ama Wray', 'ucinetid': 'wrays', 'phone': '(949) 824-0943', 'title': 'Associate Professor', 'department': 'Arts-Dance'}
+Albert F. Bennett:{'name': 'Robert Kenneth Eto', 'ucinetid': 'reto', 'phone': '(949) 824-6175', 'title': 'C&G Sr. Analyst', 'department': 'Accounting and Fiscal Services'}
+Hans-Ulrich Bernard:{'name': 'Hans Ulrich Bernard', 'ucinetid': 'hbernard', 'phone': '(949) 824-5162', 'title': 'Professor-Emeritus', 'department': 'Molecular Bio & Biochemistry'}
+F. Lynn Carpenter:{'name': 'F Lynn Carpenter', 'ucinetid': 'flcarpen', 'phone': '', 'title': 'Professor Emeritus', 'department': 'Ecology & Evolutionary Biology'}
+Patrick L. Healey:{'name': 'Barbara Lynn Hamrick', 'ucinetid': 'bhamrick', 'phone': '(714) 456-5607', 'title': 'Radiation Safety Officer', 'department': 'Mobile 714-323-7330'}
+L. R. Herman:{'name': 'L R Herman', 'ucinetid': 'lrherman', 'phone': '(949) 824-6037', 'title': 'Recall Non-Faculty Academic', 'department': 'School of Biological Sciences'}
+Mahtab F. Jafari:{'name': 'Mahtab Farahani Jalali', 'ucinetid': 'mjalalif', 'phone': '', 'title': '', 'department': ''}
+C. Sunny Jiang:{'name': 'Chenyang Jiang', 'ucinetid': 'sjiang', 'phone': '(949) 824-5527', 'title': 'Professor & Chair', 'department': 'Chair, Office Phone (949) 824-0386'}
+Mei Kong:{'name': 'Hong Wei', 'ucinetid': 'hwei7', 'phone': '', 'title': '', 'department': 'Materials Science and Engineering'}
+J. Lawrence Marsh:{'name': 'J Lawrence Marsh', 'ucinetid': 'jlmarsh', 'phone': '', 'title': '', 'department': 'Developmental and Cell Biology'}
+R. Michael Mulligan:{'name': 'R Michael Mulligan', 'ucinetid': 'rmmullig', 'phone': '(949) 824-8433', 'title': 'Prof, Assoc Dean of Grad Studies', 'department': 'Developmental and Cell Biology'}
+Alejandra Rodriguez-Verdugo:{'name': 'Alejandra Grande Rodriguez', 'ucinetid': 'agrander', 'phone': '', 'title': '', 'department': 'Child Care Services'}
+Xaiohui Xie:{'name': 'Xiaohui Xie', 'ucinetid': 'xhx', 'phone': '(949) 824-9289', 'title': 'Professor', 'department': 'Computer Science'}
+Nai-Fu Chen:{'name': 'Tai - Yih Chen', 'ucinetid': 'tchen', 'phone': '(949) 824-7402', 'title': 'Advanced Lab Director', 'department': 'Chemistry'}
+N. Edward Coulson:{'name': 'Norman Edward Coulson', 'ucinetid': 'ncoulson', 'phone': '(949) 824-0373', 'title': 'Director, Center for Real Estate', 'department': 'Paul Merage School of Business'}
+Maritza Salazar:{'name': 'Maritza Salazar Campo', 'ucinetid': 'smaritza', 'phone': '(949) 824-6127', 'title': 'Assistant Professor, Organization and Management', 'department': 'Paul Merage School of Business'}
+Gilberto Q. Conchas:{'name': 'Gilverto Q Conchas', 'ucinetid': 'gconchas', 'phone': '(949) 824-7448', 'title': 'Professor', 'department': 'Education'}
+AnneMarie M. Conley:{'name': 'AnneMarie McEvoy', 'ucinetid': 'ampm', 'phone': '(949) 824-6796', 'title': 'Associate Professor', 'department': 'Education'}
+Brandy Gatlin-Nash:{'name': 'Brandy Tenille Gatlin', 'ucinetid': 'gatlinb', 'phone': '(949) 824-2346', 'title': 'Assistant Professor', 'department': 'Education'}
+Jack R. McCullough:{'name': 'Jack R Mc Cullough', 'ucinetid': 'jrmccull', 'phone': '(949) 824-5117', 'title': 'Lecturer Soe Emeritus', 'department': 'Education'}
+Sandra Simpkins:{'name': 'Sandra Simpkins-Chaput', 'ucinetid': 'simpkins', 'phone': '(949) 824-3202', 'title': 'Professor', 'department': 'Education'}
+Constance Steinkuehler:{'name': 'Constance Steinkuehler Squire', 'ucinetid': 'const', 'phone': '(949) 824-8716', 'title': 'Professor', 'department': 'Informatics'}
+J. Stuart Nelson:{'name': 'John Stuart Nelson', 'ucinetid': 'jsnelson', 'phone': '(949) 824-7526', 'title': 'Professor', 'department': 'Surgery - Beckman Laser'}
+H. Kumar Wickramasinghe:{'name': 'Hemantha K Wickramasinghe', 'ucinetid': 'hkwick', 'phone': '(949) 824-0378', 'title': 'Distinguished Professor, Henry Samueli Endowed Chair and Prof', 'department': 'Electrical Engineering & Computer Science'}
+Brian Wong:{'name': 'Brian Fong', 'ucinetid': 'bfong2', 'phone': '', 'title': '', 'department': 'Physics and Astronomy'}
+Juan Hong:{'name': 'Hong Xuan Thi Nguyen', 'ucinetid': 'hxnguyen', 'phone': '(657) 284-7288', 'title': 'Medical Records Assistant', 'department': 'Medical Records'}
+Efi Foufoula-Georgiou:{'name': 'Efi Foufoula', 'ucinetid': 'efi', 'phone': '(949) 824-9643', 'title': 'Distinguished Professor', 'department': 'Civil & Environmental Engineering'}
+R. (Jay) Jayakrishnan:{'name': 'R Jayakrishnan', 'ucinetid': 'rjayakri', 'phone': '(949) 824-2172', 'title': 'Professor', 'department': 'Civil & Environmental Engineering'}
+C. Sunny Jiang:{'name': 'Chenyang Jiang', 'ucinetid': 'sjiang', 'phone': '(949) 824-5527', 'title': 'Professor & Chair', 'department': 'Chair, Office Phone (949) 824-0386'}
+Jean-Daniel M. Saphores:{'name': 'Jean Daniel M Saphores', 'ucinetid': 'saphores', 'phone': '(949) 824-7334', 'title': 'Professor', 'department': 'Civil & Environmental Engineering'}
+G. Scott Samuelsen:{'name': 'Gary Scott Samuelsen', 'ucinetid': 'gss', 'phone': '(949) 824-7302 ext 11224', 'title': 'Professor and Director, Advanced Power and Energy Program', 'department': 'Mechanical and Aerospace Engineering'}
+Quoc-Viet Dang:{'name': 'Quoc Viet P Dang', 'ucinetid': 'qpdang', 'phone': '(949) 824-9013', 'title': 'Assistant Professor of Teaching', 'department': 'Electrical Engineering & Computer Science'}
+A. Lee Swindlehurst:{'name': 'Arnold Lee Swindlehurst', 'ucinetid': 'swindle', 'phone': '(949) 824-2818', 'title': 'Professor', 'department': 'Electrical Engineering & Computer Science'}
+H. Kumar Wickramasinghe:{'name': 'Hemantha K Wickramasinghe', 'ucinetid': 'hkwick', 'phone': '(949) 824-0378', 'title': 'Distinguished Professor, Henry Samueli Endowed Chair and Prof', 'department': 'Electrical Engineering & Computer Science'}
+Homayoun Yousefi'zadeh:{'name': 'Homayoun Yousefizadeh', 'ucinetid': 'hyousefi', 'phone': '(949) 824-0380', 'title': 'Adjunct Professor', 'department': 'Electrical Engineering & Computer Science'}
+Manuel Gamero-Castaño:{'name': 'Manuel Gamero Castano', 'ucinetid': 'mgameroc', 'phone': '(949) 824-6597', 'title': 'Associate Professor', 'department': 'Mechanical & Aerospace Engineering'}
+J. Michael McCarthy:{'name': 'Michael S. McCarthy Jr.', 'ucinetid': 'msmccar1', 'phone': '', 'title': '', 'department': ''}
+G. Scott Samuelsen:{'name': 'Gary Scott Samuelsen', 'ucinetid': 'gss', 'phone': '(949) 824-7302 ext 11224', 'title': 'Professor and Director, Advanced Power and Energy Program', 'department': 'Mechanical and Aerospace Engineering'}
+Yun Wang:{'name': 'Hea Eun Jang', 'ucinetid': 'heaeunj', 'phone': '(949) 824-4175', 'title': 'A/P Vendor Payments', 'department': 'Accounting and Fiscal Services'}
+S. Ama Wray:{'name': 'S Ama Wray', 'ucinetid': 'wrays', 'phone': '(949) 824-0943', 'title': 'Associate Professor', 'department': 'Arts-Dance'}
+Cécile Marie Whiting:{'name': 'Cecile Marie Whiting', 'ucinetid': 'cwhiting', 'phone': '', 'title': 'Professor', 'department': 'Art History'}
+Bert Winther-Tamaki:{'name': 'Bert Winther Tamaki', 'ucinetid': 'dewinthe', 'phone': '', 'title': 'Professor', 'department': 'Art History'}
+Claire J. Kim:{'name': 'Claire Jehee Yim', 'ucinetid': 'cjyim', 'phone': '', 'title': '', 'department': 'Continuing Education'}
+Ngoc-Tram Le-Huynh:{'name': 'Dennis Ngoc Huynh', 'ucinetid': 'denninh1', 'phone': '(714) 456-6117', 'title': 'Pharmacy Technician', 'department': 'Inpatient Pharmacy'}
+James K. Lee:{'name': 'James K Leese', 'ucinetid': 'jkleese', 'phone': '', 'title': 'Teacher', 'department': 'Continuing Education'}
+Linda T. Võ:{'name': 'Linda T Vo', 'ucinetid': 'volt1', 'phone': '(714) 456-6264', 'title': 'Pager', 'department': 'Pager'}
+Yong Chen:{'name': 'Long Chen', 'ucinetid': 'lchen7', 'phone': '(949) 824-6595', 'title': 'Associate Professor', 'department': 'Mathematics'}
+Bert Winther-Tamaki:{'name': 'Bert Winther Tamaki', 'ucinetid': 'dewinthe', 'phone': '', 'title': 'Professor', 'department': 'Art History'}
+M. Ackbar Abbas:{'name': 'Ackbar Abbas', 'ucinetid': 'mabbas', 'phone': '(949) 824-6406', 'title': 'Professor', 'department': 'Comparative Literature'}
+ Hu Ying:{'name': 'Ying Hu', 'ucinetid': 'huying', 'phone': '', 'title': 'Professor', 'department': 'East Asian Studies'}
+J. Hillis Miller:{'name': 'J Hillis Miller', 'ucinetid': 'jhmiller', 'phone': '(949) 824-6722', 'title': 'UCI Distinguished Research Professor', 'department': 'English'}
+Mark A. LeVine:{'name': 'Mark Andrew Le Vine', 'ucinetid': 'mlevine', 'phone': '(949) 824-6521', 'title': 'Professor', 'department': 'History'}
+James K. Lee:{'name': 'James K Leese', 'ucinetid': 'jkleese', 'phone': '', 'title': 'Teacher', 'department': 'Continuing Education'}
+Claire J. Kim:{'name': 'Claire Jehee Yim', 'ucinetid': 'cjyim', 'phone': '', 'title': '', 'department': 'Continuing Education'}
+Linda T. Võ:{'name': 'Linda T Vo', 'ucinetid': 'volt1', 'phone': '(714) 456-6264', 'title': 'Pager', 'department': 'Pager'}
+ Hu Ying:{'name': 'Ying Hu', 'ucinetid': 'huying', 'phone': '', 'title': 'Professor', 'department': 'East Asian Studies'}
+Stephen A. Barney:{'name': 'Stephen F Barker', 'ucinetid': 'barker', 'phone': '(949) 824-8792', 'title': 'Claire Trevor Professor and Dean', 'department': "Arts-Dean's Office"}
+Emily M. Brauer:{'name': 'Emily Marie Brauer Rogers', 'ucinetid': 'ebrauer', 'phone': '(949) 824-6712', 'title': 'Lecturer (Composition)', 'department': 'English'}
+Chieh L. Chieng:{'name': 'Vicki L Jones', 'ucinetid': 'vljones', 'phone': '(949) 824-7209', 'title': 'Chief Global Affairs Officer and AVC Global Engagement', 'department': 'Office of Global Engagement'}
+Christopher Fan:{'name': 'Christopher A Tan', 'ucinetid': 'catan1', 'phone': '(877) 430-7337', 'title': 'Assistant Clinical Professor - VOL', 'department': 'SOM - Pediatrics'}
+P. Michelle Latiolais:{'name': 'P Michelle Latiolais', 'ucinetid': 'latiolai', 'phone': '', 'title': 'Professor', 'department': 'English'}
+J. Hillis Miller:{'name': 'J Hillis Miller', 'ucinetid': 'jhmiller', 'phone': '(949) 824-6722', 'title': 'UCI Distinguished Research Professor', 'department': 'English'}
+Luis Avilés:{'name': 'Luis Aviles', 'ucinetid': 'laviles', 'phone': '(949) 824-7268', 'title': 'Department Chair', 'department': 'Spanish & Portuguese'}
+Ruth Klüger:{'name': 'Ruth Kluger', 'ucinetid': 'rkluger', 'phone': '', 'title': 'Professor Emeritus', 'department': 'European Languages and Studies'}
+Braxton Soderman:{'name': 'Anton Braxton Soderman', 'ucinetid': 'asoderma', 'phone': '(949) 824-3532', 'title': 'Assistant Professor', 'department': 'Film & Media Studies'}
+M. Ackbar Abbas:{'name': 'Ackbar Abbas', 'ucinetid': 'mabbas', 'phone': '(949) 824-6406', 'title': 'Professor', 'department': 'Comparative Literature'}
+Yong Chen:{'name': 'Long Chen', 'ucinetid': 'lchen7', 'phone': '(949) 824-6595', 'title': 'Associate Professor', 'department': 'Mathematics'}
+Simcha Gross:{'name': 'Kelly Cross', 'ucinetid': 'kcross1', 'phone': '', 'title': 'Irvine Campus Housing Authority - ICHA', 'department': 'Office of Information Technology'}
+Mark A. LeVine:{'name': 'Mark Andrew Le Vine', 'ucinetid': 'mlevine', 'phone': '(949) 824-6521', 'title': 'Professor', 'department': 'History'}
+P. Kyle Stanford:{'name': 'Preston Kyle Stanford', 'ucinetid': 'stanford', 'phone': '(949) 824-6398', 'title': 'Professor', 'department': 'Logic & Philosophy of Science'}
+Jean-Paul Carvalho:{'name': 'Jean Paul Carvalho', 'ucinetid': 'jpcarv', 'phone': '(949) 824-3417', 'title': 'Associate Professor', 'department': 'Economics'}
+Simcha Gross:{'name': 'Kelly Cross', 'ucinetid': 'kcross1', 'phone': '', 'title': 'Irvine Campus Housing Authority - ICHA', 'department': 'Office of Information Technology'}
+Yong Chen:{'name': 'Long Chen', 'ucinetid': 'lchen7', 'phone': '(949) 824-6595', 'title': 'Associate Professor', 'department': 'Mathematics'}
+Mark A. LeVine:{'name': 'Mark Andrew Le Vine', 'ucinetid': 'mlevine', 'phone': '(949) 824-6521', 'title': 'Professor', 'department': 'History'}
+James K. Lee:{'name': 'James K Leese', 'ucinetid': 'jkleese', 'phone': '', 'title': 'Teacher', 'department': 'Continuing Education'}
+Luis Avilés:{'name': 'Luis Aviles', 'ucinetid': 'laviles', 'phone': '(949) 824-7268', 'title': 'Department Chair', 'department': 'Spanish & Portuguese'}
+Braxton Soderman:{'name': 'Anton Braxton Soderman', 'ucinetid': 'asoderma', 'phone': '(949) 824-3532', 'title': 'Assistant Professor', 'department': 'Film & Media Studies'}
+Cécile Marie Whiting:{'name': 'Cecile Marie Whiting', 'ucinetid': 'cwhiting', 'phone': '', 'title': 'Professor', 'department': 'Art History'}
+Bert Winther-Tamaki:{'name': 'Bert Winther Tamaki', 'ucinetid': 'dewinthe', 'phone': '', 'title': 'Professor', 'department': 'Art History'}
+M. Ackbar Abbas:{'name': 'Ackbar Abbas', 'ucinetid': 'mabbas', 'phone': '(949) 824-6406', 'title': 'Professor', 'department': 'Comparative Literature'}
+Sergio Gago-Masague:{'name': 'Sergio Gago Masague', 'ucinetid': 'sgagomas', 'phone': '', 'title': 'Assistant Professor of Teaching', 'department': 'Computer Science'}
+Kim Hermans:{'name': 'Kimberly A Hermans', 'ucinetid': 'khermans', 'phone': '', 'title': 'Lecturer', 'department': 'Informatics'}
+Sang-Woo Jun:{'name': 'Sang Woo Jun', 'ucinetid': 'swjun', 'phone': '', 'title': 'Assistant Professor', 'department': 'Computer Science'}
+Constance Steinkuehler:{'name': 'Constance Steinkuehler Squire', 'ucinetid': 'const', 'phone': '(949) 824-8716', 'title': 'Professor', 'department': 'Informatics'}
+Xaiohui Xie:{'name': 'Xiaohui Xie', 'ucinetid': 'xhx', 'phone': '(949) 824-9289', 'title': 'Professor', 'department': 'Computer Science'}
+Charles S. Zender:{'name': 'Charlie Zender', 'ucinetid': 'zender', 'phone': '(949) 891-2429', 'title': 'Professor', 'department': 'Computer Science'}
+A. Richard Chamberlin:{'name': 'A Richard Chamberlin', 'ucinetid': 'archambe', 'phone': '(949) 824-7089', 'title': 'Professor Emeritus and Chair of Pharmaceutical Sciences', 'department': 'Pharmaceutical Sciences'}
+Mahtab F. Jafari:{'name': 'Mahtab Farahani Jalali', 'ucinetid': 'mjalalif', 'phone': '', 'title': '', 'department': ''}
+Frances L. Leslie:{'name': 'Frances Leslie Gonzalez', 'ucinetid': 'fmleslie', 'phone': '(949) 824-5437', 'title': 'Professor Emeritus', 'department': 'Pharmaceutical Sciences'}
+Josh D. Blank:{'name': 'Joshua D Blank', 'ucinetid': 'jdblank', 'phone': '(949) 824-4807', 'title': 'Professor of Law', 'department': 'School of Law'}
+Leah Litman:{'name': 'Lilan Thi Tran', 'ucinetid': 'lilant', 'phone': '(949) 824-2613', 'title': 'Data Migration Lead', 'department': 'Office of Information Technology'}
+R. Anthony Reese:{'name': 'R Anthony Reese', 'ucinetid': 'reese', 'phone': '(949) 824-4745', 'title': "Chancellor's Professor of Law", 'department': 'School of Law'}
+L. Song Richardson:{'name': 'Leah Song Richardson', 'ucinetid': 'lrichars', 'phone': '(949) 824-7722', 'title': "Dean and Chancellor's Professor of Law", 'department': 'School of Law'}
+William B. Tate:{'name': 'Katherine Williams', 'ucinetid': 'kwillia4', 'phone': '', 'title': 'Graduate Student Researcher', 'department': 'Developmental and Cell Biology'}
+Katharine Tinto:{'name': 'Eda Katharine Tinto', 'ucinetid': 'etinto', 'phone': '(949) 824-9247', 'title': 'Assistant Clinical Professor of Law', 'department': 'School of Law'}
+Eric R. Abrams:{'name': 'Eric Daniel Adams', 'ucinetid': 'adamsed', 'phone': '', 'title': '', 'department': 'Mind Research Unit'}
+Irfan Ahmad:{'name': 'Ahmad Irfan', 'ucinetid': 'iahmad', 'phone': '(714) 509-4373', 'title': 'HS Associate Clinical Professor', 'department': 'SOM - Pediatrics'}
+Michael T. Alkire:{'name': 'Michele Claire Haynes', 'ucinetid': 'mchaynes', 'phone': '(949) 824-7127', 'title': 'Talent Acquisition Analyst', 'department': 'Campus Human Resources'}
+Kathrine M. Andreeff:{'name': 'Katherine M Andreeff', 'ucinetid': 'kandreef', 'phone': '(714) 509-8826', 'title': 'H.S. Assistant Clinical Professor', 'department': 'SOM - Pediatrics'}
+S. S. Bederman:{'name': 'Sarah Ashley Ruderman', 'ucinetid': 'sruderma', 'phone': '', 'title': '', 'department': 'Office of Undergraduate Admissions'}
+Anna M. Bowling:{'name': 'Ana M Rodriguez', 'ucinetid': 'anar', 'phone': '(714) 456-3758', 'title': 'Collections Representative', 'department': 'SOM - Professional Billing Group'}
+Rémi Buisson:{'name': 'Remi Buisson', 'ucinetid': 'rbuisson', 'phone': '(949) 824-4835', 'title': 'Assistant Professor', 'department': 'SOM - Biological Chemistry'}
+Robert M. Carroll:{'name': 'Roberta Nardico', 'ucinetid': 'rnardico', 'phone': '(949) 824-2870', 'title': 'Payroll Manager', 'department': 'Accounting and Fiscal Services'}
+P. A. Chandraratna:{'name': 'P A Chandraratna', 'ucinetid': 'pchandra', 'phone': '(714) 456-3868', 'title': 'PROF EMERITUS(WOS)', 'department': 'SOM - Department of Medicine'}
+Susan S. Choo:{'name': 'Susanna Choi', 'ucinetid': 'susannnc', 'phone': '', 'title': '', 'department': ''}
+Christine C. Chou:{'name': 'Christine Lydia Chon', 'ucinetid': 'clchon', 'phone': '', 'title': '', 'department': ''}
+Xing Dai:{'name': 'Ming Cai', 'ucinetid': 'mcai2', 'phone': '', 'title': "Int'l Marketing Coordinator", 'department': 'Continuing Education'}
+Alex Fong:{'name': 'Alexandra Morgan Ong', 'ucinetid': 'among', 'phone': '', 'title': '', 'department': 'Paul Merage School of Business'}
+Ling Gao:{'name': 'Jing Cao', 'ucinetid': 'caoj15', 'phone': '', 'title': 'Specialist', 'department': 'Beckman Laser Institute'}
+Deborah Goodman:{'name': 'Deborah Kathryn Lebot Woodman', 'ucinetid': 'dklw', 'phone': '(714) 456-3618', 'title': 'Financial Assistant', 'department': 'UCI Cancer Center'}
+Ian L. Gordon:{'name': 'Lok San Gordon Chan', 'ucinetid': 'loksc1', 'phone': '', 'title': '', 'department': ''}
+Jennifer S. Green:{'name': 'Jennifer Green Lusk', 'ucinetid': 'greenj1', 'phone': '(714) 509-8826', 'title': 'HS Clinical Instructor', 'department': 'Pediatric Hospitalist'}
+John E. Gross:{'name': 'Samantha Johnson', 'ucinetid': 'samanj3', 'phone': '(949) 824-2911', 'title': 'Executive Assistant', 'department': 'Sue and Bill Gross Stem Cell Research Center'}
+Kevin Harley:{'name': 'Hailey Levin', 'ucinetid': 'hharmier', 'phone': '', 'title': '', 'department': 'People Services Human Resources'}
+Peter Hauser:{'name': 'Peter Kaiser', 'ucinetid': 'pkaiser', 'phone': '(949) 824-9367', 'title': 'Professor and Chair', 'department': 'SOM - Biological Chemistry'}
+Susan M. Heller:{'name': 'Susan Tellez', 'ucinetid': 'stellez1', 'phone': '', 'title': 'ROI Specialist', 'department': 'Medical Records'}
+Bang H. Hoang:{'name': 'Huy Hoang Dang Truong', 'ucinetid': 'hhtruon2', 'phone': '', 'title': '', 'department': ''}
+M. Mark Hoffer:{'name': 'M Mark Hoffer', 'ucinetid': 'mmhoffer', 'phone': '(562) 498-8229', 'title': 'Professor Emeritus', 'department': 'SOM - Orhtopaedic Surgery'}
+Yan Lin Huang:{'name': 'Lan Huang', 'ucinetid': 'lanhuang', 'phone': '(949) 824-8548', 'title': 'Professor', 'department': 'SOM - Physiology & Biophysics'}
+F. Allan Hubbell:{'name': 'F Allan Hubbell', 'ucinetid': 'fahubbel', 'phone': '(949) 824-3975', 'title': 'Professor & Senior Associate Dean', 'department': 'DOM General Internal Medicine'}
+Peter C. Hunt:{'name': 'Peter Hung Thai', 'ucinetid': 'phthai', 'phone': '(714) 456-5201', 'title': 'CLS Supervisor, Chemistry', 'department': 'Chemistry'}
+M. M. Jamal:{'name': 'Joumana M Jamal', 'ucinetid': 'jmjamal', 'phone': '', 'title': 'UCI Retiree', 'department': 'Molecular Bio & Biochemistry'}
+Sara M. Jordan:{'name': 'Mara Jordan Shapiro', 'ucinetid': 'mjshapir', 'phone': '', 'title': '', 'department': ''}
+P. Douglas Kiester:{'name': 'P Douglas Kiester', 'ucinetid': 'pkiester', 'phone': '(714) 456-7752', 'title': 'Clinical Professor', 'department': 'SOM - Orhtopaedic Surgery'}
+Frances L. Leslie:{'name': 'Frances Leslie Gonzalez', 'ucinetid': 'fmleslie', 'phone': '(949) 824-5437', 'title': 'Professor Emeritus', 'department': 'Pharmaceutical Sciences'}
+Estelle S. Lin:{'name': 'Stella Lin', 'ucinetid': 'zhenghl1', 'phone': '', 'title': '', 'department': ''}
+Jeannette Lin:{'name': 'Jeanette Lin', 'ucinetid': 'jplin', 'phone': '(714) 456-6699', 'title': 'HS Assistant Clinical Professor-', 'department': 'SOM - Department of Medicine'}
+Fong W. Liu:{'name': 'Siu Fun Wong', 'ucinetid': 'sfwong3', 'phone': '', 'title': 'Clinical Professor Volunteer', 'department': 'Hematology and Oncology'}
+Feng Liu Smith:{'name': 'Feng Liu-Smith', 'ucinetid': 'liufe', 'phone': '(949) 824-2778', 'title': 'Assistant Professor IR', 'department': 'Epidemiology'}
+G. Robert Mason:{'name': 'G Robert Mason', 'ucinetid': 'grmason', 'phone': '', 'title': 'Professor Emeritus (W/O Sal)', 'department': 'SOM - Surgery'}
+Ronald B. Miller:{'name': 'Matthew R Miller', 'ucinetid': 'mrmille2', 'phone': '(949) 824-1562', 'title': 'Director of Communication', 'department': 'Donald Bren School of Information and Computer Sciences'}
+Ross Moskowtiz:{'name': 'Ross Moskowitz', 'ucinetid': 'rmoskowi', 'phone': '(714) 712-1753', 'title': 'Assistant Clinical Professor', 'department': 'SOM - Urology'}
+J. Dennis Mull:{'name': 'J Dennis Mull', 'ucinetid': 'jdmull', 'phone': '(714) 456-5171 (949) 509-7505', 'title': 'Professor Emeritus', 'department': 'SOM - Family Medicine'}
+Robert Myers:{'name': 'Frederick Robert Ayers', 'ucinetid': 'fayers', 'phone': '', 'title': 'Manager', 'department': ''}
+J. Stuart Nelson:{'name': 'John Stuart Nelson', 'ucinetid': 'jsnelson', 'phone': '(949) 824-7526', 'title': 'Professor', 'department': 'Surgery - Beckman Laser'}
+Hanh T. Nguyen:{'name': 'Anh T. Nguyen', 'ucinetid': 'anhtn18', 'phone': '', 'title': '', 'department': 'UCI Dining Services'}
+Y. Vien T. Nguyen:{'name': 'Y Vien Tran Nguyen', 'ucinetid': 'dianen', 'phone': '(714) 456-7237', 'title': 'Staff Physician', 'department': 'Radiological Sciences'}
+Andre Obenhaus:{'name': 'Andre Obenaus', 'ucinetid': 'obenausa', 'phone': '(949) 824-2339', 'title': 'Professor in Residence', 'department': 'SOM - Pediatrics'}
+Kristine R. Penner:{'name': 'Kristine Mariano Cajucom', 'ucinetid': 'kcajucom', 'phone': '(714) 790-8602', 'title': 'Radiologic Technologist', 'department': 'Yorba Linda Imaging Center'}
+Son Phan:{'name': 'Ton Nhan Tran', 'ucinetid': 'tonnt', 'phone': '(714) 456-5484', 'title': 'Principal Radiology Technologist', 'department': 'Radiology-Special'}
+Alice Police:{'name': 'Alice Abdelmalike Fadelalla Morkos', 'ucinetid': 'morkosa', 'phone': '(714) 456-5672', 'title': 'Video Monitor Tech', 'department': 'Trauma Neuro (DH58)'}
+James Rick:{'name': 'James Block Pick', 'ucinetid': 'jpick', 'phone': '(949) 824-8600', 'title': 'Visiting Researcher', 'department': 'Sociology'}
+I. James Sarfeh:{'name': 'I James Sarfeh', 'ucinetid': 'ijsarfeh', 'phone': '', 'title': 'Professor Emeritus', 'department': 'SOM - Surgery'}
+Leonard S. Sender:{'name': 'Jose Leonardo Romero', 'ucinetid': 'jlromer2', 'phone': '', 'title': '', 'department': 'Student Center & Event Services'}
+Marian Sowa:{'name': 'Adrian Sosa Brown', 'ucinetid': 'adriansb', 'phone': '(657) 284-7135', 'title': 'Biller III', 'department': 'Patient Financial Services'}
+M. Anne Spence:{'name': 'M Anne Spence', 'ucinetid': 'maspence', 'phone': '(949) 824-9787', 'title': 'Professor Emerita of Pediatrics', 'department': 'SOM - Pediatrics'}
+Steven Tam:{'name': 'Steven Lam', 'ucinetid': 'lams11', 'phone': '', 'title': '', 'department': 'Bren Events Center'}
+Ming Tan:{'name': 'Bing Alice Han', 'ucinetid': 'bahan', 'phone': '(949) 824-4509', 'title': 'C&G Manager', 'department': 'Accounting and Fiscal Services'}
+Dawn T. Tanner:{'name': 'Ashley Dawn Tydon', 'ucinetid': 'atydon', 'phone': '(714) 456-3947', 'title': 'Administrative Director, Clinical Research Operations', 'department': 'Research Administration'}
+Hien T. Tran:{'name': 'Hien Tuan T Nguyen', 'ucinetid': 'hientuan', 'phone': '', 'title': '', 'department': 'Surgery-Pre and Post OP'}
+Sam V. Truong:{'name': 'Victoria H. Truong', 'ucinetid': 'vhtruon2', 'phone': '', 'title': '', 'department': 'SOM - Biological Chemistry'}
+S. Armando Villalta:{'name': 'Sergio Armando Villalta', 'ucinetid': 'villalts', 'phone': '(949) 824-6150', 'title': 'Assistant Professor', 'department': 'SOM - Physiology & Biophysics'}
+Raymond Wang:{'name': 'Raymond Fang', 'ucinetid': 'raymonf2', 'phone': '', 'title': '', 'department': 'Social Science Graduate Office'}
+David Webb:{'name': 'David I Ogasawara', 'ucinetid': 'dogasawa', 'phone': '(949) 824-1393', 'title': 'Web Application Developer', 'department': 'School of Law'}
+Christopher H. Wen:{'name': 'Chuong Christopher Hong Nguyen', 'ucinetid': 'chuongcn', 'phone': '', 'title': '', 'department': 'Medical Psych (2 South) 2nd Fl'}
+Li Wen:{'name': 'Jason Yen Sun Lee', 'ucinetid': 'jasonyl6', 'phone': '', 'title': '', 'department': 'SOM - Anatomy & Neurobiology'}
+Richard G. Williams:{'name': 'Brian Richard Williams', 'ucinetid': 'brianrw', 'phone': '(949) 824-0473', 'title': 'Psychology, and Government Information', 'department': 'Library'}
+Brian Wong:{'name': 'Brian Fong', 'ucinetid': 'bfong2', 'phone': '', 'title': '', 'department': 'Physics and Astronomy'}
+Jing Yang:{'name': 'Bing Yang', 'ucinetid': 'bingy4', 'phone': '(949) 824-4977', 'title': 'Laboratory Assistant', 'department': 'Developmental and Cell Biology'}
+Qin Yang:{'name': 'Bin Wang', 'ucinetid': 'bwang7', 'phone': '(949) 824-2772', 'title': 'Postdoctoral Scholar', 'department': 'Ecology & Evolutionary Biology'}
+Douglas B. Yim:{'name': 'James Douglas Barker', 'ucinetid': 'barkerjd', 'phone': '', 'title': '', 'department': ''}
+Christopher Young:{'name': 'Christopher Wells Young Bauman', 'ucinetid': 'cwbauman', 'phone': '(949) 824-3176', 'title': 'Associate Professor, Organization and Management', 'department': 'Paul Merage School of Business'}
+E. Alison Holman:{'name': 'Ellen Alison Holman', 'ucinetid': 'aholman', 'phone': '(949) 824-7016', 'title': 'Associate Professor', 'department': 'Sue & Bill Gross School of Nursing'}
+A. Richard Chamberlin:{'name': 'A Richard Chamberlin', 'ucinetid': 'archambe', 'phone': '(949) 824-7089', 'title': 'Professor Emeritus and Chair of Pharmaceutical Sciences', 'department': 'Pharmaceutical Sciences'}
+Mahtab F. Jafari:{'name': 'Mahtab Farahani Jalali', 'ucinetid': 'mjalalif', 'phone': '', 'title': '', 'department': ''}
+A. Richard Chamberlin:{'name': 'A Richard Chamberlin', 'ucinetid': 'archambe', 'phone': '(949) 824-7089', 'title': 'Professor Emeritus and Chair of Pharmaceutical Sciences', 'department': 'Pharmaceutical Sciences'}
+Sergey V. Pronin:{'name': 'Veronica Noemie Canchola', 'ucinetid': 'vcanchol', 'phone': '', 'title': '', 'department': 'Clinic-Surgery ENT'}
+Juan Pedro Ochoa Ricouz:{'name': 'Juan Pedro Ochoa Ricoux', 'ucinetid': 'jpochoa', 'phone': '(949) 824-1707', 'title': 'Assistant Professor', 'department': 'Physics and Astronomy'}
+A. J. Shaka:{'name': 'Athan J Shaka', 'ucinetid': 'ajshaka', 'phone': '(949) 824-8509', 'title': 'Professor', 'department': 'Chemistry'}
+Jack Xin:{'name': 'Jack Jian Lin', 'ucinetid': 'linjj', 'phone': '(714) 456-6203 (949) 824-2437', 'title': 'Professor of Clinical Neurology', 'department': 'SOM - Neurology'}
+Jin Yi Yu:{'name': 'Jin-Yi Yu', 'ucinetid': 'jyyu', 'phone': '(949) 824-3878, 2991', 'title': 'Professor', 'department': 'Earth System Science'}
+Charles S. Zender:{'name': 'Charlie Zender', 'ucinetid': 'zender', 'phone': '(949) 891-2429', 'title': 'Professor', 'department': 'Computer Science'}
+Hans-Ulrich Bernard:{'name': 'Hans Ulrich Bernard', 'ucinetid': 'hbernard', 'phone': '(949) 824-5162', 'title': 'Professor-Emeritus', 'department': 'Molecular Bio & Biochemistry'}
+Tim-Allen Bruckner:{'name': 'Tim Allen Bruckner', 'ucinetid': 'brucknet', 'phone': '(949) 824-6434', 'title': 'Associate Professor', 'department': 'Public Health/ Administration'}
+F. Allan Hubbell:{'name': 'F Allan Hubbell', 'ucinetid': 'fahubbel', 'phone': '(949) 824-3975', 'title': 'Professor & Senior Associate Dean', 'department': 'DOM General Internal Medicine'}
+Mojgan Sami:{'name': 'Samuel Thomas Morgan', 'ucinetid': 'samueltm', 'phone': '', 'title': '', 'department': 'Social Science Graduate Office'}
+Lisa Sparks:{'name': 'Elisa Elena Park', 'ucinetid': 'elisaep', 'phone': '(714) 456-5413', 'title': 'Fellow - Nephrology', 'department': 'SOM - Department of Medicine'}
+Victoria Basolo:{'name': 'Mary Victoria Basolo', 'ucinetid': 'basolo', 'phone': '(949) 824-0563', 'title': 'Professor', 'department': 'Urban Planning & Public Policy'}
+Jessica Borelli:{'name': 'Jessie Borelli', 'ucinetid': 'jdonckel', 'phone': '(949) 824-1174', 'title': 'Associate Professor', 'department': 'Psychological Science'}
+Tim-Allen Bruckner:{'name': 'Tim Allen Bruckner', 'ucinetid': 'brucknet', 'phone': '(949) 824-6434', 'title': 'Associate Professor', 'department': 'Public Health/ Administration'}
+N. Edward Coulson:{'name': 'Norman Edward Coulson', 'ucinetid': 'ncoulson', 'phone': '(949) 824-0373', 'title': 'Director, Center for Real Estate', 'department': 'Paul Merage School of Business'}
+C. David Dooley:{'name': 'C David Dooley', 'ucinetid': 'cddooley', 'phone': '', 'title': 'Emeritus Professor of Psychology and Social Behavior', 'department': 'Psychological Science'}
+Larry D. Jamner:{'name': 'James D Barry', 'ucinetid': 'jdbarry', 'phone': '(714) 456-5239', 'title': 'HS Clinical Prof', 'department': 'SOM - Emergency Medicine'}
+J. Zoe Klemfuss:{'name': 'Jessica Zoe Klemfuss', 'ucinetid': 'jklemfus', 'phone': '(949) 824-4412', 'title': 'Assistant Professor', 'department': 'Psychological Science'}
+Richard D. McCleary:{'name': 'Richard D Mc Cleary', 'ucinetid': 'mccleary', 'phone': '(949) 824-7280', 'title': 'Professor', 'department': 'Criminology, Law & Society'}
+Ana Muñiz:{'name': 'Ana Laufersky Muniz', 'ucinetid': 'anamuniz', 'phone': '(949) 824-7319', 'title': 'Assistant Professor', 'department': 'Criminology, Law & Society'}
+Maria G. Rendón:{'name': 'Maria G Rendon', 'ucinetid': 'mgrendon', 'phone': '(949) 824-5880', 'title': 'Assistant Professor', 'department': 'Urban Planning & Public Policy'}
+Maritza Salazar:{'name': 'Maritza Salazar Campo', 'ucinetid': 'smaritza', 'phone': '(949) 824-6127', 'title': 'Assistant Professor, Organization and Management', 'department': 'Paul Merage School of Business'}
+Jean-Daniel M. Saphores:{'name': 'Jean Daniel M Saphores', 'ucinetid': 'saphores', 'phone': '(949) 824-7334', 'title': 'Professor', 'department': 'Civil & Environmental Engineering'}
+Azim Shariff:{'name': 'Asim Shariff', 'ucinetid': 'ashariff', 'phone': '(714) 456-7542', 'title': 'Medical Assistant', 'department': 'Clinic-Internal Medicine'}
+Rodolfo D. Torres:{'name': 'Rudolph David Torres', 'ucinetid': 'rudolphd', 'phone': '(949) 824-7680', 'title': 'Professor', 'department': 'Urban Planning & Public Policy'}
+Linda T. Võ:{'name': 'Linda T Vo', 'ucinetid': 'volt1', 'phone': '(714) 456-6264', 'title': 'Pager', 'department': 'Pager'}
+D. Bell:{'name': 'D Bell', 'ucinetid': 'dbell', 'phone': '', 'title': 'Professor Emeritus', 'department': 'Economics'}
+Jennifer Buher-Kane:{'name': 'Jennifer Kaye Marceau', 'ucinetid': 'jmarceau', 'phone': '', 'title': 'PAW Auth Coordinator', 'department': 'Referral Center'}
+Long T. Bui:{'name': 'David Sui-Tim Leong', 'ucinetid': 'dsleong', 'phone': '', 'title': '', 'department': ''}
+David O. Carter:{'name': 'David Familian', 'ucinetid': 'dfamilia', 'phone': '(949) 824-4543', 'title': 'Associate Director of Beall Center', 'department': "Arts-Dean's Office"}
+Jean-Paul Carvalho:{'name': 'Jean Paul Carvalho', 'ucinetid': 'jpcarv', 'phone': '(949) 824-3417', 'title': 'Associate Professor', 'department': 'Economics'}
+Michael Choi:{'name': 'Sean Michael White', 'ucinetid': 'seanmw', 'phone': '(949) 824-3054', 'title': 'Postdoctoral Scholar', 'department': 'Beckman Laser Institute'}
+Gilberto Q. Conchas:{'name': 'Gilverto Q Conchas', 'ucinetid': 'gconchas', 'phone': '(949) 824-7448', 'title': 'Professor', 'department': 'Education'}
+N. Edward Coulson:{'name': 'Norman Edward Coulson', 'ucinetid': 'ncoulson', 'phone': '(949) 824-0373', 'title': 'Director, Center for Real Estate', 'department': 'Paul Merage School of Business'}
+Raúl A. Fernández:{'name': 'Raul A Fernandez', 'ucinetid': 'rafernan', 'phone': '(949) 824-5272', 'title': 'Professor Emeritus', 'department': 'Social Sciences Undergraduate Student Affairs'}
+Lai Jiang:{'name': 'Hai Quoc Giang', 'ucinetid': 'gianghq', 'phone': '', 'title': '', 'department': 'UCI Dining Services'}
+Claire J. Kim:{'name': 'Claire Jehee Yim', 'ucinetid': 'cjyim', 'phone': '', 'title': '', 'department': 'Continuing Education'}
+Ines Levin:{'name': 'Ines Levin Fiorelli', 'ucinetid': 'inelevin', 'phone': '(949) 824-8731', 'title': 'Associate Professor', 'department': 'Political Science'}
+Maria G. Rendón:{'name': 'Maria G Rendon', 'ucinetid': 'mgrendon', 'phone': '(949) 824-5880', 'title': 'Assistant Professor', 'department': 'Urban Planning & Public Policy'}
+A. K. Romney:{'name': 'A K Romney', 'ucinetid': 'akromney', 'phone': '(949) 824-6797, 6336', 'title': 'Faculty - Emeritus', 'department': 'School of Social Sciences'}
+Jean-Daniel M. Saphores:{'name': 'Jean Daniel M Saphores', 'ucinetid': 'saphores', 'phone': '(949) 824-7334', 'title': 'Professor', 'department': 'Civil & Environmental Engineering'}
+P. Kyle Stanford:{'name': 'Preston Kyle Stanford', 'ucinetid': 'stanford', 'phone': '(949) 824-6398', 'title': 'Professor', 'department': 'Logic & Philosophy of Science'}
+Yang Su:{'name': 'Su Wang', 'ucinetid': 'suw', 'phone': '(949) 824-8086', 'title': 'Senior Software Engineer & Technical Lead', 'department': 'Office of Information Technology'}
+Rodolfo D. Torres:{'name': 'Rudolph David Torres', 'ucinetid': 'rudolphd', 'phone': '(949) 824-7680', 'title': 'Professor', 'department': 'Urban Planning & Public Policy'}
+Linda T. Võ:{'name': 'Linda T Vo', 'ucinetid': 'volt1', 'phone': '(714) 456-6264', 'title': 'Pager', 'department': 'Pager'}
+Mei Zhan:{'name': 'Lei Zhan', 'ucinetid': 'lzhan', 'phone': '', 'title': '', 'department': 'Mechanical & Aerospace Engineering'}
