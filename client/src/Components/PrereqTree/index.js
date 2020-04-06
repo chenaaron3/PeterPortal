@@ -1,10 +1,7 @@
 import React from "react";
-import { Button } from "semantic-ui-react";
 import "./prereq-tree.scss";
 
 const horizontalStyle = { display: "inline-flex", flexDirection: "row" };
-
-const branchStyle = { listStyleType: "none" };
 
 class Tree extends React.Component {
   render() {
