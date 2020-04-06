@@ -56,7 +56,7 @@ class QuarterMenu extends React.Component {
   }
 }
 
-class GradeChart extends React.Component {
+class Chart extends React.Component {
   render() {
   }
 }
@@ -79,7 +79,7 @@ export default class GradeDist extends React.Component {
                   </Grid.Row>
                   
                   <Grid.Row>
-                    <GradeChart />
+                    <Chart />
                   </Grid.Row>
                 </Card.Content>
               </Card>
