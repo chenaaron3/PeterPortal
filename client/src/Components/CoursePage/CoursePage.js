@@ -2,7 +2,7 @@ import React from "react";
 import Timetable from "../Timetable";
 import ReviewsModule from "../ReviewsModule";
 import PrereqTree from "../PrereqTree";
-import GradeDist from "../GradeDist";
+import GradeDist from "./GradeDist.js";
 import { Grid, Icon, Divider, Card, Radio } from "semantic-ui-react";
 import "./CoursePage.scss";
 
@@ -114,6 +114,8 @@ class CoursePage extends React.Component {
                 </Card.Content>
               </Card>
             </Grid.Row>
+            
+            <GradeDist/>
 
             {/* <Grid.Row className="course_content-container course_prereq-tree-container">
               <Card>
