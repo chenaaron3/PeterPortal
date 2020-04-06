@@ -4,11 +4,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
+var subdomain = require('express-subdomain');
+
 var cors = require('cors');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var reviewsRouter = require('./routes/reviews');
+// var indexRouter = require('./routes/index');
+var apiRouter = require('./api/v1');
+// var usersRouter = require('./routes/users');
+// var reviewsRouter = require('./routes/reviews');
 var app = express();
 var mysql = require("mysql");
 
@@ -19,18 +22,24 @@ var corsOptions = {
 
 
 //Database connection
-app.use(function(req, res, next){
-	res.locals.connection = mysql.createConnection({
-		host     : 'review-test-db.clt9zo57ol4p.us-west-1.rds.amazonaws.com',
-		user     : 'root',
-		password : 'password',
-		database : 'reviews'
-	});
-	res.locals.connection.connect();
-	next();
-});
+// app.use(function(req, res, next){
+// 	res.locals.connection = mysql.createConnection({
+// 		host     : 'review-test-db.clt9zo57ol4p.us-west-1.rds.amazonaws.com',
+// 		user     : 'root',
+// 		password : 'password',
+// 		database : 'reviews'
+// 	});
+// 	res.locals.connection.connect();
+// 	next();
+// });
 
-// view engine setup
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Serve the api via subdomain api.peter-portal.com
+app.use(subdomain('api', apiRouter));
+
+// // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -43,9 +52,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/reviews', reviewsRouter);
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
+// app.use('/reviews', reviewsRouter);
+
+app.get('*', (req,res) =>{
+  res.sendFile(path.join(__dirname+'/build/index.html'));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

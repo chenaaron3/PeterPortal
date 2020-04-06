@@ -1,5 +1,4 @@
 import React from "react";
-import avatar from "../../assets/default_avatar.png";
 import Review from "./Review";
 import { Form, TextArea, Checkbox, Dropdown, Button } from "semantic-ui-react";
 
