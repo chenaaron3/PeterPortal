@@ -1,0 +1,38 @@
+.filter-list-container {
+    margin-top: 0;
+    overflow-y: auto;
+    width: 280px;
+    padding-left: 16px;
+    padding-top: 18px;
+    height: 100%;
+}
+
+.ui.vertical.menu {
+    width: 100%;
+}
+
+
+.sk-item-list__item {
+    display: flex;
+    font-weight: 500;
+    margin: 3px 0;
+}
+
+.sk-item-list-option__checkbox {
+    flex: 0 0 15px;
+    margin: 3px 5px 0 1px;
+}
+
+.sk-item-list-option__text, .sk-item-list-option__count{
+    font-size: 12px;
+}
+
+.sk-item-list-option__text {
+    flex: auto;
+}
+
+.sk-item-list-option__count{
+    text-align: right;
+    color: gray;
+    margin-right: 4px;
+}

@@ -4,7 +4,7 @@
   "description": "ElasticSearch + Web Scraping implementation for UCI Catalogue search functionality",
   "main": "index.js",
   "scripts": {
-    "build-client": "cd client && yarn build && mv build ../server/build",
+    "build-client": "cd client && yarn build && mv build ../server/",
     "update-courses-json": "cd server/script && node update-courses-json.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
