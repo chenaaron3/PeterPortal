@@ -1,5 +1,5 @@
 import React from "react";
-import avatar from "../../../Assets/default_avatar.png";
+import avatar from "../../../Assets/default-avatar.png";
 import "./review.scss";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";

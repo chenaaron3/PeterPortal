@@ -1,12 +1,13 @@
 {
   "name": "peter-portal",
   "version": "1.0.0",
-  "description": "ElasticSearch + Web Scraping implementation for UCI Catalogue search functionality",
+  "description": "The One-Stop-Shop for course discovery at UC Irvine.",
   "main": "index.js",
   "scripts": {
     "build-client": "cd client && yarn build && mv build ../server/",
     "update-courses-json": "cd server/script && node update-courses-json.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "genJSON": "(cd script || cd ./) && (python Scraper.py)",
+    "deployElastic": "(cd script || cd ./) && (python deleteelasticcloud.py && python deployelasticcloud.py)"
   },
   "repository": {
     "type": "git",
