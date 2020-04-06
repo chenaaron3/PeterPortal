@@ -32,10 +32,10 @@ class CoursePage extends React.Component {
       method: "POST"
     };
 
-    console.log(process.env.REACT_APP_ELASTIC_ENDPOINT_URL_COURSES)
+    // console.log(process.env.REACT_APP_ELASTIC_ENDPOINT_URL_COURSES)
 
     fetch(
-      process.env.REACT_APP_ELASTIC_ENDPOINT_URL_COURSES,
+      "https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/courses/_search",
       requestHeader
     )
       .then(data => {
