@@ -1,14 +1,28 @@
 import React from "react";
-import { Table } from "semantic-ui-react";
+import { Table, Dropdown } from "semantic-ui-react";
 import "./timetable.scss";
 import { CourseSection } from "./CourseSection";
+
+const friendOptions = [
+  {
+    key: '2020 Winter',
+    text: '2020 Winter',
+    value: '2020 Winter',
+  },
+  {
+    key: '2020 Spring',
+    text: '2020 Spring',
+    value: '2020 Spring',
+  },
+]
 
 class Timeable extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      WebSocData: null
+      WebSocData: null,
+      term: "2020 Spring"
     };
   }
 
@@ -73,106 +87,35 @@ class Timeable extends React.Component {
     }
   }
 
+  onSectionHover(e) {
+    console.log(e)
+  }
+
   drawSectionsOnTable() {
-    for (var s in this.state.WebSocData.M) {
-      var test = document.createElement("div");
-      test.innerHTML =
-        '<button style="transform: translateX(' +
-        this.state.WebSocData.M[s].time.beginMin * 1.5 +
-        "px); min-width:" +
-        this.state.WebSocData.M[s].time.sessionDuration * 1.5 +
-        'px" class="ui ' +
-        this.sectionTypeToColor(this.state.WebSocData.M[s].sectionType) +
-        ' button course-section"><p>' +
-        this.state.WebSocData.M[s].bldg +
-        "<br/>" +
-        this.state.WebSocData.M[s].sectionType.toUpperCase() +
-        "[" +
-        this.state.WebSocData.M[s].sectionNum +
-        "]</p></button>";
-      document
-        .getElementById("M-" + this.state.WebSocData.M[s].time.beginHour)
-        .append(test.firstChild);
-    }
-    for (var s in this.state.WebSocData.Tu) {
-      var test = document.createElement("div");
-      test.innerHTML =
-        '<button style="transform: translateX(' +
-        this.state.WebSocData.Tu[s].time.beginMin * 1.5 +
-        "px); min-width:" +
-        this.state.WebSocData.Tu[s].time.sessionDuration * 1.5 +
-        'px" class="ui ' +
-        this.sectionTypeToColor(this.state.WebSocData.Tu[s].sectionType) +
-        ' button course-section"><p>' +
-        this.state.WebSocData.Tu[s].bldg +
-        "<br/>" +
-        this.state.WebSocData.Tu[s].sectionType.toUpperCase() +
-        "[" +
-        this.state.WebSocData.Tu[s].sectionNum +
-        "]</p></button>";
-      document
-        .getElementById("Tu-" + this.state.WebSocData.Tu[s].time.beginHour)
-        .append(test.firstChild);
-    }
-    for (var s in this.state.WebSocData.W) {
-      var test = document.createElement("div");
-      test.innerHTML =
-        '<button style="transform: translateX(' +
-        this.state.WebSocData.W[s].time.beginMin * 1.5 +
-        "px); min-width:" +
-        this.state.WebSocData.W[s].time.sessionDuration * 1.5 +
-        'px" class="ui ' +
-        this.sectionTypeToColor(this.state.WebSocData.W[s].sectionType) +
-        ' button course-section"><p>' +
-        this.state.WebSocData.W[s].bldg +
-        "<br/>" +
-        this.state.WebSocData.W[s].sectionType.toUpperCase() +
-        "[" +
-        this.state.WebSocData.W[s].sectionNum +
-        "]</p></button>";
-      document
-        .getElementById("W-" + this.state.WebSocData.W[s].time.beginHour)
-        .append(test.firstChild);
-    }
-    for (var s in this.state.WebSocData.Th) {
-      var test = document.createElement("div");
-      test.innerHTML =
-        '<button style="transform: translateX(' +
-        this.state.WebSocData.Th[s].time.beginMin * 1.5 +
-        "px); min-width:" +
-        this.state.WebSocData.Th[s].time.sessionDuration * 1.5 +
-        'px" class="ui ' +
-        this.sectionTypeToColor(this.state.WebSocData.Th[s].sectionType) +
-        ' button course-section"><p>' +
-        this.state.WebSocData.Th[s].bldg +
-        "<br/>" +
-        this.state.WebSocData.Th[s].sectionType.toUpperCase() +
-        "[" +
-        this.state.WebSocData.Th[s].sectionNum +
-        "]</p></button>";
-      document
-        .getElementById("Th-" + this.state.WebSocData.Th[s].time.beginHour)
-        .append(test.firstChild);
-    }
-    for (var s in this.state.WebSocData.F) {
-      var test = document.createElement("div");
-      test.innerHTML =
-        '<button style="transform: translateX(' +
-        this.state.WebSocData.F[s].time.beginMin * 1.5 +
-        "px); min-width:" +
-        this.state.WebSocData.F[s].time.sessionDuration * 1.5 +
-        'px" class="ui ' +
-        this.sectionTypeToColor(this.state.WebSocData.F[s].sectionType) +
-        ' button course-section"><p>' +
-        this.state.WebSocData.F[s].bldg +
-        "<br/>" +
-        this.state.WebSocData.F[s].sectionType.toUpperCase() +
-        "[" +
-        this.state.WebSocData.F[s].sectionNum +
-        "]</p></button>";
-      document
-        .getElementById("F-" + this.state.WebSocData.F[s].time.beginHour)
-        .append(test.firstChild);
+    for (var i in this.state.WebSocData) {
+      for(var s in this.state.WebSocData[i]) {
+        var test = document.createElement("div");
+        test.innerHTML =
+          '<button style="margin: 1px; height: auto; transform: translateX(' +
+          this.state.WebSocData[i][s].time.beginMin * 1.5 +
+          "px); min-width:" +
+          this.state.WebSocData[i][s].time.sessionDuration * 1.5 +
+          'px" class="ui ' +
+          this.sectionTypeToColor(this.state.WebSocData[i][s].sectionType) + " " + this.state.WebSocData[i][s].sectionType.toUpperCase() +
+          "[" +
+          this.state.WebSocData[i][s].sectionNum + "]" +
+          ' button course-section"><p style="font-size: 10px; padding: 4px 0px 0px 4px">' +
+          this.state.WebSocData[i][s].bldg +
+          "<br/>" +
+          this.state.WebSocData[i][s].sectionType.toUpperCase() +
+          "[" +
+          this.state.WebSocData[i][s].sectionNum +
+          ']</p><div class="ui progress"><div class="bar" style="width:'+ (this.state.WebSocData[i][s].numCurrentlyEnrolled / this.state.WebSocData[i][s].maxCapacity)*100 + '%"><div class="progress"></div></div></div></button>';
+        document
+          .getElementById(i + "-" + this.state.WebSocData[i][s].time.beginHour)
+          .append(test.firstChild);
+          // console.log(this.state.WebSocData[i][s]);
+      }
     }
   }
 
@@ -180,6 +123,7 @@ class Timeable extends React.Component {
     if (this.state.WebSocData != null) {
       this.drawSectionsOnTable();
     }
+
     return (
       <div className={"timetable-container"}>
         <Table celled className={"unstackable"}>

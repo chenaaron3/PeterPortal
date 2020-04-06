@@ -3,5 +3,106 @@
     padding: 8px !important;
     margin: 1px !important;
     // margin: 0 0.75rem 1px 0;
-
 }
+
+.dependency-node {
+    &::after{
+        content: '';
+        width: 20px;
+        border-bottom: solid 1px gray;
+        position: absolute;
+        transform: translateX(-1px) translateY(16px);
+        z-index: 1;
+    }
+}
+
+.course-node_container{
+    z-index: 3;
+
+    .course-node{
+        background-color: #5E9EC1 !important;
+        color: white !important;
+    }
+}
+
+.prereq-branch{
+    p {
+        background-color: white;
+        z-index: 3;
+        position: relative;
+        padding: 0 4px;
+    }
+    
+    &::after {
+        content: '';
+        width: 110px;
+        border-bottom: solid 1px gray;
+        position: absolute;
+        transform: translateX(-39px) translateY(-11px);
+        z-index: 1;
+    }
+}
+
+.dependency-branch {
+    p {
+        background-color: white;
+        z-index: 3;
+        position: relative;
+        padding: 0 4px;
+    }
+    
+    &::after {
+        content: '';
+        width: 110px;
+        border-bottom: solid 1px gray;
+        position: absolute;
+        transform: translateX(-22px) translateY(-11px);
+        z-index: 1;
+    }
+}
+
+.prereq-node-branch {
+    &::before {
+        content: '';
+        width: 20px;
+        border-bottom: solid 1px gray;
+        position: absolute;
+        transform: translateX(-20px) translateY(16px);
+        z-index: 1;
+    }
+}
+
+
+.prereq-list {
+    list-style-type: none; 
+    padding: 0; 
+    margin:0;
+}
+
+.prereq-list-branch {
+    position: relative;
+    &::before {
+        content: '';
+        border-right: solid 1px gray;
+        position: absolute;
+        transform: translateX(-20px) translateY(17px);
+        z-index: 1;
+        height: calc(100% - 32px);
+    }
+}
+
+
+.dependency-list-branch {
+    position: relative;
+    &::before {
+        content: '';
+        border-right: solid 1px gray;
+        position: absolute;
+        transform: translateX(140px) translateY(17px);
+        z-index: 1;
+        height: calc(100% - 32px);
+    }
+}
+
+
+

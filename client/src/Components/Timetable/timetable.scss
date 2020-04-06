@@ -6,6 +6,7 @@
 .time-header {
     th {
         border-left: none !important;
+        background-color: white !important;
         
         span {
             display: block;
@@ -23,8 +24,29 @@
 }
 
 .course-section{
-    padding: 8px !important;
+    padding: 0 !important;
     text-align: left !important;
     font-size: 12px !important;
     height: 60px;
+}
+
+tr > td:nth-child(2n) {
+    background-color: rgba(0,0,50,.05);
+}
+
+td {
+    max-height: 60px;
+}
+
+.ui.table {
+    border: none;
+}
+
+.ui.progress:last-child {
+    margin: 0px;
+    max-height: 6px;    
+}
+
+.ui.progress .bar {
+    max-height: 6px; 
 }
