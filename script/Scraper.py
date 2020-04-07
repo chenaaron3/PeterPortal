@@ -36,6 +36,7 @@ SPECIAL_PREREQUISITE_WHITE_LIST = ["SAT ", "ACT ", "AP "]
 PRETOKENIZE = ["AP Physics C: Electricity and Magnetism"]
             
 # driver: the Selenium Chrome driver
+# url: url to scrape
 # returns the Beautiful Soup Object for a page url
 def scrape(driver, url):
     # Use Selenium to load entire page
@@ -150,7 +151,7 @@ def determineCourseLevel(id_number:str):
 
 # soup: the Beautiful Soup object for a catalogue department page
 # json_data: maps class to its json data ({STATS 280: {metadata: {...}, data: {...}, node: Node}})
-# departmentToSchoolMapping: maps department code to its school (I&C SCI: Donald Bren School of Information and Computer Sciences)
+# departmentToSchoolMapping: maps department code to its school {I&C SCI: Donald Bren School of Information and Computer Sciences}
 # returns nothing, scrapes all courses in a department page and stores information into a dictionary
 def getAllRequirements(soup, json_data:dict, departmentToSchoolMapping:dict):
     # department name
