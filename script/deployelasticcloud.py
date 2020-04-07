@@ -12,7 +12,7 @@ Deploying to AWS
 """
 
 elasticEndpointURL = 'https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com'
-jsonToUpload = "all_courses.json"
+jsonToUpload = "all_professors.json"
 
 headers = {
     'Content-type' : 'application/json'
