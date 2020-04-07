@@ -2,91 +2,58 @@ import React from "react";
 import { get } from "lodash";
 import "./SearchPage.scss";
 import CourseFilter from "./CourseFilter.js";
+import ProfessorHitItem from "./ProfessorHitItem.js";
+import CourseHitItem from "./CourseHitItem.js";
 import { Icon, Menu } from "semantic-ui-react";
 import { Pagination, SearchkitComponent, Hits, NoHits, InitialLoader, SearchBox, SearchkitManager, SearchkitProvider } from "searchkit";
 
+
 const InitialLoaderComponent = (props) => <div>Fetching course data...</div>;
 
-const HitItem = (props) => (
-  <div>
-    <div>
-      <a href={"/course/" + props.result._id}>
-        <h3>
-          <span
-            className={props.bemBlocks.item("id_department")}
-            dangerouslySetInnerHTML={{
-              __html: get(
-                props.result,
-                "highlight.id_department",
-                props.result._source.id_department
-              ),
-            }}
-          ></span>
-          &nbsp;
-          <span
-            className={props.bemBlocks.item("id_number")}
-            dangerouslySetInnerHTML={{
-              __html: get(
-                props.result,
-                "highlight.id_number",
-                props.result._source.id_number
-              ),
-            }}
-          ></span>
-          &nbsp;
-          <span
-            className={props.bemBlocks.item("name")}
-            dangerouslySetInnerHTML={{
-              __html: get(
-                props.result,
-                "highlight.name",
-                props.result._source.name
-              ),
-            }}
-          ></span>
-        </h3>
-      </a>
-      <h4 className={"course-department_unit"}>
-        {props.result._source.department}&nbsp;･&nbsp;
-        {props.result._source.units[0]} units
-      </h4>
-      <p
-        className={props.bemBlocks.item("description")}
-        dangerouslySetInnerHTML={{
-          __html: get(
-            props.result,
-            "highlight.description",
-            props.result._source.description
-          ),
-        }}
-      ></p>
-      <p>{props.result._source.prerequisite}</p>
-
-      <p className={"course-department_unit"}>
-        {props.result._source.ge_string}
-      </p>
-
-      <br />
-    </div>
-  </div>
-);
 
 class SearchPage extends SearchkitComponent {
-  state = { activeItem: "courses" };
+  state = { activeItem: "professors" };
 
+  queryFieldValues = {
+    "courses": [
+      "id_department^10",
+      "id_number^10",
+      "description",
+      "dept_alias^10",
+      "name^3",
+    ],
+    "professors": [
+      "name^10",
+      "ucinetid^10",
+      "title^3",
+      "courseHistory",
+      "department^3",
+    ]
+  }
+  highlightFieldValues = {
+    "courses": [
+      "name",
+      "id_department",
+      "id_number",
+      "description",
+    ],
+    "professors": [
+      "name",
+      "title",
+      "department",
+      "courseHistory"
+    ]
+  }
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   render() {
     const { activeItem } = this.state;
-
+    let searchkit = new SearchkitManager("https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/" + activeItem);
     return (
       <SearchkitProvider
-        searchkit={
-          new SearchkitManager(
-            "https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/courses"
-          )
-        }
+        searchkit={searchkit}
       >
+      {console.log(searchkit)}
         <div className="App" style={{ display: "flex", flexDirection: "row" }}>
           <div className="search-page">
 
@@ -127,28 +94,17 @@ class SearchPage extends SearchkitComponent {
                   <Icon name='search' size='large' className="search-icon"/>
                   <SearchBox
                     searchOnChange={true}
-                    queryFields={[
-                      "id_department^10",
-                      "id_number^10",
-                      "description",
-                      "dept_alias^10",
-                      "name^3",
-                    ]}
+                    queryFields={this.queryFieldValues[activeItem]}
                     searchThrottleTime={300}
-                    placeholder={"Course number, title and description"}
+                    placeholder={activeItem == "courses" ? "Course number, title and description" : "Professor name, title, and department"}
                   />
                 </div>
                 
                 <div>
                   <Hits
-                    itemComponent={HitItem}
+                    itemComponent={activeItem == "courses" ? CourseHitItem : ProfessorHitItem}
                     hitsPerPage={20}
-                    highlightFields={[
-                      "name",
-                      "id_department",
-                      "id_number",
-                      "description",
-                    ]}
+                    highlightFields={this.highlightFieldValues[activeItem]}
                     customHighlight={{
                       pre_tags: ["<highlight>"],
                       post_tags: ["</highlight>"],
