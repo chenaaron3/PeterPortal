@@ -12,9 +12,9 @@ import { SearchkitManager, SearchkitProvider } from "searchkit";
 class App extends React.Component {
   render() {
     return (
-      <SearchkitProvider searchkit= {
-        new SearchkitManager("https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/courses")
-        }>
+      // <SearchkitProvider {/*searchkit= {
+      //   new SearchkitManager("https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/professors")
+      // */}>
         <Router>
           <NavBar/>
           <Switch>
@@ -26,7 +26,7 @@ class App extends React.Component {
           </Switch>
         </Router>
 
-      </SearchkitProvider>
+      // </SearchkitProvider>
     );
   }
 }
