@@ -1,7 +1,7 @@
 @import '../../branding.scss';
 
 #peterportal-logo {
-    width: 60%;
+    width: 100%;
   }
   
 .top-bar {
@@ -34,5 +34,11 @@
     padding: 0 !important;
     border: 0 !important;
     box-shadow: none !important;
+  }
+
+  .peterportal-logo-container {
+    margin-left: 50px;
+    max-width: 100px;
+    margin-right: 12px;
   }
 

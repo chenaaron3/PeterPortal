@@ -58,6 +58,7 @@
       .search-icon {
         color: gray;
         margin: 0;
+        margin-top: 2px;
 
       }
     }
@@ -84,6 +85,27 @@
 .sidebar-container {
   position: fixed;
   margin-top: 28px;
+  margin-bottom: 28px;
+  .footer {
+    background-color: #f9f9f9; 
+    height: auto;
+    margin-top: 28px;
+    padding: 16px;
+    a {
+      margin-right: 8px;
+      color: gray;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    a:hover {
+      color: $primary-color-1;
+    }
+
+    .copyright>p{
+      font-size: 12px;
+      color: gray;
+    }
+  }
 }
 
 .mode-switcher {

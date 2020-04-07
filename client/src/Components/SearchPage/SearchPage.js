@@ -3,14 +3,7 @@ import { get } from "lodash";
 import "./SearchPage.scss";
 import CourseFilter from "./CourseFilter.js";
 import { Icon, Menu } from "semantic-ui-react";
-import {
-  Pagination,
-  SearchkitComponent,
-  Hits,
-  NoHits,
-  InitialLoader,
-} from "searchkit";
-import { SearchBox, SearchkitManager, SearchkitProvider } from "searchkit";
+import { Pagination, SearchkitComponent, Hits, NoHits, InitialLoader, SearchBox, SearchkitManager, SearchkitProvider } from "searchkit";
 
 const InitialLoaderComponent = (props) => <div>Fetching course data...</div>;
 
@@ -113,6 +106,20 @@ class SearchPage extends SearchkitComponent {
                   />
                 </Menu>
                 <CourseFilter/>
+
+                <div class="footer">
+                  <a href="https://github.com/icssc-projects">Github</a>
+                  <a href="/">API</a>
+                  <a href="/">About</a>
+                  <a href="/">Team</a>
+                  <a href="/">FAQ</a>
+                  <div class="copyright">
+                    <br/>
+                    <p>Made with ♥ by <a href="https://studentcouncil.ics.uci.edu/">ICSSC Project Committee</a>
+                    <br/>Copyright © 2020, ICSSC.</p>
+                  </div>
+                </div>
+
               </div>
 
               <div className="search-pane-container">
