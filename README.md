@@ -5,12 +5,10 @@
 The One-Stop-Shop for course discovery at UC Irvine.
 
 ## Overview
----
 
 ### PeterPortal is a web application aimed to aid UCI students with course discovery. We consolidate public data available on multiple UCI sources on the application to improve the user experience when planning their course schedule.
 
 ## Features
----
 - Filtered catalogue/professor search
 - Visual dependency/prerequisite tree
 - Visual grade distribution history
@@ -18,7 +16,7 @@ The One-Stop-Shop for course discovery at UC Irvine.
 - Professors rating/review
 
 ## Development
----
+
 <h3>
   <span>
   This project is built with
