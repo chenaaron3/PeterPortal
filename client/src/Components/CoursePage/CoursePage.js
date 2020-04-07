@@ -2,7 +2,7 @@ import React from "react";
 import Timetable from "../Timetable";
 import ReviewsModule from "../ReviewsModule";
 import PrereqTree from "../PrereqTree";
-import { Grid, Icon, Divider, Card, Radio } from "semantic-ui-react";
+import { Grid, Icon, Divider, Card, Radio, Button } from "semantic-ui-react";
 import "./CoursePage.scss";
 
 class CoursePage extends React.Component {
