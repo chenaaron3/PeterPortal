@@ -1,0 +1,148 @@
+@import '../../branding.scss';
+
+.search-page {
+    width: 1000px;
+    margin-left: 36px;
+    margin-top: 48px;
+    
+
+}
+
+// highlight{
+//     font-style: normal;
+//     font-weight: bold;
+//     text-decoration: underline
+// }
+
+.sk-hits-hit__id_department .sk-hits-hit__id_number .sk-hits-hit__prof_name{
+    font-weight: 900 !important;
+    color: $primary-color-1;
+}
+
+.sk-hits-hit__name{
+    font-weight: 500;
+    color: $primary-color-1;
+}
+
+.sk-hits-hit__title{
+  font-weight: 500;
+  color: $primary-color-1;
+}
+
+.course-department_unit {
+    color: gray;
+    font-weight: normal;
+    margin-top: 0px;
+}
+
+
+.ui.vertical.tabular.menu {
+    border-right: 0;
+    position: fixed;
+    max-width: 145px;
+    z-index: 1;
+    .item {
+        border-right: 1px solid transparent;
+    }
+    .active.item {
+        border-radius: 24px 24px 24px 24px !important;
+    }
+}
+
+.ui.grid>.column:not(.row) {
+    padding: 0;
+}
+
+.search-pane-container {
+    margin-left: 320px;
+    .searchbox-container {
+      position: fixed; 
+      display: flex;
+      background: white;
+      padding-top: 28px !important;
+      .search-icon {
+        color: gray;
+        margin: 0;
+        margin-top: 2px;
+
+      }
+    }
+
+}
+
+
+.sk-search-box input.sk-search-box__text {
+  box-shadow: none;
+  font-size: 16px;
+  padding: 0 10px 10px 0px;
+  margin-left: 10px;
+  width: 680px;
+  font-size: 18px;
+  border: none;
+  border-bottom: 1px solid #ebebeb;
+  height: auto;
+  line-height: normal;
+  input.sk-search-box__text::placeholder {
+    color: gray;
+  }
+}
+
+.sidebar-container {
+  position: fixed;
+  margin-top: 28px;
+  margin-bottom: 28px;
+  .footer {
+    background-color: #f9f9f9; 
+    height: auto;
+    margin-top: 28px;
+    padding: 16px;
+    a {
+      margin-right: 8px;
+      color: gray;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    a:hover {
+      color: $primary-color-1;
+    }
+
+    .copyright>p{
+      font-size: 12px;
+      color: gray;
+    }
+  }
+}
+
+.mode-switcher {
+    width: 280px !important;
+}
+
+.ui.secondary.menu .item {
+  padding: 0;
+}
+
+.sk-hits {
+  padding-top: 80px;
+  margin-left: 34px;
+}
+
+
+  .sk-search-box__action {
+    display: none;
+  }
+
+  .sk-search-box form {
+    width: 100%;
+  }
+  
+  .is-focused {
+    input.sk-search-box__text {
+      outline: none !important;
+      border-color: $primary-color-2;
+    }
+    input.sk-search-box__text::placeholder {
+      color: gray !important;
+      opacity: 0.5;
+    }
+  }
+  

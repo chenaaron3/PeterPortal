@@ -1,5 +1,5 @@
 import React from "react";
-import avatar from "../../../assets/default_avatar.png";
+// import avatar from "../../../Assets/default-avatar.png";
 import "./review.scss";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
@@ -14,7 +14,7 @@ class Review extends React.Component {
       <div className={"review_container"}>
         <div className={"avatar_container"}>
           {/* avater here! */}
-          <img src={avatar}></img>
+          {/* <img src={avatar}></img> */}
         </div>
 
         <div className={"content_container"}>
