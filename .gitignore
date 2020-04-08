@@ -12,7 +12,8 @@
 /coverage
 
 # production
-/build
+/server/build
+
 
 # misc
 .DS_Store
@@ -20,8 +21,15 @@
 .env.development.local
 .env.test.local
 .env.production.local
+npm.lock
 yarn.lock
+
+/client/.env
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/server/.env
+.DS_Store
+/client/.DS_Store

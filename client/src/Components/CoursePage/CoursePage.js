@@ -2,9 +2,8 @@ import React from "react";
 import Timetable from "../Timetable";
 import ReviewsModule from "../ReviewsModule";
 import PrereqTree from "../PrereqTree";
-import ElasticCloudInfo from "../../ElasticCloudInfo";
-import { Grid, Icon, Divider, Card, Radio } from "semantic-ui-react";
-import "./index.scss";
+import { Grid, Icon, Divider, Card, Radio, Button } from "semantic-ui-react";
+import "./CoursePage.scss";
 
 class CoursePage extends React.Component {
   constructor(props) {
@@ -33,8 +32,10 @@ class CoursePage extends React.Component {
       method: "POST"
     };
 
+    // console.log(process.env.REACT_APP_ELASTIC_ENDPOINT_URL_COURSES)
+
     fetch(
-      ElasticCloudInfo.elasticEndpointURL + "/courses/_search",
+      "https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/courses/_search",
       requestHeader
     )
       .then(data => {
@@ -113,7 +114,7 @@ class CoursePage extends React.Component {
               </Card>
             </Grid.Row>
 
-            <Grid.Row className="course_content-container course_prereq-tree-container">
+            {/* <Grid.Row className="course_content-container course_prereq-tree-container">
               <Card>
                 <Card.Content>
                   <Card.Header>
@@ -127,28 +128,9 @@ class CoursePage extends React.Component {
                   />
                 </Card.Content>
               </Card>
-            </Grid.Row>
+            </Grid.Row> */}
           </div>
         </div>
-
-        // <div style={{ width: "60%", margin: "auto" }}>
-
-        //   <h1>{this.state.courseData.number}</h1>
-        //   <h2>{this.state.courseData.id}</h2>
-        //   <h3>{this.state.courseData.department}</h3>
-        //   {this.state.courseData.description}
-        //   <br />
-        //   <br />
-        //   {this.state.courseData.prerequisite}
-        //   {console.log(this.state.courseData)}
-        //   <br/>
-        //   <br/>
-        //   {this.state.courseData.id && <PrereqTree id={this.state.courseData.id}
-        //                                             dependencies={this.state.courseData.dependencies}
-        //                                             prerequisiteJSON={this.state.courseData.prerequisiteJSON}/>}
-        //   <Timetable id_department={this.state.courseData.id_department} id_number={this.state.courseData.id_number} />
-        //   <ReviewsModule />
-        // </div>
       );
     } else {
       return (
