@@ -12,17 +12,19 @@ Possbile Errors:
         Solution: run 'chcp 65001' in terminal
 
 Basic Workflow:
-Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch -> View the Webpage on React
+Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch
+Generate Professor JSON -> Deploy the Professor JSON Data to ElasticSearch
 
-Generate JSON:
+Generate Class JSON:
 1. cd into script
-2. Run 'npm run genJSON'
+2. Run 'python Scraper.py'
+
+Generate Professor JSON:
+1. cd into script
+2. Run 'python professorscrape.py'
 
 Cloud Deploy Data (in Bulk) to AWS ElasticSearch:  
 1. cd into script
-2. Run 'npm run deployElastic'
-
-How to Locally View Webpage on React:
-1. cd into client
-2. Run yarn start or npm start
-3. Start searching classes on the searchbar
+2. Uncomment corresponding 'indexToDelete' variable in deleteelasticcloud.py
+3. Uncomment desired 'jsonToUpload' variable in deployelasticcloud.py
+4. Run 'npm run deployElastic'

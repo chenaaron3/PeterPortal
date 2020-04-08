@@ -10,7 +10,8 @@ Deleting an Index From Elasticsearch on AWS
 """
 
 elasticEndpointURL = 'https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com'
-indexToDelete = 'courses'
+# indexToDelete = 'courses'
+# indexToDelete = 'professors'
 
 url = elasticEndpointURL + "/" + indexToDelete
 
