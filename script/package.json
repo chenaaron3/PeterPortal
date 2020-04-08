@@ -4,7 +4,6 @@
   "description": "Scraping Data from UCI Catalogue.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "genJSON": "python Scraper.py",
     "deployElastic": "python deleteelasticcloud.py && python deployelasticcloud.py"
   },
   "author": "",
