@@ -14,7 +14,7 @@
 //     text-decoration: underline
 // }
 
-.sk-hits-hit__id_department .sk-hits-hit__id_number{
+.sk-hits-hit__id_department .sk-hits-hit__id_number .sk-hits-hit__prof_name{
     font-weight: 900 !important;
     color: $primary-color-1;
 }
@@ -22,6 +22,11 @@
 .sk-hits-hit__name{
     font-weight: 500;
     color: $primary-color-1;
+}
+
+.sk-hits-hit__title{
+  font-weight: 500;
+  color: $primary-color-1;
 }
 
 .course-department_unit {
