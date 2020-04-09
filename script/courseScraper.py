@@ -8,8 +8,9 @@ import json
 import os
 import platform
 
-from RequirementNode import Node, nodify
-from Alias import ALIASES
+from requirementNode import Node, nodify, CONFLICT_PREREQ_NAME
+from alias import ALIASES
+from progressBar import ProgressBar
 
 # DO NOT CHANGE
 # Automatically determines the path based on your operating system
@@ -47,6 +48,11 @@ def scrape(driver, url):
     # html = requests.get(url).text
     return BeautifulSoup(html, 'html.parser')
 
+# s: string to normalize (usually parsed from beautiful soup object)
+# returns a normalized string that can be safely compared to other strings
+def normalizeString(s:str):
+    return unicodedata.normalize("NFKD", s)
+
 # driver: the Selenium Chrome driver
 # returns a mapping from department code to school name. Uses the catalogue.
 # Example: {"I&C SCI":"Donald Bren School of Information and Computer Sciences","IN4MATX":"Donald Bren School of Information and Computer Sciences"}
@@ -60,14 +66,17 @@ def getDepartmentToSchoolMapping(driver):
                "BANA":"The Paul Merage School of Business"}
     # get the soup object for catalogue
     catalogueSoup = scrape(driver, URL_TO_ALL_COURSES)
+    # get all li from sidebar
+    lis = catalogueSoup.find(id="/").find_all("li")
+    bar = ProgressBar(len(lis))
     # look through all the links in the sidebar
-    for possibleSchoolLink in catalogueSoup.find(id="/").find_all("li"):
+    for possibleSchoolLink in lis:
         # create school soup
         schoolUrl = CATALOGUE_BASE_URL + possibleSchoolLink.a['href'] + "#courseinventory"
         schoolSoup = scrape(driver, schoolUrl)
         # get the school name
-        school = unicodedata.normalize("NFKD", schoolSoup.find(id="content").h1.getText())
-        print("School:", school)
+        school = normalizeString(schoolSoup.find(id="content").h1.getText())
+        if debug: print("School:", school)
         # if this school has the "Courses" tab
         if schoolSoup.find(id="courseinventorytab") != None:
             # map school soup
@@ -84,6 +93,7 @@ def getDepartmentToSchoolMapping(driver):
                 if departmentSoup.find(id="courseinventorytab") != None:
                     # map department soup
                     mapCoursePageToSchool(mapping, school, departmentSoup)
+        bar.inc()
     return mapping
 
 # mapping: the dictionary used to map department code to school name
@@ -96,39 +106,114 @@ def mapCoursePageToSchool(mapping:dict, school:str, soup):
         # if department is not empty (why tf is Chemical Engr and Materials Science empty)
         if schoolDepartment.h3 != None:
             # get the department name
-            department = unicodedata.normalize("NFKD", schoolDepartment.h3.getText())
+            department = normalizeString(schoolDepartment.h3.getText())
             # extract the first department code
-            courseNumber, _, _ =  getCourseInfo(schoolDepartment.div)
-            id_dept = " ".join(courseNumber.split()[0:-1])
-            print(f"\t{id_dept}")
+            courseID, _, _ =  getCourseInfo(schoolDepartment.div)
+            id_dept = " ".join(courseID.split()[0:-1])
+            if debug: print(f"\t{id_dept}")
             # set the mapping
             mapping[id_dept] = school   
 
 # driver: the Selenium Chrome driver
 # returns a list of class URLS from AllCourses
 # Example: ["http://catalogue.uci.edu/allcourses/ac_eng/","http://catalogue.uci.edu/allcourses/afam/",...]
-def getAllCoursesURLS(driver):
+def getAllCourseURLS(driver):
     print(f"\nCollecting Course URLs from {URL_TO_ALL_COURSES}...")
     # store all URLS in list
     courseURLS = []
     # gets the soup object
     allCoursesSoup = scrape(driver, URL_TO_ALL_COURSES)
+    letterLists = allCoursesSoup.find(id="atozindex").find_all("ul")
+    bar = ProgressBar(len(letterLists))
     # get all the unordered lists
-    for letterList in allCoursesSoup.find(id="atozindex").find_all("ul"):
+    for letterList in letterLists:
         # get all the list items
         for courseURL in letterList.find_all('a', href=True):
             # prepend base url to relative path
             courseURLS.append(CATALOGUE_BASE_URL + courseURL['href'])
+        bar.inc()
     return courseURLS
 
+# soup: the Beautiful Soup object for a catalogue department page
+# json_data: maps class to its json data ({STATS 280: {metadata: {...}, data: {...}, node: Node}})
+# departmentToSchoolMapping: maps department code to its school {I&C SCI: Donald Bren School of Information and Computer Sciences}
+# returns nothing, scrapes all courses in a department page and stores information into a dictionary
+def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
+    # department name
+    department = normalizeString(soup.find(id="content").h1.get_text())
+    # strip off department id
+    department = department[:department.find("(")].strip()
+    if debug: print("Department:", department)
+
+    for course in soup.select(".courses"):
+        # if page is empty for some reason??? (http://catalogue.uci.edu/allcourses/cbems/)
+        if len(course.select("h3")) == 0:
+            return
+        for courseBlock in course.find_all("div", "courseblock"):
+            # course identification
+            courseID, courseName, courseUnits = getCourseInfo(courseBlock)
+            if debug: print("", courseID, courseName, courseUnits, sep="\t")
+            # get course body (0:Course Description, 1:Prerequisite)
+            courseBody = courseBlock.div.find_all("p")
+            # parse course description
+            courseDescription = normalizeString(courseBody[0].getText())
+
+            # parse units
+            unit_range = courseUnits.split(" ")[0]
+            if "-" in courseUnits:
+                unit_range = unit_range.split("-")
+            else:
+                unit_range = [unit_range] * 2
+            # parse course number and department
+            splitID = courseID.split()
+            id_department = " ".join(splitID[0:-1])
+            id_number = splitID[-1]
+            # error detection
+            if id_department not in departmentToSchoolMapping:
+                noSchoolDepartment.add(id_department)
+
+            # store meta data for Elasticsearch
+            metadata = {
+                "index" : {
+                    "_index" : "courses",
+                    "_id" : courseID.replace(" ", "")
+                }
+            }
+            # Examples at https://github.com/icssc-projects/PeterPortal/wiki/Course-Search
+            # store class data into dictionary
+            dic = {"id":courseID, "id_department": id_department, "id_number": id_number, 
+                    "id_school": departmentToSchoolMapping[id_department] if id_department in departmentToSchoolMapping else "", 
+                    "name": courseName, 
+                    "course_level": determineCourseLevel(courseID),
+                    "dept_alias": ALIASES[id_department] if id_department in ALIASES else [],
+                    "units":[float(x) for x in unit_range],"description":courseDescription, "department": department, 
+                    "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"{}", "dependencies":[],"repeatability":"","grading option":"",
+                    "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":"","ge_types":[],"ge_string":""}
+            # stores dictionaries in json_data to add dependencies later 
+            json_data[courseID] = {"metadata":metadata,
+                                        "data":dic,
+                                        "node":None}
+            
+            # populates the dic with simple information
+            parseCourseBody(courseBody, dic)
+
+            # try to parse prerequisite
+            if len(courseBody) > 1:
+                node = parsePrerequisite(courseBody[1], dic)
+                # maps the course to its requirement Node
+                json_data[courseID]["node"] = node
+            # doesn't have any prerequisites
+            else:
+                if debug: print("\t\tNOREQS")
+
 # courseBlock: a courseblock tag
-# returns tuple(courseNumber, courseName, courseUnits)
+# returns tuple(courseID, courseName, courseUnits)
 # Example: ('I&C SCI 6B', "Boolean Logic and Discrete Structures", "4 Units.")
 def getCourseInfo(courseBlock):
                          # id has number         # name fille   # units has word "Unit"
     courseInfoPatternWithUnits = r"(?P<id>.*[0-9]+[^.]*)\.[ ]+(?P<name>.*)\.[ ]+(?P<units>\d*\.?\d.*Units?)\."
     courseInfoPatternWithoutUnits = r"(?P<id>.*[0-9]+[^.]*)\. (?P<name>.*)\."
-    courseBlockString = unicodedata.normalize("NFKD", courseBlock.p.get_text().strip())
+    courseBlockString = normalizeString(courseBlock.p.get_text().strip())
     if "Unit" in courseBlockString:
         res = re.match(courseInfoPatternWithUnits, courseBlockString)
         return (res.group("id").strip(), res.group("name").strip(), res.group("units").strip())
@@ -151,174 +236,116 @@ def determineCourseLevel(id_number:str):
     else:
         print("COURSE LEVEL ERROR", courseNumber)
 
-# soup: the Beautiful Soup object for a catalogue department page
-# json_data: maps class to its json data ({STATS 280: {metadata: {...}, data: {...}, node: Node}})
-# departmentToSchoolMapping: maps department code to its school {I&C SCI: Donald Bren School of Information and Computer Sciences}
-# returns nothing, scrapes all courses in a department page and stores information into a dictionary
-def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
-    # department name
-    department = unicodedata.normalize("NFKD", soup.find(id="content").h1.get_text())
-    # strip off department id
-    department = department[:department.find("(")].strip()
-    if debug: print("Department:", department)
+# courseBody: a collection of ptags within a courseblock
+# dic: a dictionary to store parsed information
+# returns nothing, mutates the dictionary passed in
+def parseCourseBody(courseBody, dic:dict):
+    # iterate through each ptag for the course
+    for c in courseBody:
+        pTagText = normalizeString(c.getText().strip())
+        # if starts with ( and has I or V in it, probably a GE tag
+        if len(pTagText) > 0 and pTagText[0] == "(" and ("I" in pTagText or "V" in pTagText):
+            # try to parse GE types
+            ges = re.compile("(?P<type>[IV]+)\.?(?P<subtype>[abAB]?)")
+            if debug: print("\t\tGE:", end="")
+            for ge in ges.finditer(pTagText):
+                # normalize IA and VA to Ia and Va
+                extractedGE = ge.group("type") + ge.group("subtype").lower()
+                # normalize in full string also
+                pTagText = pTagText.replace(ge.group("type") + ge.group("subtype"), extractedGE)
+                # add to ge_types
+                dic["ge_types"].append(GE_DICTIONARY[extractedGE])
+                if debug: print(GE_DICTIONARY[extractedGE] + " ", end="")
+            if debug: print()
+            # store the full string
+            dic["ge_string"] = pTagText
+        # try to match keywords like "grading option", "repeatability"
+        for keyWord in dic.keys():
+            if re.match("^" + keyWord + ".*", pTagText.lower()):
+                dic[keyWord] = pTagText
+                break
 
-    for course in soup.select(".courses"):
-        # if page is empty for some reason??? (http://catalogue.uci.edu/allcourses/cbems/)
-        if len(course.select("h3")) == 0:
+# tag: the second ptag from courseBody
+# dic: a dictionary to store parsed information
+# returns a requirement Node if successfully parsed, None otherwise
+def parsePrerequisite(tag, dic:dict):
+    # sometimes prerequisites are in the same ptag as corequisites
+    prereqRegex = re.compile(r"((?P<fullcoreqs>Corequisite:[^\n]*)\n)?(?P<fullreqs>Prerequisite[^:]*:(?P<reqs>.*))")
+    possibleReq = prereqRegex.search(normalizeString(tag.get_text()))
+    # if matches prereq structure
+    if possibleReq:
+        dic["corequisite"] = "" if possibleReq.group("fullcoreqs") == None else possibleReq.group("fullcoreqs")
+        dic["prerequisite"] = "" if possibleReq.group("fullreqs") == None else possibleReq.group("fullreqs")
+        # only get the first sentence (following sentences are grade requirements like "at least C or better")
+        rawReqs = normalizeString(possibleReq.group("reqs").split(".")[0].strip())
+        # look for pretokenized items
+        for pretoken in PRETOKENIZE:
+            if pretoken in rawReqs:
+                rawReqs = rawReqs.replace(pretoken, pretoken.replace(" and ", "/").replace(" or ", "/"))
+        # get all courses                    
+        extractedReqs = re.split(r' and | or ', rawReqs.replace("(","").replace(")",""))
+        # tokenized version: replace each class by an integer
+        tokenizedReqs = rawReqs
+        special = False
+        # if doesnt have a link to another course, probably a special requirement
+        if len(tag.select("a")) == 0:
+            if debug: print("\t\tSPECIAL REQ NO LINK:", rawReqs) 
+            specialRequirements.add(rawReqs)
             return
-        for courseBlock in course.find_all("div", "courseblock"):
-            # course identification
-            courseNumber, courseName, courseUnits = getCourseInfo(courseBlock)
-            if debug: print("", courseNumber, courseName, courseUnits, sep="\t")
-            # get course info (0:Course Description, 1:Prerequisite)
-            courseInfo = courseBlock.div.find_all("p")
-            # parse course description
-            courseDescription = unicodedata.normalize("NFKD", courseInfo[0].getText())
-
-            # parse units
-            unit_list = courseUnits.split(" ")[0]
-            if "-" in courseUnits:
-                unit_list = unit_list.split("-")
-            else:
-                unit_list = [unit_list] * 2
-            # parse course number and department
-            splitID = courseNumber.split()
-            id_department = " ".join(splitID[0:-1])
-            id_number = splitID[-1]
-
-            # store meta data for Elasticsearch
-            metadata = {
-                "index" : {
-                    "_index" : "courses",
-                    "_id" : courseNumber.replace(" ", "")
-                }
-            }
-            if id_department not in departmentToSchoolMapping:
-                noSchoolDepartment.add(id_department)
-            # Examples at https://github.com/icssc-projects/PeterPortal/wiki/Course-Search
-            # store class data into dictionary
-            dic = {"id":courseNumber, "id_department": id_department, "id_number": id_number, 
-                    "id_school": departmentToSchoolMapping[id_department] if id_department in departmentToSchoolMapping else "", 
-                    "name": courseName, 
-                    "course_level": determineCourseLevel(courseNumber),
-                    "dept_alias": ALIASES[id_department] if id_department in ALIASES else [],
-                    "units":[float(x) for x in unit_list],"description":courseDescription, "department": department, 
-                    "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"{}", "dependencies":[],"repeatability":"","grading option":"",
-                    "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":"","ge_types":[],"ge_string":""}
-            # stores dictionaries in json_data to add dependencies later 
-            json_data[courseNumber] = {}
-            json_data[courseNumber]["metadata"] = metadata
-            json_data[courseNumber]["data"] = dic
-            json_data[courseNumber]["node"] = None
-            
-            # iterate through each p tag for the course
-            for c in courseInfo:
-                pTagText = unicodedata.normalize("NFKD", c.getText().strip())
-                # if starts with ( and has I or V in it, probably a GE tag
-                if len(pTagText) > 0 and pTagText[0] == "(" and ("I" in pTagText or "V" in pTagText):
-                    # try to parse GE types
-                    ges = re.compile("(?P<type>[IV]+)\.?(?P<subtype>[abAB]?)")
-                    if debug: print("\t\tGE:", end="")
-                    for ge in ges.finditer(pTagText):
-                        # normalize IA and VA to Ia and Va
-                        extractedGE = ge.group("type") + ge.group("subtype").lower()
-                        # normalize in full string also
-                        pTagText = pTagText.replace(ge.group("type") + ge.group("subtype"), extractedGE)
-                        # add to ge_types
-                        dic["ge_types"].append(GE_DICTIONARY[extractedGE])
-                        if debug: print(GE_DICTIONARY[extractedGE] + " ", end="")
-                    if debug: print()
-                    # store the full string
-                    dic["ge_string"] = pTagText
-                # try to match keywords like "grading option", "repeatability"
-                for keyWord in dic.keys():
-                    if re.match("^" + keyWord + ".*", pTagText.lower()):
-                        dic[keyWord] = pTagText
-                        break
-            
-            # try to find prerequisite
-            if len(courseInfo) > 1:
-                # sometimes prerequisites are in the same ptag as corequisites
-                prereqRegex = re.compile(r"((?P<fullcoreqs>Corequisite:[^\n]*)\n)?(?P<fullreqs>Prerequisite[^:]*:(?P<reqs>.*))")
-                possibleReq = prereqRegex.search(unicodedata.normalize("NFKD",courseInfo[1].get_text()))
-                # if matches prereq structure
-                if possibleReq:
-                    dic["corequisite"] = "" if possibleReq.group("fullcoreqs") == None else possibleReq.group("fullcoreqs")
-                    dic["prerequisite"] = "" if possibleReq.group("fullreqs") == None else possibleReq.group("fullreqs")
-                    # only get the first sentence (following sentences are grade requirements like "at least C or better")
-                    rawReqs = unicodedata.normalize("NFKD",possibleReq.group("reqs").split(".")[0].strip())
-                    # look for pretokenized items
-                    for pretoken in PRETOKENIZE:
-                        if pretoken in rawReqs:
-                            rawReqs = rawReqs.replace(pretoken, pretoken.replace(" and ", "/").replace(" or ", "/"))
-                    # get all the individual class names                    
-                    extractedReqs = re.split(r' and | or ', rawReqs.replace("(","").replace(")",""))
-                    # tokenized version: replace each class by an integer
-                    tokenizedReqs = rawReqs
-                    special = False
-                    # if doesnt have a link to another course, probably a special requirement
-                    if len(courseInfo[1].select("a")) == 0:
-                        if debug: print("\t\tSPECIAL REQ NO LINK:", rawReqs) 
-                        specialRequirements.add(rawReqs)
-                        special = True
-                    # if has a link
-                    if not special:
-                        for i in range(len(extractedReqs)):
-                            courseRegex = re.compile(r"^([^a-z]+ )+[A-Z0-9]+$")
-                            # if doesnt match course code regex, its probably a special requirement unless whitelisted
-                            if not courseRegex.match(extractedReqs[i].strip()) and not any([True for exception in SPECIAL_PREREQUISITE_WHITE_LIST if exception in extractedReqs[i]]):
-                                if debug: print("\t\tSPECIAL REQ BAD FORMAT:", rawReqs) 
-                                specialRequirements.add(rawReqs)
-                                special = True
-                                break
-                            # does the actual replacement
-                            tokenizedReqs = tokenizedReqs.replace(extractedReqs[i].strip(), str(i), 1)
-                        # if nothing went wrong while processing tokens
-                        if not special:
-                            # place a space between parentheses to tokenize
-                            tokenizedReqs = tokenizedReqs.replace("(", "( ").replace(")", " )")
-                            # tokenize each item
-                            tokens = tokenizedReqs.split()
-                            # get the requirement Node
-                            node = nodify(tokens, extractedReqs, courseNumber)
-                            # stringify node
-                            dic["prerequisiteJSON"] = str(node)
-                            # add list of prereq classes for dependency generation
-                            dic["prerequisiteList"] = extractedReqs
-                            # maps the course to its requirement Node
-                            json_data[courseNumber]["node"] = node
-                            # debug information
-                            if debug:
-                                print("\t\tREQS:", rawReqs)
-                                print("\t\tREQSTOKENS:", tokens)
-                                print("\t\tNODE:",node)
-                # doesn't match Requirements description                    
-                else:
-                    if debug: print("\t\tNOREQS")
-            # doesn't have any descriptions
-            else:
-                if debug: print("\t\tNOREQS")
+        # if has a link, continue tokenizing
+        for i in range(len(extractedReqs)):
+            courseRegex = re.compile(r"^([^a-z]+ )+[A-Z0-9]+$")
+            # if doesnt match course code regex, its probably a special requirement unless whitelisted
+            if not courseRegex.match(extractedReqs[i].strip()) and not any([True for exception in SPECIAL_PREREQUISITE_WHITE_LIST if exception in extractedReqs[i]]):
+                if debug: print("\t\tSPECIAL REQ BAD FORMAT:", rawReqs) 
+                specialRequirements.add(rawReqs)
+                return
+            # does the actual replacement
+            tokenizedReqs = tokenizedReqs.replace(extractedReqs[i].strip(), str(i), 1)
+        # place a space between parentheses to tokenize
+        tokenizedReqs = tokenizedReqs.replace("(", "( ").replace(")", " )")
+        # tokenize each item
+        tokens = tokenizedReqs.split()
+        # get the requirement Node
+        node = nodify(tokens, extractedReqs, dic["id"])
+        # stringify node
+        dic["prerequisiteJSON"] = str(node)
+        # add list of classes mentioned in prereq for dependency generation
+        dic["prerequisiteList"] = extractedReqs
+        # debug information
+        if debug:
+            print("\t\tREQS:", rawReqs)
+            print("\t\tREQSTOKENS:", tokens)
+            print("\t\tNODE:",node)
+        return node
+    # doesn't match prereq structure                    
+    else:
+        if debug: print("\t\tNOREQS")
 
 # json_data: collection of class information generated from getAllCourses
 # sets the dependencies for courses
 def setDependencies(json_data:dict):
-    print("Setting Course Dependencies...")
+    print("\nSetting Course Dependencies...")
+    bar = ProgressBar(len(json_data))
     # go through each prerequisiteList to add dependencies
-    for courseNumber in json_data:
+    for courseID in json_data:
         # iterate prerequisiteList
-        for prerequisite in json_data[courseNumber]["data"]["prerequisiteList"]:
+        for prerequisite in json_data[courseID]["data"]["prerequisiteList"]:
             # prereq needs to exist as a class
             if prerequisite in json_data:
-                json_data[prerequisite]["data"]["dependencies"].append(courseNumber)
+                json_data[prerequisite]["data"]["dependencies"].append(courseID)
+        bar.inc()
 
 # json_data: collection of class information generated from getAllCourses and setDependencies
 def writeJsonData(json_data:dict,filename=GENERATE_JSON_NAME):
-    print(f"Writing JSON to {filename}...")
+    print(f"\nWriting JSON to {filename}...")
+    bar = ProgressBar(len(json_data))
     # string that represents the JSON file we want to generate
     json_string = ""
     # loop through each course to jsonify
-    for courseNumber in json_data:
-        json_string += json.dumps(json_data[courseNumber]["metadata"]) + '\n' + json.dumps(json_data[courseNumber]["data"]) + '\n'
+    for courseID in json_data:
+        json_string += json.dumps(json_data[courseID]["metadata"]) + '\n' + json.dumps(json_data[courseID]["data"]) + '\n'
+        bar.inc()
     # remove existing file
     if os.path.exists(filename):
         os.remove(filename)
@@ -356,10 +383,17 @@ if __name__ == "__main__":
     # debugging information
     specialRequirements = set()
     noSchoolDepartment = set()
+    conflictFile = open(CONFLICT_PREREQ_NAME, "w")
+    conflictFile.write("Following courses have conflicting AND/OR logic in their prerequisites\n")
+    conflictFile.close()
 
+    allCourseURLS = getAllCourseURLS(driver)
+    print("\nParsing All Courses...")
+    bar = ProgressBar(len(allCourseURLS))
     # SCRAPE ALL CLASSES
-    for classURL in getAllCoursesURLS(driver):
+    for classURL in allCourseURLS:
         getAllCourses(scrape(driver, classURL), json_data, departmentToSchoolMapping)
+        bar.inc()
     setDependencies(json_data)
     writeJsonData(json_data)
 
