@@ -12,8 +12,8 @@ Deploying to AWS
 """
 
 elasticEndpointURL = 'https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com'
-# jsonToUpload = "all_professors.json"
-# jsonToUpload = "all_courses.json"
+jsonToUpload = "resources/all_courses.json"
+# jsonToUpload = "resources/all_professors.json"
 
 headers = {
     'Content-type' : 'application/json'
@@ -26,8 +26,7 @@ with open(path_to_json) as f:
   data = f.read()
 
 r = requests.put(url, data=data, headers=headers)
-print(r.text)
-
+print("Deploy Finished")
 
 # Below method only has 14 day trial. Keeping it just in case.
 """

@@ -17,7 +17,8 @@ from progressBar import ProgressBar
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
 URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
-GENERATE_JSON_NAME = "all_courses.json"
+GENERATE_JSON_NAME = "resources/all_courses.json"
+PROFESSOR_DATA_NAME = "resources/professor_data.txt"
 SPECIAL_REQS_NAME = "output/special_reqs.txt"
 SCHOOL_LIST_NAME = "output/school_list.txt" 
 GE_DICTIONARY = {"Ia":"GE Ia: Lower Division Writing",
@@ -57,7 +58,7 @@ def normalizeString(s:str):
 # returns a mapping from department code to school name. Uses the catalogue.
 # Example: {"I&C SCI":"Donald Bren School of Information and Computer Sciences","IN4MATX":"Donald Bren School of Information and Computer Sciences"}
 def getDepartmentToSchoolMapping(driver):
-    print("\nMapping Department to Schools...")
+    print("\nMapping Departments to Schools...")
     # some need to be hard coded (These are mentioned in All Courses but not listed in their respective school catalogue)
     mapping = {"FIN":"The Paul Merage School of Business",
                "ARMN":"School of Humanities",
@@ -68,7 +69,7 @@ def getDepartmentToSchoolMapping(driver):
     catalogueSoup = scrape(driver, URL_TO_ALL_COURSES)
     # get all li from sidebar
     lis = catalogueSoup.find(id="/").find_all("li")
-    bar = ProgressBar(len(lis))
+    bar = ProgressBar(len(lis), debug)
     # look through all the links in the sidebar
     for possibleSchoolLink in lis:
         # create school soup
@@ -124,7 +125,7 @@ def getAllCourseURLS(driver):
     # gets the soup object
     allCoursesSoup = scrape(driver, URL_TO_ALL_COURSES)
     letterLists = allCoursesSoup.find(id="atozindex").find_all("ul")
-    bar = ProgressBar(len(letterLists))
+    bar = ProgressBar(len(letterLists), debug)
     # get all the unordered lists
     for letterList in letterLists:
         # get all the list items
@@ -164,6 +165,7 @@ def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
                 unit_range = unit_range.split("-")
             else:
                 unit_range = [unit_range] * 2
+
             # parse course number and department
             splitID = courseID.split()
             id_department = " ".join(splitID[0:-1])
@@ -179,6 +181,7 @@ def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
                     "_id" : courseID.replace(" ", "")
                 }
             }
+
             # Examples at https://github.com/icssc-projects/PeterPortal/wiki/Course-Search
             # store class data into dictionary
             dic = {"id":courseID, "id_department": id_department, "id_number": id_number, 
@@ -186,9 +189,10 @@ def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
                     "name": courseName, 
                     "course_level": determineCourseLevel(courseID),
                     "dept_alias": ALIASES[id_department] if id_department in ALIASES else [],
-                    "units":[float(x) for x in unit_range],"description":courseDescription, "department": department, 
+                    "units":[float(x) for x in unit_range],"description":courseDescription, "department": department, "professorHistory":[],
                     "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"{}", "dependencies":[],"repeatability":"","grading option":"",
                     "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":"","ge_types":[],"ge_string":""}
+
             # stores dictionaries in json_data to add dependencies later 
             json_data[courseID] = {"metadata":metadata,
                                         "data":dic,
@@ -326,7 +330,7 @@ def parsePrerequisite(tag, dic:dict):
 # sets the dependencies for courses
 def setDependencies(json_data:dict):
     print("\nSetting Course Dependencies...")
-    bar = ProgressBar(len(json_data))
+    bar = ProgressBar(len(json_data), debug)
     # go through each prerequisiteList to add dependencies
     for courseID in json_data:
         # iterate prerequisiteList
@@ -336,10 +340,25 @@ def setDependencies(json_data:dict):
                 json_data[prerequisite]["data"]["dependencies"].append(courseID)
         bar.inc()
 
-# json_data: collection of class information generated from getAllCourses and setDependencies
+# json_data: collection of class information generated from getAllCourses
+# professor_data: collection of professor information generated from professorScraper.py
+# sets the professorHistory for courses
+def setProfessorHistory(json_data:dict, professor_data:dict):
+    print("\nSetting Professor History...")
+    bar = ProgressBar(len(professor_data), debug)
+    # go through each profesor data values
+    for professor in professor_data.values():
+        # go through each course that professor has taught
+        for courseID in professor["courseHistory"]:
+            # course needs to exist as a class
+            if courseID in json_data:
+                json_data[courseID]["data"]["professorHistory"].append(professor["ucinetid"])
+        bar.inc()
+
+# json_data: collection of class information generated from getAllCourses
 def writeJsonData(json_data:dict,filename=GENERATE_JSON_NAME):
     print(f"\nWriting JSON to {filename}...")
-    bar = ProgressBar(len(json_data))
+    bar = ProgressBar(len(json_data), debug)
     # string that represents the JSON file we want to generate
     json_string = ""
     # loop through each course to jsonify
@@ -378,6 +397,7 @@ if __name__ == "__main__":
     driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
     # store all of the data
     json_data = {}
+    professor_data = json.load(open(PROFESSOR_DATA_NAME))
     # maps department code to school 
     departmentToSchoolMapping = getDepartmentToSchoolMapping(driver)
     # debugging information
@@ -388,13 +408,14 @@ if __name__ == "__main__":
     conflictFile.close()
 
     allCourseURLS = getAllCourseURLS(driver)
-    print("\nParsing All Courses...")
-    bar = ProgressBar(len(allCourseURLS))
+    print("\nParsing Each Course URL...")
+    bar = ProgressBar(len(allCourseURLS), debug)
     # SCRAPE ALL CLASSES
     for classURL in allCourseURLS:
         getAllCourses(scrape(driver, classURL), json_data, departmentToSchoolMapping)
         bar.inc()
     setDependencies(json_data)
+    setProfessorHistory(json_data, professor_data)
     writeJsonData(json_data)
 
     # Debug information about school

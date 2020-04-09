@@ -1,5 +1,5 @@
 # Python Dependencies:  
-    pip install beautifulsoup4 selenium requests  
+    pip install beautifulsoup4 selenium requests progressbar
 
 # Basic Workflows:
 A. Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch  
@@ -15,9 +15,10 @@ B. Generate Professor JSON -> Deploy the Professor JSON Data to ElasticSearch
 
 ## Cloud Deploy Data (in Bulk) to AWS ElasticSearch:  
 1. cd into script
-2. Uncomment corresponding 'indexToDelete' variable in deleteelasticcloud.py
-3. Uncomment desired 'jsonToUpload' variable in deployelasticcloud.py
-4. Run 'npm run deployElastic'
+2. Optionally uncomment corresponding 'indexToDelete' variable in deleteelasticcloud.py
+3. Optionally delete the existing index by running 'python deleteelasticcloud.py'
+4. Uncomment desired 'jsonToUpload' variable in deployelasticcloud.py
+5. Index the data by running 'python deployelasticcloud.py'
 
 # Deploying Scripts to AWS EC2 Instance:  
 ## Create an AWS EC2 Instance
