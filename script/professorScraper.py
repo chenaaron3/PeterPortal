@@ -7,7 +7,8 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
-from Scraper import getCourseInfo
+from courseScraper import getCourseInfo
+from progressBar import ProgressBar
 import boto3
 import json
 import urllib
@@ -20,12 +21,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Dependencies:
-# - pip install beautifulsoup4 selenium
-# - Install selenium Chrome driver (https://sites.google.com/a/chromium.org/chromedriver/downloads)
-#     - add executable to PATH (https://selenium.dev/documentation/en/webdriver/driver_requirements/#quick-reference)
-#     - update the path below
-
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
 URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
@@ -37,8 +32,8 @@ URL_TO_INSTRUCT_HISTORY = "https://www.reg.uci.edu/perl/InstructHist"
 FOUND_NAME = "output/found_profs.txt"
 QUESTIONABLE_NAME = "output/questionable_profs.txt"
 MISSING_NAME = "output/missing_profs.txt"
-CONDENSED_NAME = "output/condensed.txt"
-JSON_NAME = "all_professors.json"
+PROFESSOR_DATA_NAME = "resources/professor_data.txt"
+JSON_NAME = "resources/all_professors.json"
 
 # stats
 hits = 0
@@ -60,17 +55,20 @@ def scrape(driver, url):
 # returns a list of all faculty links to scrape
 # Example: ['http://catalogue.uci.edu/clairetrevorschoolofthearts/#faculty', 'http://catalogue.uci.edu/schoolofbiologicalsciences/#faculty', ...]
 def getFacultyLinks(driver):
+    print(f"\nCollecting Faculty Links from Sidebar...")
     # get the soup object for catalogue
     catalogueSoup = scrape(driver, URL_TO_ALL_COURSES)
     faculty_links = []
+    # all links in sidebar
+    lis = catalogueSoup.find(id="/").find_all("li")
+    bar = ProgressBar(len(lis), False)
     # look through all the links in the sidebar
-    for possibleSchoolLink in catalogueSoup.find(id="/").find_all("li"):
+    for possibleSchoolLink in lis:
         # create school soup
         schoolUrl = CATALOGUE_BASE_URL + possibleSchoolLink.a['href'] + "#faculty"
         schoolSoup = scrape(driver, schoolUrl)
         # get the school name
         school = unicodedata.normalize("NFKD", schoolSoup.find(id="content").h1.getText())
-        print("School:", school)
         # if this school has the "Faculty" tab
         if schoolSoup.find(id="facultytab") != None:
             # add school faculty page
@@ -88,6 +86,7 @@ def getFacultyLinks(driver):
                     if departmentSoup.find(id="facultytab") != None:
                         # add department faculty page
                         faculty_links.append(departmentUrl)
+        bar.inc()
     return faculty_links
 
 # soup: a soup that is loaded into a Courses page that is associated with a Faculty page
@@ -130,8 +129,10 @@ def getHardcodedDepartmentCodes(link:str):
 def getAllProfessors(soup, departmentCodes:list):
     global hits
     global misses
+    faculties = soup.select(".faculty")
+    bar = ProgressBar(len(faculties), False)
     # find all faculty blocks
-    for faculty in soup.select(".faculty"):
+    for faculty in faculties:
         # extract name and title
         name = faculty.find("span", class_="name")
         title = faculty.find("span", class_="title")
@@ -159,6 +160,7 @@ def getAllProfessors(soup, departmentCodes:list):
                 # check if results have the same first and last name as the query
                 if name_split[0].lower() != result_name_split[0].lower() or name_split[-1].lower() != result_name_split[-1].lower():
                     fquestionable.write(name_text + ":" + str(results) + "\n")
+        bar.inc()
     print("Hits:", hits, "Misses:", misses)
 
 # driver: the Selenium Chrome driver
@@ -241,7 +243,6 @@ def getCourseHistory(query:dict):
         row += 101
         PARAMS["start_row"] = str(row)
     query['courseHistory'] = list(courseHistory)
-    print(courseHistory)
 
 # soup: a soup that is loaded into a Instructor History page
 # relatedDepartments: a list of the professor's related departments (eg. ['ARTS', 'ART', 'DANCE', 'DRAMA', 'MUSIC'])
@@ -254,6 +255,7 @@ def parseHistoryPage(soup, relatedDepartments, courseHistory):
     FIELD_LABELS = {"qtr":0,"empty":1,"instructor":2,"courseCode":3,"dept":4,"courseNo":5,"type":6,"title":7,"units":8,"maxCap":9,"enr":10,"req":11}
     YEAR_THRESHOLD = 5
     entries = soup.find_all("tr")
+
     # check if any results show up
     validEntryFound = False
     # loop through all row entries
@@ -271,21 +273,27 @@ def parseHistoryPage(soup, relatedDepartments, courseHistory):
                 if parseHistoryPage.firstEntry == myEntry:
                     return False
                 parseHistoryPage.firstEntry = myEntry
+
             validEntryFound = True
             # if QTR field breaches threshold
             qtr_year = fields[FIELD_LABELS["qtr"]].text.strip()
             year = int(re.sub("[^0-9]", "", qtr_year))
             if CUR_YEAR - year > YEAR_THRESHOLD:
                 return False
+
             dept = fields[FIELD_LABELS["dept"]].text.strip()
             # if dept is related to professor
             if dept in relatedDepartments:
                 courseCode = dept + " " + fields[FIELD_LABELS["courseNo"]].text.strip()
                 courseHistory.add(courseCode)
+
     return validEntryFound
 
 # json_data: collection of class information generated from getAllRequirements and setDependencies
 def writeToJson():
+    print(f"\nWriting JSON to {JSON_NAME}...")
+    bar = ProgressBar(len(facultyDictionary), False)
+
     # string that represents the JSON file we want to generate
     json_string = ""
     # loop through each course to jsonify
@@ -297,6 +305,8 @@ def writeToJson():
             }
         }
         json_string += json.dumps(metadata) + '\n' + json.dumps(facultyDictionary[faculty]) + '\n'
+        bar.inc()
+
     with open(JSON_NAME, "w") as f:
         f.write(json_string)
 
@@ -306,34 +316,51 @@ if __name__ == "__main__":
     fmissing = io.open(MISSING_NAME, "w", encoding="utf-8")
     fquestionable = io.open(QUESTIONABLE_NAME, "w", encoding="utf-8")
     ffound = io.open(FOUND_NAME, "w", encoding="utf-8")
-    fcondensed = io.open(CONDENSED_NAME, "w", encoding="utf-8")
+    fprofessorData = io.open(PROFESSOR_DATA_NAME, "w", encoding="utf-8")
+
     # maps faculty ucnetid to their information
     facultyDictionary = {}
+
     # the Selenium Chrome driver
     options = Options()
     options.headless = True
     driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
+
     # list of faculty links
     faculty_links = getFacultyLinks(driver)
-    print(faculty_links)
+    print("\nTOTAL PROGRESS:")
+    bar = ProgressBar(len(faculty_links), True)
+    print()
+
     for link in faculty_links:
         # faculty in school of medicine do not teach
         if link == "http://catalogue.uci.edu/schoolofmedicine/#faculty":
             continue
+        # retrive related departments
         department_soup = scrape(driver, link.replace("#faculty","#courseinventory"))
         department_codes = getAllDepartmentCodes(department_soup)
+        # backup related departments
         if len(department_codes) == 0:
             department_codes = getHardcodedDepartmentCodes(link)
-        faculty_soup = scrape(driver, link)
-        print(link)
-        getAllProfessors(faculty_soup, department_codes)
+
+        print(f"Now Scraping {link}...")
+        # scraping professors on the link
+        getAllProfessors(scrape(driver, link), department_codes)
+        print("TOTAL PROGRESS:")
+        bar.inc()
+        print()
+
+    # output to json file
     writeToJson()
-    condensed = "\n".join("{!r}: {!r}".format(k, facultyDictionary[k]) for k in sorted(facultyDictionary))
-    fcondensed.write(condensed)
+
+    # debug output
+    fprofessorData.write(json.dumps(facultyDictionary))
     print(hits, misses)
     print(hits / (hits + misses))
+
+    # clean up resources
     driver.quit()
     fmissing.close()
     fquestionable.close()
     ffound.close()
-    fcondensed.close()
+    fprofessorData.close()
