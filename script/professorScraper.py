@@ -7,8 +7,6 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
-from courseScraper import getCourseInfo
-from progressBar import ProgressBar
 import boto3
 import json
 import urllib
@@ -20,6 +18,9 @@ import datetime
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+from courseScraper import getCourseInfo
+from progressBar import ProgressBar
 
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
 URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
