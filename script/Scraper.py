@@ -3,6 +3,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
 import json
 import os
 import platform
@@ -342,7 +343,9 @@ if __name__ == "__main__":
     # whether to print out info
     debug = False
     # the Selenium Chrome driver
-    driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER)
+    options = Options()
+    options.headless = True
+    driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
     # store all of the data
     json_data = {}
     # maps department code to school 
