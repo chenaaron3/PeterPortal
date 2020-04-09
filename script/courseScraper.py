@@ -11,6 +11,7 @@ import platform
 from requirementNode import Node, nodify, CONFLICT_PREREQ_NAME
 from alias import ALIASES
 from progressBar import ProgressBar
+from professorScraper import PROFESSOR_DATA_NAME
 
 # DO NOT CHANGE
 # Automatically determines the path based on your operating system
@@ -18,7 +19,6 @@ PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__
 URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
 GENERATE_JSON_NAME = "resources/all_courses.json"
-PROFESSOR_DATA_NAME = "resources/professor_data.txt"
 SPECIAL_REQS_NAME = "output/special_reqs.txt"
 SCHOOL_LIST_NAME = "output/school_list.txt" 
 GE_DICTIONARY = {"Ia":"GE Ia: Lower Division Writing",

@@ -11,6 +11,9 @@ Deploying to AWS
 4. Run this script (python deployelasticcloud.py)
 """
 
+# Username: PeterPortal
+# Password: PeterPortal1!
+
 elasticEndpointURL = 'https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com'
 jsonToUpload = "resources/all_courses.json"
 # jsonToUpload = "resources/all_professors.json"
