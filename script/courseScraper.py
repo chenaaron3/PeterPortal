@@ -48,25 +48,10 @@ def scrape(driver, url):
     return BeautifulSoup(html, 'html.parser')
 
 # driver: the Selenium Chrome driver
-# returns a list of class URLS from AllCourses
-# Example: ["http://catalogue.uci.edu/allcourses/ac_eng/","http://catalogue.uci.edu/allcourses/afam/",...]
-def getAllCoursesURLS(driver):
-    # store all URLS in list
-    courseURLS = []
-    # gets the soup object
-    allCoursesSoup = scrape(driver, URL_TO_ALL_COURSES)
-    # get all the unordered lists
-    for letterList in allCoursesSoup.find(id="atozindex").find_all("ul"):
-        # get all the list items
-        for courseURL in letterList.find_all('a', href=True):
-            # prepend base url to relative path
-            courseURLS.append(CATALOGUE_BASE_URL + courseURL['href'])
-    return courseURLS
-
-# driver: the Selenium Chrome driver
 # returns a mapping from department code to school name. Uses the catalogue.
 # Example: {"I&C SCI":"Donald Bren School of Information and Computer Sciences","IN4MATX":"Donald Bren School of Information and Computer Sciences"}
 def getDepartmentToSchoolMapping(driver):
+    print("\nMapping Department to Schools...")
     # some need to be hard coded (These are mentioned in All Courses but not listed in their respective school catalogue)
     mapping = {"FIN":"The Paul Merage School of Business",
                "ARMN":"School of Humanities",
@@ -86,7 +71,7 @@ def getDepartmentToSchoolMapping(driver):
         # if this school has the "Courses" tab
         if schoolSoup.find(id="courseinventorytab") != None:
             # map school soup
-            mapSoup(mapping, school, schoolSoup)   
+            mapCoursePageToSchool(mapping, school, schoolSoup)   
         # look for department links
         departmentLinks = schoolSoup.find(class_="levelone")
         if departmentLinks != None:
@@ -98,27 +83,43 @@ def getDepartmentToSchoolMapping(driver):
                 # if this department has the "Courses" tab
                 if departmentSoup.find(id="courseinventorytab") != None:
                     # map department soup
-                    mapSoup(mapping, school, departmentSoup)
+                    mapCoursePageToSchool(mapping, school, departmentSoup)
     return mapping
 
 # mapping: the dictionary used to map department code to school name
 # school: the school to map to
 # soup: a soup that is loaded into a Courses page
 # returns nothing, mutates the mapping passed in
-def mapSoup(mapping:dict, school:str, soup):
+def mapCoursePageToSchool(mapping:dict, school:str, soup):
     # get all the departments under this school
     for schoolDepartment in soup.find(id="courseinventorycontainer").find_all(class_="courses"):
         # if department is not empty (why tf is Chemical Engr and Materials Science empty)
         if schoolDepartment.h3 != None:
             # get the department name
             department = unicodedata.normalize("NFKD", schoolDepartment.h3.getText())
-            print("\tDepartment:", department)
             # extract the first department code
             courseNumber, _, _ =  getCourseInfo(schoolDepartment.div)
             id_dept = " ".join(courseNumber.split()[0:-1])
-            print("\tDepartment Code:", id_dept)
+            print(f"\t{id_dept}")
             # set the mapping
             mapping[id_dept] = school   
+
+# driver: the Selenium Chrome driver
+# returns a list of class URLS from AllCourses
+# Example: ["http://catalogue.uci.edu/allcourses/ac_eng/","http://catalogue.uci.edu/allcourses/afam/",...]
+def getAllCoursesURLS(driver):
+    print(f"\nCollecting Course URLs from {URL_TO_ALL_COURSES}...")
+    # store all URLS in list
+    courseURLS = []
+    # gets the soup object
+    allCoursesSoup = scrape(driver, URL_TO_ALL_COURSES)
+    # get all the unordered lists
+    for letterList in allCoursesSoup.find(id="atozindex").find_all("ul"):
+        # get all the list items
+        for courseURL in letterList.find_all('a', href=True):
+            # prepend base url to relative path
+            courseURLS.append(CATALOGUE_BASE_URL + courseURL['href'])
+    return courseURLS
 
 # courseBlock: a courseblock tag
 # returns tuple(courseNumber, courseName, courseUnits)
@@ -154,7 +155,7 @@ def determineCourseLevel(id_number:str):
 # json_data: maps class to its json data ({STATS 280: {metadata: {...}, data: {...}, node: Node}})
 # departmentToSchoolMapping: maps department code to its school {I&C SCI: Donald Bren School of Information and Computer Sciences}
 # returns nothing, scrapes all courses in a department page and stores information into a dictionary
-def getAllRequirements(soup, json_data:dict, departmentToSchoolMapping:dict):
+def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
     # department name
     department = unicodedata.normalize("NFKD", soup.find(id="content").h1.get_text())
     # strip off department id
@@ -298,9 +299,10 @@ def getAllRequirements(soup, json_data:dict, departmentToSchoolMapping:dict):
             else:
                 if debug: print("\t\tNOREQS")
 
-# json_data: collection of class information generated from getAllRequirements
+# json_data: collection of class information generated from getAllCourses
 # sets the dependencies for courses
 def setDependencies(json_data:dict):
+    print("Setting Course Dependencies...")
     # go through each prerequisiteList to add dependencies
     for courseNumber in json_data:
         # iterate prerequisiteList
@@ -309,8 +311,9 @@ def setDependencies(json_data:dict):
             if prerequisite in json_data:
                 json_data[prerequisite]["data"]["dependencies"].append(courseNumber)
 
-# json_data: collection of class information generated from getAllRequirements and setDependencies
+# json_data: collection of class information generated from getAllCourses and setDependencies
 def writeJsonData(json_data:dict,filename=GENERATE_JSON_NAME):
+    print(f"Writing JSON to {filename}...")
     # string that represents the JSON file we want to generate
     json_string = ""
     # loop through each course to jsonify
@@ -322,7 +325,7 @@ def writeJsonData(json_data:dict,filename=GENERATE_JSON_NAME):
     with open(filename, "a") as f:
         f.write(json_string)
 
-# json_data: collection of class information generated from getAllRequirements
+# json_data: collection of class information generated from getAllCourses
 # used to create the dictionary for aliases
 def printAllDepartments(jsont_data:dict):
     departments = {}
@@ -354,17 +357,11 @@ if __name__ == "__main__":
     specialRequirements = set()
     noSchoolDepartment = set()
 
-    # UNCOMMENT ONE OF THE FOLLOWING 
-    # 1. SCRAPE ALL CLASSES
+    # SCRAPE ALL CLASSES
     for classURL in getAllCoursesURLS(driver):
-        getAllRequirements(scrape(driver, classURL), json_data, departmentToSchoolMapping)
+        getAllCourses(scrape(driver, classURL), json_data, departmentToSchoolMapping)
     setDependencies(json_data)
     writeJsonData(json_data)
-
-    # 2. SCRAPE ICS CATALOGUE
-    # getAllRequirements(scrape(driver, "http://catalogue.uci.edu/allcourses/art/"), json_data, departmentToSchoolMapping)
-    # setDependencies(json_data)
-    # writeJsonData(json_data, "test.json")
 
     # Debug information about school
     schoolFile = open(SCHOOL_LIST_NAME, "w")
