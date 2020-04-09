@@ -5,9 +5,6 @@ from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-from elasticsearch import Elasticsearch, RequestsHttpConnection
-from requests_aws4auth import AWS4Auth
-import boto3
 import json
 import urllib
 import time
