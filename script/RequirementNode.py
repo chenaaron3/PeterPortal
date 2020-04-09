@@ -1,3 +1,5 @@
+CONFLICT_PREREQ_NAME = "output/conflict_prereq.txt"
+
 class Node:
     def __init__(self, type = "?", vals = None):
         # holds other nodes
@@ -84,7 +86,9 @@ def nodify(tokens, lookup, courseNumber):
         elif token == "and":
             # if has conflicting logic (eg. A or B and C)
             if stack[0].type == "|":
-                print("\t\tCONFLICT WARNING IN NODIFY!!", courseNumber)
+                f = open(CONFLICT_PREREQ_NAME, "a")
+                f.write(f"{courseNumber}\n")
+                f.close()
                 # wrap the previous values into a subnode (eg. (A or B) and C)
                 subNode = Node(stack[0].type, stack[0].values.copy())
                 # set context node to just the subnode
@@ -94,7 +98,9 @@ def nodify(tokens, lookup, courseNumber):
         elif token == "or":
             # if has conflicting logic (eg. A and B or C)
             if stack[0].type == "&":
-                print("\t\tCONFLICT WARNING IN NODIFY!!", courseNumber)
+                f = open(CONFLICT_PREREQ_NAME, "a")
+                f.write(f"{courseNumber}\n")
+                f.close()
                 # wrap the previous values into a subnode (eg. (A and B) or C)
                 subNode = Node(stack[0].type, stack[0].values.copy())
                 # set context node to just the subnode
