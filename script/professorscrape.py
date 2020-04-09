@@ -3,6 +3,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
@@ -309,7 +310,9 @@ if __name__ == "__main__":
     # maps faculty ucnetid to their information
     facultyDictionary = {}
     # the Selenium Chrome driver
-    driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER)
+    options = Options()
+    options.headless = True
+    driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
     # list of faculty links
     faculty_links = getFacultyLinks(driver)
     print(faculty_links)
