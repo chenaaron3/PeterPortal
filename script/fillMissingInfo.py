@@ -1,4 +1,12 @@
-elasticEndpointURL = 'https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com'
+import requests
+import json
+import os
+from dotenv import load_dotenv
+
+# activate .env
+load_dotenv()
+
+elasticEndpointURL = os.getenv("ELASTIC_ENDPOINT_URL")
 
 # Add missing professors
 def addMissingProfessor(ucinetid, name, department):
