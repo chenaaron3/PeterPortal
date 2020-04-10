@@ -7,13 +7,17 @@ import pyperclip
 # 2. Paste the JSON generated from Scraper.py
 # 3. Run python docJSON.py
 
-keyOrder = ["id", "id_number", "id_department", "id_school", "department", "name", "description", "dept_alias", "course_level",
-            "prerequisite", "prerequisiteList", "prerequisiteJSON", "dependencies", 
+courseKeyOrder = ["id", "id_number", "id_department", "id_school", "department", "name", "description", "dept_alias", "course_level",
+            "prerequisite", "prerequisiteList", "prerequisiteJSON", "dependencies", "professorHistory",
             "repeatability", "corequisite", "overlaps", "restriction", "concurrent", "units", "same as", "grading option", 
             "ge_string", "ge_types"]
 
+professorKeyOrder = ["ucinetid", "name", "title", "department", "phone", "relatedDepartments", "courseHistory"]
+
+keyOrder = courseKeyOrder
+
 messyJSON = """
-{"id": "COMPSCI 178", "id_department": "COMPSCI", "id_number": "178", "id_school": "Donald Bren School of Information and Computer Sciences", "name": "Machine Learning and Data-Mining", "course_level": "Upper Division (100-199)", "dept_alias": ["CS"], "units": [4.0, 4.0], "description": "Introduction to principles of machine learning and data-mining applied to real-world datasets. Typical applications include spam filtering, object recognition, and credit scoring.", "department": "Computer Science", "prerequisiteJSON": "{\"AND\":[\"I&C SCI 6B\",\"I&C SCI 6D\",{\"OR\":[\"I&C SCI 6N\",\"MATH 3A\"]},\"MATH 2B\",{\"OR\":[\"STATS 67\",{\"AND\":[\"STATS 7\",\"STATS 120A\"]}]}]}", "prerequisiteList": ["I&C SCI 6B", "I&C SCI 6D", "I&C SCI 6N", "MATH 3A", "MATH 2B", "STATS 67", "STATS 7", "STATS 120A"], "prerequisite": "Prerequisite: I&C SCI 6B and I&C SCI 6D and (I&C SCI 6N or MATH 3A) and MATH 2B and (STATS 67 or (STATS 7 and STATS 120A))", "dependencies": ["COMPSCI 117", "COMPSCI 172B", "COMPSCI 175", "COMPSCI 272", "COMPSCI 274C", "STATS 170A"], "repeatability": "", "grading option": "", "concurrent": "", "same as": "", "restriction": "Restriction: School of Info & Computer Sci students have first consideration for enrollment. Computer Science Engineering Majors have first consideration for enrollment.", "overlaps": "", "corequisite": "", "ge_types": [], "ge_string": ""}
+{"id": "AFAM 50", "id_department": "AFAM", "id_number": "50", "id_school": "School of Humanities", "name": "Introductory Topics in African American Studies", "course_level": "Lower Division (1-99)", "dept_alias": [], "units": [4.0, 4.0], "description": "Introduction to a broad range of topics in African American studies, exploring history, literature, art, culture, politics, and contemporary social issues. Topical organization of courses addresses issues that have been of importance historically and are reshaping the African diaspora today.", "department": "African American Studies", "professorHistory": [], "prerequisiteJSON": "", "prerequisiteList": [], "prerequisite": "", "dependencies": [], "repeatability": " unlimited as topics vary.", "grading option": "", "concurrent": "", "same as": "", "restriction": "", "overlaps": "", "corequisite": "", "ge_types": [], "ge_string": ""}
 """
 
 # convert string to dictionary

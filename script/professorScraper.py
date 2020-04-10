@@ -16,7 +16,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from courseScraper import getCourseInfo
+import courseScraper
 from progressBar import ProgressBar
 
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
@@ -50,13 +50,14 @@ def scrape(driver, url):
     return BeautifulSoup(html, 'html.parser')
 
 # driver: the Selenium Chrome driver
-# returns a list of all faculty links to scrape
-# Example: ['http://catalogue.uci.edu/clairetrevorschoolofthearts/#faculty', 'http://catalogue.uci.edu/schoolofbiologicalsciences/#faculty', ...]
+# returns a map of all faculty links to scrape to their correspdoning school
+# Example: {'http://catalogue.uci.edu/clairetrevorschoolofthearts/#faculty':'Claire Trevor School of the Arts',
+#           'http://catalogue.uci.edu/thehenrysamuelischoolofengineering/departmentofbiomedicalengineering/#faculty':'The Henry Samueli School of Engineering', ...}
 def getFacultyLinks(driver):
     print(f"\nCollecting Faculty Links from Sidebar...")
     # get the soup object for catalogue
     catalogueSoup = scrape(driver, URL_TO_ALL_COURSES)
-    faculty_links = []
+    faculty_links = {}
     # all links in sidebar
     lis = catalogueSoup.find(id="/").find_all("li")
     bar = ProgressBar(len(lis), False)
@@ -70,7 +71,7 @@ def getFacultyLinks(driver):
         # if this school has the "Faculty" tab
         if schoolSoup.find(id="facultytab") != None:
             # add school faculty page
-            faculty_links.append(schoolUrl)
+            faculty_links[schoolUrl] = school
         else:
             # look for department links
             departmentLinks = schoolSoup.find(class_="levelone")
@@ -83,7 +84,7 @@ def getFacultyLinks(driver):
                     # if this department has the "Faculty" tab
                     if departmentSoup.find(id="facultytab") != None:
                         # add department faculty page
-                        faculty_links.append(departmentUrl)
+                        faculty_links[departmentUrl] = school
         bar.inc()
     return faculty_links
 
@@ -103,7 +104,7 @@ def getAllDepartmentCodes(soup):
         # if department is not empty (why tf is Chemical Engr and Materials Science empty)
         if schoolDepartment.h3 != None:
             # extract the first department code
-            courseNumber, _, _ =  getCourseInfo(schoolDepartment.div)
+            courseNumber, _, _ =  courseScraper.getCourseInfo(schoolDepartment.div)
             id_dept = " ".join(courseNumber.split()[0:-1])
             departmentCodes.append(id_dept)
     return departmentCodes
@@ -123,8 +124,9 @@ def getHardcodedDepartmentCodes(link:str):
 
 # soup: a soup that is loaded into a Faculty page
 # departmentCodes: a list of departments from the same school as the professor (eg. ["COMPSCI","IN4MATX","I&C SCI","SWE","STATS"])
+# school: the school the professor is listed under (eg. "Donald Bren School of Information and Computer Sciences")
 # returns nothing, mutates the global facultyDictionary and outputs debug information
-def getAllProfessors(soup, departmentCodes:list):
+def getAllProfessors(soup, departmentCodes:list, school:str):
     global hits
     global misses
     faculties = soup.select(".faculty")
@@ -145,6 +147,7 @@ def getAllProfessors(soup, departmentCodes:list):
         else:
             # add to dictionary if not already seen
             if results["ucinetid"] not in facultyDictionary:
+                results['school'] = school
                 results['relatedDepartments'] = departmentCodes
                 facultyDictionary[results["ucinetid"]] = results
                 getCourseHistory(results)
@@ -324,7 +327,7 @@ if __name__ == "__main__":
     options.headless = True
     driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
 
-    # list of faculty links
+    # dictionary of faculty links to the school name
     faculty_links = getFacultyLinks(driver)
     print("\nTOTAL PROGRESS:")
     bar = ProgressBar(len(faculty_links), True)
@@ -343,7 +346,7 @@ if __name__ == "__main__":
 
         print(f"Now Scraping {link}...")
         # scraping professors on the link
-        getAllProfessors(scrape(driver, link), department_codes)
+        getAllProfessors(scrape(driver, link), department_codes, faculty_links[link])
         print("TOTAL PROGRESS:")
         bar.inc()
         print()
