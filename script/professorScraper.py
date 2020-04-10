@@ -30,7 +30,7 @@ URL_TO_INSTRUCT_HISTORY = "https://www.reg.uci.edu/perl/InstructHist"
 FOUND_NAME = "output/found_profs.txt"
 QUESTIONABLE_NAME = "output/questionable_profs.txt"
 MISSING_NAME = "output/missing_profs.txt"
-PROFESSOR_DATA_NAME = "resources/professor_data.txt"
+PROFESSOR_DATA_NAME = "resources/professor_data.json"
 JSON_NAME = "resources/all_professors.json"
 
 # stats
@@ -166,8 +166,8 @@ def getAllProfessors(soup, departmentCodes:list, school:str):
 
 # driver: the Selenium Chrome driver
 # query: the name of the professor to look up (eg. "Kei Akagi")
-# returns the directory informmation about a professor
-# Example: {'name': 'Kei Akagi', 'ucinetid': 'kakagi', 'phone': '(949) 824-2171', 'title': "Chancellor's Professor", 'department': 'Arts-Music', 'relatedDepartments': ['ARTS', 'ART', 'DANCE', 'DRAMA', 'MUSIC']}
+# returns the directory information about a professor
+# Example: {'name': 'Kei Akagi', 'ucinetid': 'kakagi', 'phone': '(949) 824-2171', 'title': "Chancellor's Professor", 'department': 'Arts-Music'}
 def getDirectoryInfo(driver, query):
     data = {'uciKey': query}
     # first search through post request
@@ -212,13 +212,16 @@ def getDirectoryInfo(driver, query):
     return info
 
 # query: a dictionary with professor information (eg. {'name': 'Kei Akagi', 'ucinetid': 'kakagi', 'phone': '(949) 824-2171', 'title': "Chancellor's Professor", 'department': 'Arts-Music', 'relatedDepartments': ['ARTS', 'ART', 'DANCE', 'DRAMA', 'MUSIC']})
+# socName: the Schedule of Classes name if known
 # returns nothing, adds a field 'courseHistory' to the dictionary passed in 
-def getCourseHistory(query:dict):
+def getCourseHistory(query:dict, socName=""):
     # set of courseHistory
     courseHistory = set()
     # reformat name to Lastname, First Initial (Kei Akagi => Akagi, K.)
     normalName = query["name"]
     reformatName = normalName.split()[-1] + ", " + normalName[0] + "."
+    if socName != "":
+        reformatName = socName
     # make get request to Instructor History page
     PARAMS = {"order":"term",
               "action":"Submit",
@@ -251,6 +254,7 @@ def getCourseHistory(query:dict):
 # returns whether or not to continue parsing
 # Example: False when no valid entries show up or passed year threshold, True otherwise
 def parseHistoryPage(soup, relatedDepartments, courseHistory):
+    CUR_YEAR = datetime.datetime.now().year % 100
     firstEntry = True
     # maps the field names from Instructor History page to an index
     FIELD_LABELS = {"qtr":0,"empty":1,"instructor":2,"courseCode":3,"dept":4,"courseNo":5,"type":6,"title":7,"units":8,"maxCap":9,"enr":10,"req":11}
@@ -312,7 +316,6 @@ def writeToJson():
         f.write(json_string)
 
 if __name__ == "__main__":
-    CUR_YEAR = datetime.datetime.now().year % 100
     # open up files
     fmissing = io.open(MISSING_NAME, "w", encoding="utf-8")
     fquestionable = io.open(QUESTIONABLE_NAME, "w", encoding="utf-8")

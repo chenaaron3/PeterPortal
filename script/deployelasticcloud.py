@@ -21,7 +21,7 @@ elasticEndpointURL = os.getenv("ELASTIC_ENDPOINT_URL")
 # elasticEndpointURL = old
 
 # jsonToUpload = "resources/all_courses.json"
-jsonToUpload = "resources/all_professors.json"
+# jsonToUpload = "resources/all_professors.json"
 
 headers = {
     'Content-type' : 'application/json'
