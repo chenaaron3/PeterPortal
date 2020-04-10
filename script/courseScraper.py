@@ -19,6 +19,7 @@ PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__
 URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
 GENERATE_JSON_NAME = "resources/all_courses.json"
+DEPT_SCHOOL_MAP_NAME = "resources/dept_school_map.json"
 SPECIAL_REQS_NAME = "output/special_reqs.txt"
 SCHOOL_LIST_NAME = "output/school_list.txt" 
 GE_DICTIONARY = {"Ia":"GE Ia: Lower Division Writing",
@@ -95,6 +96,10 @@ def getDepartmentToSchoolMapping(driver):
                     # map department soup
                     mapCoursePageToSchool(mapping, school, departmentSoup)
         bar.inc()
+    # write to file
+    f = open(DEPT_SCHOOL_MAP_NAME, "w")
+    f.write(json.dumps(mapping))
+    f.close()
     return mapping
 
 # mapping: the dictionary used to map department code to school name

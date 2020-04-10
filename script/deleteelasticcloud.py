@@ -19,7 +19,7 @@ elasticEndpointURL = os.getenv("ELASTIC_ENDPOINT_URL")
 # elasticEndpointURL = old
 
 # indexToDelete = 'courses'
-indexToDelete = 'professors'
+# indexToDelete = 'professors'
 
 url = elasticEndpointURL + "/" + indexToDelete
 
