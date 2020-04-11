@@ -18,7 +18,7 @@ old = "https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.co
 elasticEndpointURL = os.getenv("ELASTIC_ENDPOINT_URL")
 # elasticEndpointURL = old
 
-# indexToDelete = 'courses'
+indexToDelete = 'courses'
 # indexToDelete = 'professors'
 
 url = elasticEndpointURL + "/" + indexToDelete

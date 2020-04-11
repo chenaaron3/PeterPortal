@@ -18,6 +18,7 @@
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.2",
+    "searchkit-express": "^0.2.1",
     "websoc-api": "^0.0.5"
   }
 }

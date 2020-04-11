@@ -42,8 +42,7 @@ class SearchEngine extends SearchkitComponent {
       }
       
     render() {
-        let searchkit = new SearchkitManager(process.env.REACT_APP_ELASTIC_ENDPOINT_URL + this.props.activeItem,  
-                        {basicAuth: `${process.env.REACT_APP_ELASTIC_BASICAUTH_USER}:${process.env.REACT_APP_ELASTIC_BASICAUTH_PASS}`});
+        let searchkit = new SearchkitManager("/"+ this.props.activeItem);
         return (
             <SearchkitProvider searchkit={searchkit}>
                 <div className="App" style={{ display: "flex", flexDirection: "row" }}>

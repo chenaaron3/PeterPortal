@@ -14,11 +14,10 @@ import professorScraper
 import courseScraper
 
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
-# 
+# URL TO FORM EDIT: https://docs.google.com/forms/d/1fZMDeRrarp4_prTz7aCn5wMh2UVz5U9jj9G26v8MoXs
+# URL TO FORM FILL: https://forms.gle/Y5SjHoHM7iW4bes17
 PATH_TO_JSON_KEY = "resources/google_sheet.json"
-MISSING_PROF_FORM_URL = "https://docs.google.com/forms/d/1fZMDeRrarp4_prTz7aCn5wMh2UVz5U9jj9G26v8MoXs"
 MISSING_PROF_SHEET_URL = "https://docs.google.com/spreadsheets/d/1L4TMYuz1IO6brM7wPO7qVUKtPHviLx8ZbuKOyApmHCo/"
-
 # ASSUMED SHEET SCHEMA (timestamp, ucinetid, name, department, requesterEmail, status)
 STATUS_CELL_ID = "F"
 
