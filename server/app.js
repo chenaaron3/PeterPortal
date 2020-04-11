@@ -12,9 +12,12 @@ var cors = require('cors');
 var apiRouter = require('./api/v1');
 // var usersRouter = require('./routes/users');
 // var reviewsRouter = require('./routes/reviews');
+<<<<<<< HEAD
 var coursesRouter = require('./routes/courses')
 var professorsRouter = require('./routes/professors')
 
+=======
+>>>>>>> df180f7d48ae1c6504f3850af9746f9745ab1438
 var app = express();
 var mysql = require("mysql");
 
@@ -58,8 +61,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 // app.use('/reviews', reviewsRouter);
+<<<<<<< HEAD
 app.use("/courses", coursesRouter)
 app.use("/professors", professorsRouter)
+=======
+>>>>>>> df180f7d48ae1c6504f3850af9746f9745ab1438
 
 app.get('*', (req,res) =>{
   res.sendFile(path.join(__dirname+'/build/index.html'));
