@@ -13,11 +13,7 @@ class App extends React.Component {
   render() {
     return (
       // <SearchkitProvider {/*searchkit= {
-<<<<<<< HEAD
       //   new SearchkitManager("/courses")
-=======
-      //   new SearchkitManager("https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/professors")
->>>>>>> df180f7d48ae1c6504f3850af9746f9745ab1438
       // */}>
         <Router>
           <NavBar/>
