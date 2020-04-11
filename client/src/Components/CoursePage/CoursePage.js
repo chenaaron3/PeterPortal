@@ -14,6 +14,8 @@ class CoursePage extends React.Component {
     };
   }
 
+
+
   getCourseData() {
     var searchParams = {
       query: {
@@ -43,6 +45,7 @@ class CoursePage extends React.Component {
       })
       .then(res => {
         this.setState({ courseData: res.hits.hits[0]._source });
+        console.log(this.state.courseData);
       })
       .catch(e => console.log(e));
   }
@@ -112,6 +115,12 @@ class CoursePage extends React.Component {
                   </p>
                 </Card.Content>
               </Card>
+            </Grid.Row>
+            <Grid.Row>
+              <ReviewsModule
+               courseId={this.state.courseData.id}
+               professorHistory={this.state.courseData.professorHistory ? this.state.courseData.professorHistory : []}
+               />
             </Grid.Row>
 
             {/* <Grid.Row className="course_content-container course_prereq-tree-container">

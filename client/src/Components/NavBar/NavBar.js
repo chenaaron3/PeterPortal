@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu, Segment, Label, Popup, Grid, Header, Button, Icon } from "semantic-ui-react";
-import Logo from "../../assets/peterportal-banner-logo.svg";
+import Logo from "../../Assets/peterportal-banner-logo.svg";
 import "./NavBar.scss";
 
 class NavBar extends React.Component {
