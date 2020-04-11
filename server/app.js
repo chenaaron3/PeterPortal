@@ -7,31 +7,32 @@ var logger = require('morgan');
 var subdomain = require('express-subdomain');
 
 var cors = require('cors');
-
+var dotenv = require('dotenv');
 // var indexRouter = require('./routes/index');
 var apiRouter = require('./api/v1');
 // var usersRouter = require('./routes/users');
-// var reviewsRouter = require('./routes/reviews');
+var reviewsRouter = require('./routes/reviews');
 var app = express();
 var mysql = require("mysql");
 
 var corsOptions = {
 	origin: "http://localhost:3000"
 }
+port = process.env.PORT || 3001;
 
+// dotenv.config();
 
-
-//Database connection
-// app.use(function(req, res, next){
-// 	res.locals.connection = mysql.createConnection({
-// 		host     : 'review-test-db.clt9zo57ol4p.us-west-1.rds.amazonaws.com',
-// 		user     : 'root',
-// 		password : 'password',
-// 		database : 'reviews'
-// 	});
-// 	res.locals.connection.connect();
-// 	next();
-// });
+// Database connection
+app.use(function(req, res, next){
+	res.locals.connection = mysql.createConnection({
+		host     : process.env.REVIEWS_DB_ENDPOINT,
+		user     : process.env.DB_USERNAME,
+		password : process.env.DB_PASSWORD,
+		database : 'peterportal'
+	});
+	res.locals.connection.connect();
+	next();
+});
 
 // Serve the static files from the React app
 app.use(express.static(path.join(__dirname, 'build')));
@@ -54,16 +55,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
-// app.use('/reviews', reviewsRouter);
+app.use('/reviews', reviewsRouter);
 
-app.get('*', (req,res) =>{
-  res.sendFile(path.join(__dirname+'/build/index.html'));
-});
+// app.get('*', (req,res) =>{
+//   res.sendFile(path.join(__dirname+'/build/index.html'));
+// });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -75,5 +76,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.get('/', (req, res) => res.send('Hello World!'))
 
 module.exports = app;
