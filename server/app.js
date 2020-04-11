@@ -62,14 +62,14 @@ app.use('/reviews', reviewsRouter);
 app.use("/courses", coursesRouter)
 app.use("/professors", professorsRouter)
 
-// app.get('*', (req,res) =>{
-//   res.sendFile(path.join(__dirname+'/build/index.html'));
-// });
+app.get('*', (req,res) =>{
+  res.sendFile(path.join(__dirname+'/build/index.html'));
+});
 
 // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
+app.use(function(req, res, next) {
+  next(createError(404));
+});
 
 // error handler
 app.use(function(err, req, res, next) {
