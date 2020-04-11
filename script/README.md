@@ -1,5 +1,5 @@
 # Python Dependencies:  
-    pip install beautifulsoup4 selenium elasticsearch requests progressbar
+    pip install beautifulsoup4 selenium elasticsearch requests progressbar python-dotenv gspread oauth2client
 
 # Basic Workflows:
 A. Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch  
