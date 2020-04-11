@@ -119,6 +119,7 @@ class ReviewsModule extends React.Component {
   }
   
   getReviews = () => {
+    console.log(this.props.courseID)
     fetch("/reviews/course?courseID="+ encodeURIComponent(this.props.courseID), {
       method: "GET"
     }).then(data => {return data.json()})
