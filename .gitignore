@@ -27,7 +27,6 @@ npm.lock
 yarn.lock
 
 # .env
-/client/.env
 /server/.env
 /script/.env
 
