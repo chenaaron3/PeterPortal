@@ -42,7 +42,7 @@ class SearchEngine extends SearchkitComponent {
       }
       
     render() {
-        let searchkit = new SearchkitManager("https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/" + this.props.activeItem);
+        let searchkit = new SearchkitManager("/"+ this.props.activeItem);
         return (
             <SearchkitProvider searchkit={searchkit}>
                 <div className="App" style={{ display: "flex", flexDirection: "row" }}>

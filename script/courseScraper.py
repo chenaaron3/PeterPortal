@@ -11,7 +11,7 @@ import platform
 from requirementNode import Node, nodify, CONFLICT_PREREQ_NAME
 from alias import ALIASES
 from progressBar import ProgressBar
-from professorScraper import PROFESSOR_DATA_NAME
+import professorScraper
 
 # DO NOT CHANGE
 # Automatically determines the path based on your operating system
@@ -19,6 +19,7 @@ PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__
 URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
 GENERATE_JSON_NAME = "resources/all_courses.json"
+DEPT_SCHOOL_MAP_NAME = "resources/dept_school_map.json"
 SPECIAL_REQS_NAME = "output/special_reqs.txt"
 SCHOOL_LIST_NAME = "output/school_list.txt" 
 GE_DICTIONARY = {"Ia":"GE Ia: Lower Division Writing",
@@ -95,6 +96,10 @@ def getDepartmentToSchoolMapping(driver):
                     # map department soup
                     mapCoursePageToSchool(mapping, school, departmentSoup)
         bar.inc()
+    # write to file
+    f = open(DEPT_SCHOOL_MAP_NAME, "w")
+    f.write(json.dumps(mapping))
+    f.close()
     return mapping
 
 # mapping: the dictionary used to map department code to school name
@@ -190,7 +195,7 @@ def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
                     "course_level": determineCourseLevel(courseID),
                     "dept_alias": ALIASES[id_department] if id_department in ALIASES else [],
                     "units":[float(x) for x in unit_range],"description":courseDescription, "department": department, "professorHistory":[],
-                    "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"{}", "dependencies":[],"repeatability":"","grading option":"",
+                    "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"", "dependencies":[],"repeatability":"","grading option":"",
                     "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":"","ge_types":[],"ge_string":""}
 
             # stores dictionaries in json_data to add dependencies later 
@@ -265,8 +270,9 @@ def parseCourseBody(courseBody, dic:dict):
             dic["ge_string"] = pTagText
         # try to match keywords like "grading option", "repeatability"
         for keyWord in dic.keys():
-            if re.match("^" + keyWord + ".*", pTagText.lower()):
-                dic[keyWord] = pTagText
+            possibleMatch = re.match(f"^{keyWord}:?(?P<value>.*)", pTagText.lower())
+            if possibleMatch:
+                dic[keyWord] = possibleMatch.group("value")
                 break
 
 # tag: the second ptag from courseBody
@@ -274,12 +280,12 @@ def parseCourseBody(courseBody, dic:dict):
 # returns a requirement Node if successfully parsed, None otherwise
 def parsePrerequisite(tag, dic:dict):
     # sometimes prerequisites are in the same ptag as corequisites
-    prereqRegex = re.compile(r"((?P<fullcoreqs>Corequisite:[^\n]*)\n)?(?P<fullreqs>Prerequisite[^:]*:(?P<reqs>.*))")
+    prereqRegex = re.compile(r"((?P<fullcoreqs>Corequisite:(?P<coreqs>[^\n]*))\n)?(?P<fullreqs>Prerequisite[^:]*:(?P<reqs>.*))")
     possibleReq = prereqRegex.search(normalizeString(tag.get_text()))
     # if matches prereq structure
     if possibleReq:
-        dic["corequisite"] = "" if possibleReq.group("fullcoreqs") == None else possibleReq.group("fullcoreqs")
-        dic["prerequisite"] = "" if possibleReq.group("fullreqs") == None else possibleReq.group("fullreqs")
+        dic["corequisite"] = "" if possibleReq.group("coreqs") == None else possibleReq.group("coreqs")
+        dic["prerequisite"] = "" if possibleReq.group("reqs") == None else possibleReq.group("reqs")
         # only get the first sentence (following sentences are grade requirements like "at least C or better")
         rawReqs = normalizeString(possibleReq.group("reqs").split(".")[0].strip())
         # look for pretokenized items
@@ -397,7 +403,7 @@ if __name__ == "__main__":
     driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
     # store all of the data
     json_data = {}
-    professor_data = json.load(open(PROFESSOR_DATA_NAME))
+    professor_data = json.load(open(professorScraper.PROFESSOR_DATA_NAME))
     # maps department code to school 
     departmentToSchoolMapping = getDepartmentToSchoolMapping(driver)
     # debugging information

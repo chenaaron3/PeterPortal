@@ -4,7 +4,6 @@
 /node_modules
 /server/node_modules
 /client/node_modules
-/client/build
 /.pnp
 .pnp.js
 
@@ -13,7 +12,10 @@
 
 # production
 /server/build
+/client/build
 
+# resources
+/script/resources/google_sheet.json
 
 # misc
 .DS_Store
@@ -24,12 +26,16 @@
 npm.lock
 yarn.lock
 
-/client/.env
+# .env
+.env
+/server/.env
+/script/.env
 
+# .log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/server/.env
+# .DS_Store
 .DS_Store
 /client/.DS_Store

@@ -12,6 +12,9 @@ var dotenv = require('dotenv');
 var apiRouter = require('./api/v1');
 // var usersRouter = require('./routes/users');
 var reviewsRouter = require('./routes/reviews');
+var coursesRouter = require('./routes/courses')
+var professorsRouter = require('./routes/professors')
+
 var app = express();
 var mysql = require("mysql");
 
@@ -56,6 +59,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 app.use('/reviews', reviewsRouter);
+app.use("/courses", coursesRouter)
+app.use("/professors", professorsRouter)
 
 // app.get('*', (req,res) =>{
 //   res.sendFile(path.join(__dirname+'/build/index.html'));
