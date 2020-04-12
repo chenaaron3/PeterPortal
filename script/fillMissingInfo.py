@@ -14,19 +14,13 @@ import professorScraper
 import courseScraper
 
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
-<<<<<<< HEAD
 # URL TO FORM EDIT: https://docs.google.com/forms/d/1fZMDeRrarp4_prTz7aCn5wMh2UVz5U9jj9G26v8MoXs
 # URL TO FORM FILL: https://forms.gle/Y5SjHoHM7iW4bes17
 PATH_TO_JSON_KEY = "resources/google_sheet.json"
 MISSING_PROF_SHEET_URL = "https://docs.google.com/spreadsheets/d/1L4TMYuz1IO6brM7wPO7qVUKtPHviLx8ZbuKOyApmHCo/"
-=======
-PATH_TO_JSON_KEY = "resources/google_sheet.json"
-MISSING_PROF_FORM_URL = "https://docs.google.com/forms/d/1fZMDeRrarp4_prTz7aCn5wMh2UVz5U9jj9G26v8MoXs"
-MISSING_PROF_SHEET_URL = "https://docs.google.com/spreadsheets/d/1L4TMYuz1IO6brM7wPO7qVUKtPHviLx8ZbuKOyApmHCo/"
-
->>>>>>> df180f7d48ae1c6504f3850af9746f9745ab1438
 # ASSUMED SHEET SCHEMA (timestamp, ucinetid, name, department, requesterEmail, status)
 STATUS_CELL_ID = "F"
+ADMIN_APPROVE_STATUS = "APPROVE" 
 
 # Source: https://www.twilio.com/blog/2017/02/an-easy-way-to-read-and-write-to-a-google-spreadsheet-in-python.html
 def authenticateGoogleSheets():
@@ -45,12 +39,15 @@ def getSeleniumDriver():
 # returns a list of related department groups
 def getDepartmentGroups():
     departmentGroups = []
-    f = open(professorScraper.PROFESSOR_DATA_NAME)
-    professor_data = json.load(f)
-    f.close()
-    for professor in professor_data:
-        if professor_data[professor]["relatedDepartments"] not in departmentGroups:
-            departmentGroups.append(professor_data[professor]["relatedDepartments"])
+    faculty_links = professorScraper.getFacultyLinks(driver)
+    for link in faculty_links:
+        department_soup = professorScraper.scrape(driver, link.replace("#faculty","#courseinventory"))
+        department_codes = professorScraper.getAllDepartmentCodes(department_soup)
+        # backup related departments
+        if len(department_codes) == 0:
+            department_codes = professorScraper.getHardcodedDepartmentCodes(link)
+        if department_codes not in departmentGroups:
+            departmentGroups.append(department_codes)
     return departmentGroups
 
 # Docs: https://github.com/burnash/gspread
@@ -60,44 +57,56 @@ def pollProfessorRequest():
     # retrieve records
     records = sheet.get_all_records()
     numRecords = len(records)
-    # if any new records were made
-    if numRecords != pollProfessorRequest.totalRecords:
+    # find all indices of records that have an approved status
+    approvedRecordIndices = [i for i in range(len(records)) if records[i]["status"] == ADMIN_APPROVE_STATUS]
+    # if any new records were made or an approval has been made
+    if numRecords != pollProfessorRequest.totalRecords or len(approvedRecordIndices) > 0:
         print("CHANGE DETECTED!")
         # cache information
         leftOff = pollProfessorRequest.totalRecords
         pollProfessorRequest.totalRecords = numRecords
-        # start processing from where we left off before
-        for i in range(leftOff, len(records)):
-            # if record has not been handled
-            if records[i]["status"] == "":
+        indicesToCover = set(range(leftOff, len(records)))
+        indicesToCover.update(approvedRecordIndices)
+        # start processing from where we left off before or deal with approved records
+        for i in sorted(indicesToCover):
+            currentStatus = records[i]["status"]
+            # if record has not been handled or admin has approved of an entry
+            if currentStatus == "" or currentStatus == ADMIN_APPROVE_STATUS:
                 # try to add the professor
-                status = addMissingProfessor(records[i]["ucinetid"], records[i]["name"], records[i]["department"])
+                status = addMissingProfessor(records[i]["ucinetid"], records[i]["name"], records[i]["department"], currentStatus)
                 # update the status
                 sheet.update(f"{STATUS_CELL_ID}{i + 2}", status)
                 print(status)
 
-# ucinetid: ucinetid from form
-# name: name from form
-# department: department from form
+# ucinetid: ucinetid from form (eg. "igassko")
+# name: name from form  (eg. "GASSKO, I.")
+# department: department from form (eg. "I&C SCI")
+# status: the current status of the entry (eg. "APPROVE" or "")
 # returns the status of the update
-def addMissingProfessor(ucinetid:str, name:str, department:str):
+def addMissingProfessor(ucinetid:str, name:str, department:str, status:str):
     print(f"Searching for {ucinetid}, {name}, {department}...")
     # check if not already indexed
     url = elasticEndpointURL + f"/professors/_doc/{ucinetid}"
-    res = requests.get(url, auth=(os.getenv("ELASTIC_BASICAUTH_USER"), os.getenv("ELASTIC_BASICAUTH_PASS"))).json()
+    res = requests.get(url).json()
     # if already indexed
     if res["found"]:
         res = res["_source"]
         # check if requested department is not listed in related departments
         if department not in res["relatedDepartments"]:
+            # if from different school
+            if deptToSchoolMap[department] not in res["schools"]:
+                res["schools"].append(deptToSchoolMap[department])
             # save old history to compare later
             oldHistory = list(res["courseHistory"])
             # add to accepted departments
-            res["relatedDepartments"].append(department)
+            res["relatedDepartments"] += getRelatedDepartments(department)
             # search course history again
-            professorScraper.getCourseHistory(res, name)
+            professorScraper.getCourseHistory(driver, res, name)
             # if found any new classes
             if len(res["courseHistory"]) > len(oldHistory):
+                # approve before indexing
+                if not status == ADMIN_APPROVE_STATUS and not validateName(res["name"], name):
+                    return "NEED ADMIN APPROVAL TO UPDATE"
                 # find added classes
                 addedClasses = set(res["courseHistory"]).difference(set(oldHistory))
                 # update courses' professorHistory on elastic search
@@ -117,15 +126,18 @@ def addMissingProfessor(ucinetid:str, name:str, department:str):
         # if is a valid ucinetid
         if res != None:
             # get school
-            res["school"] = deptToSchoolMap[department]
+            res["schools"] = [deptToSchoolMap[department]]
             # get relatedDepartments
             res["relatedDepartments"] = getRelatedDepartments(department)
             # get course history
-            professorScraper.getCourseHistory(res, name)
+            professorScraper.getCourseHistory(driver, res, name)
             # if taught no courses
             if len(res["courseHistory"]) == 0:
                 return "REJECTED: This professor has no course history. Maybe the entered name or department is wrong."
             else:
+                # approve before indexing
+                if not status == ADMIN_APPROVE_STATUS and not validateName(res["name"], name):
+                    return "NEED ADMIN APPROVAL TO ADD"
                 # update courses' professorHistory on elastic search
                 updateProfessorHistory(ucinetid, res["courseHistory"])
                 # index professor on elastic search
@@ -135,6 +147,23 @@ def addMissingProfessor(ucinetid:str, name:str, department:str):
         else:
             return "ERROR: Invalid ucinetid."
 
+# directoryName: name associated to the ucinetid given (eg. "Irene Gassko")
+# givenName: websoc name of professor provided by user (eg. "GASSKO, I.")
+# returns if the ucinetid's directory name has the matching name as the given name
+# (prevents trolls from entering a valid websoc name and indexing to a different professor)
+# if true => index safely, if false => need admin to approve of exceptions like ("Chen Yu Sheu", "SHEU, P.")
+def validateName(directoryName:str, givenName:str):
+    # split and extract directory name
+    splitDirectoryName = directoryName.split()
+    directoryLastName = splitDirectoryName[-1]
+    directoryFirstInitial = splitDirectoryName[0][0]
+    # split and extract given name
+    splitGivenName = givenName.replace(",", "").split()
+    givenLastName = splitGivenName[0]
+    givenFirstInitial = splitGivenName[1][0]
+    return directoryLastName.lower() == givenLastName.lower() and directoryFirstInitial.lower() == givenFirstInitial.lower()
+
+
 # ucinetid: netid for professor that taught the courses in coursesIDs (eg. "psheu")
 # courseIDs: list of courses to update (eg. ["EECS 116", "EECS 159B", "EECS 199"])
 # returns nothing, directly alters data on elastic search
@@ -142,7 +171,7 @@ def updateProfessorHistory(ucinetid:str, courseIDs:list):
     for courseID in courseIDs:
         courseID = courseID.replace(" ","")
         url = elasticEndpointURL + f"/courses/_doc/{courseID}"
-        res = requests.get(url, auth=(os.getenv("ELASTIC_BASICAUTH_USER"), os.getenv("ELASTIC_BASICAUTH_PASS"))).json()
+        res = requests.get(url).json()
         # if course exists
         if res["found"]:
             res = res["_source"]
@@ -160,7 +189,7 @@ def index(url:str, data:dict):
     headers = {
         'Content-type' : 'application/json'
     }
-    r = requests.put(url, data=json.dumps(data), headers=headers, auth=(os.getenv("ELASTIC_BASICAUTH_USER"), os.getenv("ELASTIC_BASICAUTH_PASS")))
+    r = requests.put(url, data=json.dumps(data), headers=headers)
 
 # department: a department to find a grouping for
 # returns a department grouping
@@ -168,7 +197,7 @@ def index(url:str, data:dict):
 def getRelatedDepartments(department:str):
     for departmentGroup in departmentGroups:
         if department in departmentGroup:
-            return departmentGroup
+            return list(departmentGroup)
     return []
 
 if __name__ == "__main__":
@@ -193,7 +222,7 @@ if __name__ == "__main__":
 
     while True:
         print(f"{datetime.datetime.now()}: Polling")
-        # poll sheets every 10 mins
+        # poll sheets every 5 mins
         pollProfessorRequest()
-        time.sleep(60 * 5)
+        time.sleep(60 * 1)
     driver.quit()
