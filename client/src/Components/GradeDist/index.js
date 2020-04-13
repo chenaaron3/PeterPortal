@@ -1,5 +1,5 @@
 import React from 'react';
-import Chart from "chart.js";
+import { ResponsiveBarCanvas } from '@nivo/bar'
 import { Card, Grid, Dropdown } from "semantic-ui-react";
 import "./GradeDist.scss"
 
@@ -58,6 +58,64 @@ class QuarterMenu extends React.Component {
 
 class Chart extends React.Component {
   render() {
+    let data = [
+      {
+        "grade": "A",
+        "number": 235
+      },
+      {
+        "grade": "B",
+        "number": 71
+      },
+      {
+        "grade": "C",
+        "number": 7
+      },
+      {
+        "grade": "D",
+        "number": 0
+      },
+      {
+        "grade": "F",
+        "number": 0
+      }
+    ];
+    return (
+    <ResponsiveBarCanvas
+        data={data}
+        keys={
+          ['number']
+        }
+        indexBy="grade"
+        margin={{
+          top: 50,
+          right: 60,
+          bottom: 50,
+          left: 60
+        }}
+        padding={0.2}
+        layout="vertical"
+        axisTop={{
+          tickSize: 5,
+          tickPadding: 5, 
+          tickRotation: 0, 
+          legend: '', 
+          legendOffset: 36
+        }}
+        axisBottom={{
+          tickSize: 10,
+          tickPadding: 5,
+          tickRotation: 0,
+          legend: 'Grade',
+          legendPosition: 'middle',
+          legendOffset: 36
+        }}
+        enableGridX={false}
+        enableGridY={false}
+        enableLabel={true}
+        colors="#5E9EC1"
+        isInteractive={true}
+    />);
   }
 }
 
@@ -78,7 +136,7 @@ export default class GradeDist extends React.Component {
                     </Grid.Column>
                   </Grid.Row>
                   
-                  <Grid.Row>
+                  <Grid.Row id="gradedist_row">
                     <Chart />
                   </Grid.Row>
                 </Card.Content>
