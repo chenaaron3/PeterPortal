@@ -14,6 +14,7 @@ var apiRouter = require('./api/v1');
 var reviewsRouter = require('./routes/reviews');
 var coursesRouter = require('./routes/courses')
 var professorsRouter = require('./routes/professors')
+var weekRouter = require('./routes/week')
 
 var app = express();
 var mysql = require("mysql");
@@ -61,6 +62,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/reviews', reviewsRouter);
 app.use("/courses", coursesRouter)
 app.use("/professors", professorsRouter)
+app.use("/week", weekRouter)
 
 app.get('*', (req,res) =>{
   res.sendFile(path.join(__dirname+'/build/index.html'));
