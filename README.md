@@ -30,10 +30,4 @@ __To start the development server for the React client__, run `npm run start-ser
 
 __To start the development server for the Express API and server__, install [Nodemon](https://nodemon.io/) and then run `npm run start-server-dev` in the terminal from the PeterPortal directory. The Express server will run and listen for changes on `localhost:5000`.
 
->__Note:__ PeterPortal API is set to run on the subdomain of the server (api.peter-portal.com). Therefore, in order to develop and test the API routes locally, you must configure your machine's `hosts` file to include 
->```
->127.0.0.1   peter-portal.dev
->127.0.0.1   api.peter-portal.dev
->```
->You may now make requests to the API local endpoint @ `api.peter-portal.dev:5000`
 
