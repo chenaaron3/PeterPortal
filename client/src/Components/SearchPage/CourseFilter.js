@@ -6,23 +6,23 @@ import {RefinementListFilter, SelectedFilters, ResetFilters, HitsStats, TermQuer
 const GEForm = (
   <div>
     <CheckboxFilter title="ge-Ia" id="ge-Ia" label="GE Ia: Lower Division Writing" filter={TermQuery("ge_types.keyword", "GE Ia: Lower Division Writing")} />
-    <CheckboxFilter id="ge-Ib" label="GE Ib: Upper Division Writing" filter={TermQuery("ge_types.keyword", "GE Ib: Upper Division Writing")} />
-    <CheckboxFilter id="ge-II" label="GE II: Science and Technology" filter={TermQuery("ge_types.keyword", "GE II: Science and Technology")} />
-    <CheckboxFilter id="ge-III" label="GE III: Social & Behavioral Sciences" filter={TermQuery("ge_types.keyword", "GE III: Social & Behavioral Sciences")} />
-    <CheckboxFilter id="ge-IV" label="GE IV: Arts and Humanities" filter={TermQuery("ge_types.keyword", "GE IV: Arts and Humanities")} />
-    <CheckboxFilter id="ge-Va" label="GE Va: Quantitative Literacy" filter={TermQuery("ge_types.keyword", "GE Va: Quantitative Literacy")} />
-    <CheckboxFilter id="ge-Vb" label="GE Vb: Formal Reasoning" filter={TermQuery("ge_types.keyword", "GE Vb: Formal Reasoning")} />
-    <CheckboxFilter id="ge-VI" label="GE VI: Language Other Than English" filter={TermQuery("ge_types.keyword", "GE VI: Language Other Than English")} />
-    <CheckboxFilter id="ge-VII" label="GE VII: Multicultural Studies" filter={TermQuery("ge_types.keyword", "GE VII: Multicultural Studies")} />
-    <CheckboxFilter id="ge-VIII" label="GE VIII: International/Global Issues" filter={TermQuery("ge_types.keyword", "GE VIII: International/Global Issues")} />
+    <CheckboxFilter title="ge-Ib" id="ge-Ib" label="GE Ib: Upper Division Writing" filter={TermQuery("ge_types.keyword", "GE Ib: Upper Division Writing")} />
+    <CheckboxFilter title="ge-II" id="ge-II" label="GE II: Science and Technology" filter={TermQuery("ge_types.keyword", "GE II: Science and Technology")} />
+    <CheckboxFilter title="ge-III" id="ge-III" label="GE III: Social & Behavioral Sciences" filter={TermQuery("ge_types.keyword", "GE III: Social & Behavioral Sciences")} />
+    <CheckboxFilter title="ge-IV" id="ge-IV" label="GE IV: Arts and Humanities" filter={TermQuery("ge_types.keyword", "GE IV: Arts and Humanities")} />
+    <CheckboxFilter title="ge-Va" id="ge-Va" label="GE Va: Quantitative Literacy" filter={TermQuery("ge_types.keyword", "GE Va: Quantitative Literacy")} />
+    <CheckboxFilter title="ge-Vb" id="ge-Vb" label="GE Vb: Formal Reasoning" filter={TermQuery("ge_types.keyword", "GE Vb: Formal Reasoning")} />
+    <CheckboxFilter title="ge-VI" id="ge-VI" label="GE VI: Language Other Than English" filter={TermQuery("ge_types.keyword", "GE VI: Language Other Than English")} />
+    <CheckboxFilter title="ge-VII" id="ge-VII" label="GE VII: Multicultural Studies" filter={TermQuery("ge_types.keyword", "GE VII: Multicultural Studies")} />
+    <CheckboxFilter title="ge-VII" id="ge-VIII" label="GE VIII: International/Global Issues" filter={TermQuery("ge_types.keyword", "GE VIII: International/Global Issues")} />
   </div>
 )
 
 const CourseLevelForm = (
   <div>
-    <CheckboxFilter id="course-level-lower" label="Lower Division (1-99)" filter={TermQuery("course_level.keyword", "Lower Division (1-99)")} />
-    <CheckboxFilter id="course-level-upper" label="Upper Division (100-199)" filter={TermQuery("course_level.keyword", "Upper Division (100-199)")} />
-    <CheckboxFilter id="course-level-grad" label="Graduate/Professional Only (200+)" filter={TermQuery("course_level.keyword", "Graduate/Professional Only (200+)")} />
+    <CheckboxFilter title="course-level-lower" id="course-level-lower" label="Lower Division (1-99)" filter={TermQuery("course_level.keyword", "Lower Division (1-99)")} />
+    <CheckboxFilter title="course-level-upper" id="course-level-upper" label="Upper Division (100-199)" filter={TermQuery("course_level.keyword", "Upper Division (100-199)")} />
+    <CheckboxFilter title="course-level-grad" id="course-level-grad" label="Graduate/Professional Only (200+)" filter={TermQuery("course_level.keyword", "Graduate/Professional Only (200+)")} />
   </div>
 )
 

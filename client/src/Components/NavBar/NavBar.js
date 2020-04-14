@@ -62,7 +62,7 @@ class NavBar extends React.Component {
 
                 <Menu.Item position="right">
                   <div className={"school-term_container"}>
-                    <p className={"school-term"} style={{marginBottom: "-1px"}}>Week 2, Spring 2020</p>
+                    <p className={"school-term"} style={{marginBottom: "-1px"}}>Week 3, Spring 2020</p>
                   </div>
                 </Menu.Item>
 
