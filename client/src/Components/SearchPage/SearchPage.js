@@ -11,8 +11,8 @@ class SearchPage extends React.Component {
     const { activeItem } = this.state;
     return (
       <>
-        {activeItem == "courses" && <SearchEngine activeItem={activeItem} handleItemClick={this.handleItemClick}/>}
-        {activeItem == "professors" && <SearchEngine activeItem={activeItem} handleItemClick={this.handleItemClick}/>}
+        {activeItem === "courses" && <SearchEngine activeItem={activeItem} handleItemClick={this.handleItemClick}/>}
+        {activeItem === "professors" && <SearchEngine activeItem={activeItem} handleItemClick={this.handleItemClick}/>}
       </>
     );
   }

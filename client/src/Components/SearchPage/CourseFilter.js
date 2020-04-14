@@ -1,18 +1,11 @@
 import React from "react";
 import {Divider, Accordion, Menu, Form} from "semantic-ui-react";
-import "./CourseFilter.scss";
-import {RefinementListFilter, SelectedFilters, ResetFilters, HitsStats, TermQuery, CheckboxFilter} from "searchkit";
-
-const customHitStats = props => (
-    <div>
-      <p>{props.hitsCount.value} courses found in {props.timeTaken}ms</p>
-  </div>
-)
-
+import "./Filter.scss";
+import {RefinementListFilter, SelectedFilters, ResetFilters, HitsStats, TermQuery, CheckboxFilter,  SearchkitComponent} from "searchkit";
 
 const GEForm = (
   <div>
-    <CheckboxFilter id="ge-Ia" label="GE Ia: Lower Division Writing" filter={TermQuery("ge_types.keyword", "GE Ia: Lower Division Writing")} />
+    <CheckboxFilter title="ge-Ia" id="ge-Ia" label="GE Ia: Lower Division Writing" filter={TermQuery("ge_types.keyword", "GE Ia: Lower Division Writing")} />
     <CheckboxFilter id="ge-Ib" label="GE Ib: Upper Division Writing" filter={TermQuery("ge_types.keyword", "GE Ib: Upper Division Writing")} />
     <CheckboxFilter id="ge-II" label="GE II: Science and Technology" filter={TermQuery("ge_types.keyword", "GE II: Science and Technology")} />
     <CheckboxFilter id="ge-III" label="GE III: Social & Behavioral Sciences" filter={TermQuery("ge_types.keyword", "GE III: Social & Behavioral Sciences")} />
@@ -33,6 +26,14 @@ const CourseLevelForm = (
   </div>
 )
 
+const SelectedFilter = (props) => (
+  <div className={"sk-selected-filters-option sk-selected-filters__item"}>
+    <div className={props.bemBlocks.option("name")}>{props.labelValue}</div>
+    <div className={props.bemBlocks.option("remove-action")} onClick={props.removeFilter}>x</div>
+  </div>
+)
+
+
 
 class CourseFilter extends React.Component {
   state = { activeIndex: 0 }
@@ -49,12 +50,12 @@ class CourseFilter extends React.Component {
       const { activeIndex } = this.state 
         return(
          <div className="filter-list-container">
-          {/* <HitsStats component={customHitStats} />
-          <ResetFilters/> */}
+          
           <h4>Search Filter</h4>
-          <SelectedFilters/>
+            <SelectedFilters itemComponent={SelectedFilter}/>
+          
 
-            <div style={{height: "60vh", overflowY: "auto"}}>
+            <div style={{ overflowY: "auto" }}>
             <Accordion vertical>
               <Menu.Item>
                 <Accordion.Title

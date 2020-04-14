@@ -1,6 +1,6 @@
 import React from "react";
-import { Menu, Segment, Label, Popup, Grid, Header, Button, Icon } from "semantic-ui-react";
-import Logo from "../../assets/peterportal-banner-logo.svg";
+import { Menu, Segment, Label, Popup, Grid, Header, Icon } from "semantic-ui-react";
+import Logo from "../../Assets/peterportal-banner-logo.svg";
 import "./NavBar.scss";
 
 class NavBar extends React.Component {
@@ -16,13 +16,13 @@ class NavBar extends React.Component {
         <Menu secondary className="nav-menu">
           <Menu.Item>
             <div class="peterportal-logo-container">
-              <a href="/"><img id="peterportal-logo" src={Logo}></img></a>
+              <a href="/"><img alt="PeterPortal" id="peterportal-logo" src={Logo}></img></a>
             </div>
           </Menu.Item>
           <Menu.Item>
             <div>
 
-            <Popup style={{padding: "36px", width: "400px"}} trigger={<Label as='a' color='yellow' image>Alpha<Label.Detail>v0.1</Label.Detail></Label>} flowing hoverable >
+            <Popup style={{padding: "36px", width: "400px"}} trigger={<Label as='a' color='yellow' image>alpha<Label.Detail>v0.2</Label.Detail></Label>} flowing hoverable >
               <Grid centered columns={1}>
                 <Grid.Column textAlign='left'>
                   <Header as='h4'>Alpha Disclaimer</Header>

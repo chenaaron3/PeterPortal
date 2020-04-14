@@ -26,16 +26,16 @@ port = process.env.PORT || 3001;
 // dotenv.config();
 
 // Database connection
-app.use(function(req, res, next){
-	res.locals.connection = mysql.createConnection({
-		host     : process.env.REVIEWS_DB_ENDPOINT,
-		user     : process.env.DB_USERNAME,
-		password : process.env.DB_PASSWORD,
-		database : 'peterportal'
-	});
-	res.locals.connection.connect();
-	next();
-});
+// app.use(function(req, res, next){
+// 	res.locals.connection = mysql.createConnection({
+// 		host     : process.env.REVIEWS_DB_ENDPOINT,
+// 		user     : process.env.DB_USERNAME,
+// 		password : process.env.DB_PASSWORD,
+// 		database : 'peterportal'
+// 	});
+// 	res.locals.connection.connect();
+// 	next();
+// });
 
 // Serve the static files from the React app
 app.use(express.static(path.join(__dirname, 'build')));
