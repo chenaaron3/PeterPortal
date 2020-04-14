@@ -1,6 +1,10 @@
 import requests
 import json
 import os
+from dotenv import load_dotenv
+
+# activate .env
+load_dotenv()
 
 """
 Deleting an Index From Elasticsearch on AWS
@@ -9,8 +13,13 @@ Deleting an Index From Elasticsearch on AWS
 3. Run this script (python deleteelasticcloud.py)
 """
 
-elasticEndpointURL = 'https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com'
-indexToDelete = 'courses'
+old = "https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com"
+
+elasticEndpointURL = os.getenv("ELASTIC_ENDPOINT_URL")
+# elasticEndpointURL = old
+
+# indexToDelete = 'courses'
+# indexToDelete = 'professors'
 
 url = elasticEndpointURL + "/" + indexToDelete
 

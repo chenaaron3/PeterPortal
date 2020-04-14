@@ -2,10 +2,10 @@ import React from "react";
 import Review from "./Review";
 import { Form, TextArea, Checkbox, Dropdown, Button } from "semantic-ui-react";
 
-const professorOptions = [
-  { key: "pattis", value: "pattis", text: "Richard Pattis" },
-  { key: "thornton", value: "thornton", text: "Alexander Thornton" }
-];
+// const professorOptions = [
+//   { key: "pattis", value: "pattis", text: "Richard Pattis" },
+//   { key: "thornton", value: "thornton", text: "Alexander Thornton" }
+// ];
 
 const creditOptions = [
   { key: "credit", value: "True", text: "Taken for credit" },
@@ -36,26 +36,56 @@ const gradeReceived = [
 ];
 
 class ReviewsModule extends React.Component {
+
+
   constructor(props) {
     super(props);
-    let date = new Date;
+    let date = new Date();
     this.state = {
       text: "",
       rating: 0,
+      difficulty: 0,
       userID: "raman",
-      courseID: "",//this.props.courseID,
+      // courseID: "",//this.props.courseID,
       profID: "",
       date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
       grade: "",
       forCredit: "",
+      professorOptions: [],
       reviews: [],
     };
+    console.log(this.state);
+    this.getProfessorNames();
+    this.getReviews();
     
   }
 
   componentWillReceiveProps(props) {
+    console.log("hi")
     this.setState({courseID: this.props.courseID});
     this.getReviews();
+    this.getProfessorNames();
+  }
+
+  getProfessorNames() {
+    console.log("Getting the professors");
+    let names = []
+    for (var i = 0; i < this.props.professorHistory.length; i++) {       
+      fetch(
+        "https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/professors/_doc/"+this.props.professorHistory[i],
+        {method: "GET"}
+      )
+        .then(data => {
+          return data.json();
+        })
+        .then(res => {
+          console.log(res);
+          this.setState({})
+          names.push({ key: res._source.ucinetid, value: res._source.ucinetid, text: res._source.name })
+          this.setState({professorOptions: names});
+        })
+        .catch(e => console.log(e));
+    }
   }
 
   addReview = () => {
@@ -63,8 +93,9 @@ class ReviewsModule extends React.Component {
     var queryParams = {
       text: this.state.text,
       rating: this.state.rating,
+      difficulty: this.state.difficulty,
       userID: this.state.userID,
-      courseID: this.state.courseID,//this.props.courseID,
+      courseID: this.props.courseID,//this.props.courseID,
       profID: this.state.profID,
       date: this.state.date,
       grade: this.state.grade,
@@ -73,7 +104,7 @@ class ReviewsModule extends React.Component {
     var requestHeader= {
       'Content-Type': 'application/json',
     };
-    
+    console.log(queryParams);
     fetch("/reviews/addReview", {
       method: "POST",
       headers: requestHeader,
@@ -83,19 +114,20 @@ class ReviewsModule extends React.Component {
       console.log("it worked");
       this.getReviews();
     }).catch(() => {
-      console.log("no course found")
+      console.log("No Course Found")
     });
   }
   
   getReviews = () => {
+    console.log(this.props.courseID)
     fetch("/reviews/course?courseID="+ encodeURIComponent(this.props.courseID), {
       method: "GET"
     }).then(data => {return data.json()})
     .then(res => {
       this.setState({reviews: res});
-      console.log("it worked", res);
+      console.log(res);
     }).catch(() => {
-      console.log("no course found")
+      console.log("No Course Found")
     });
   }
 
@@ -107,7 +139,7 @@ class ReviewsModule extends React.Component {
           
           {this.state.reviews && this.state.reviews.map(item => (
             <>
-              <Review reviewData={item} />
+              <Review reviewData={item} getReviews={this.getReviews}/>
             </>
           ))}
            
@@ -131,7 +163,7 @@ class ReviewsModule extends React.Component {
                 fluid
                 search
                 selection
-                options={professorOptions}
+                options={this.state.professorOptions}
                 placeholder="Select Professor"
                 onChange={(event,  data) => {this.setState({profID: data.value})}}                
               />
@@ -157,6 +189,13 @@ class ReviewsModule extends React.Component {
                 selection
                 options={ratingOptions}
                 onChange={(event, data)=> {this.setState({rating: data.value})}}
+              />
+              <Dropdown
+                placeholder="Difficulty"
+                fluid
+                selection
+                options={ratingOptions}
+                onChange={(event, data)=> {this.setState({difficulty: data.value})}}
               />
               </div>
               

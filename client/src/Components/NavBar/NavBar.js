@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Segment, Label, Popup, Grid, Header, Button, Icon } from "semantic-ui-react";
+import { Menu, Segment, Label, Popup, Grid, Header, Icon } from "semantic-ui-react";
 import Logo from "../../Assets/peterportal-banner-logo.svg";
 import "./NavBar.scss";
 
@@ -16,13 +16,13 @@ class NavBar extends React.Component {
         <Menu secondary className="nav-menu">
           <Menu.Item>
             <div class="peterportal-logo-container">
-              <a href="/"><img id="peterportal-logo" src={Logo}></img></a>
+              <a href="/"><img alt="PeterPortal" id="peterportal-logo" src={Logo}></img></a>
             </div>
           </Menu.Item>
           <Menu.Item>
             <div>
 
-            <Popup style={{padding: "36px", width: "400px"}} trigger={<Label as='a' color='yellow' image>Alpha<Label.Detail>v0.1</Label.Detail></Label>} flowing hoverable >
+            <Popup style={{padding: "36px", width: "400px"}} trigger={<Label as='a' color='yellow' image>alpha<Label.Detail>v0.2</Label.Detail></Label>} flowing hoverable >
               <Grid centered columns={1}>
                 <Grid.Column textAlign='left'>
                   <Header as='h4'>Alpha Disclaimer</Header>
@@ -62,7 +62,7 @@ class NavBar extends React.Component {
 
                 <Menu.Item position="right">
                   <div className={"school-term_container"}>
-                    <p className={"school-term"} style={{marginBottom: "-1px"}}>Week 2, Spring 2020</p>
+                    <p className={"school-term"} style={{marginBottom: "-1px"}}>Week 3, Spring 2020</p>
                   </div>
                 </Menu.Item>
 

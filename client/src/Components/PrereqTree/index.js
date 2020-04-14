@@ -13,7 +13,7 @@ class Tree extends React.Component {
         {isValueNode && (
           <span>
             <div className="prereq-node-branch">
-              <a href="" role="button" className={"node ui basic button"} basic>
+              <a href={"/course/" + prerequisite.replace(/\s+/g, '')} role="button" className={"node ui basic button"} basic>
                 {prerequisite}
               </a>
             </div>
@@ -47,15 +47,11 @@ class Tree extends React.Component {
 }
 
 class PrereqTree extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    let hasPrereqs = this.props.prerequisiteJSON != "";
-    let hasDependencies = this.props.dependencies.length != 0;
+    let hasPrereqs = this.props.prerequisiteJSON !== "";
+    let hasDependencies = this.props.dependencies.length !== 0;
 
-    if (this.props.id == undefined) return "";
+    if (this.props.id === undefined) return "";
     else if (!hasPrereqs && !hasDependencies)
       return (
         <div>
@@ -77,7 +73,7 @@ class PrereqTree extends React.Component {
                     <span>
                       <div className="dependency-node">
                         <a
-                          href=""
+                          href={"/course/" + dependency.replace(/\s+/g, '')}
                           role="button"
                           className={"node ui button"}
                           basic
@@ -104,7 +100,7 @@ class PrereqTree extends React.Component {
         {/* Display the class id */}
         <div className="course-node_container" style={{ margin: "auto" }}>
           <a
-            href=""
+            href="/"
             role="button"
             className={"node ui button course-node"}
             basic

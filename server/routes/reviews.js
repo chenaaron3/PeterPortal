@@ -11,30 +11,31 @@ router.post("/post", function(req, res, next){
 })
 
 router.get('/professor', function(req, res, next)  {
-  let sql = `SELECT * FROM Reviews AS r WHERE r.profID = "${req.query.profID}" ORDER BY r.dateSubmitted DESC`
-    res.locals.connection.query(sql, function (error, results, fields) {
-        if(error) throw error;
-        res.send(JSON.stringify(results));
-    });
+  let sql = `SELECT * FROM reviews AS r WHERE r.prof_id = "${req.query.profID}" ORDER BY r.submitted_at DESC`
+
+  res.locals.connection.query(sql, function (error, results, fields) {
+      if(error) throw error;
+      res.send(JSON.stringify(results));
+  });
 })
 
 router.get('/course', function(req, res, next)  {
-  console.log(req.query.courseID)
-  let sql = `SELECT * FROM Reviews AS r WHERE r.courseID = "${req.query.courseID}" ORDER BY r.dateSubmitted DESC`
-  console.log(sql)
-    res.locals.connection.query(sql, function (error, results, fields) {
-        if(error) throw error;
-        res.send(JSON.stringify(results));
-    });
+  let sql = `SELECT * FROM reviews AS r WHERE r.course_id = "${req.query.courseID}" ORDER BY r.submitted_at DESC`
+  
+  res.locals.connection.query(sql, function (error, results, fields) {
+      if(error) throw error;
+      res.send(JSON.stringify(results));
+  });
 })
 
 router.post('/addReview', function(req, res) {
   
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
-  console.log("this is the body", req.body);
+
   const data = {
     text: req.body.text,
     rating: req.body.rating,
+    difficulty: req.body.difficulty,
     userID: req.body.userID,
     courseID: req.body.courseID,
     profID: req.body.profID,
@@ -42,33 +43,56 @@ router.post('/addReview', function(req, res) {
     grade: req.body.grade,
     forCredit: req.body.forCredit,
   }
-  let sql = `INSERT INTO Reviews 
-  (reviewText, rating, userID, courseID, profID, dateSubmitted, grade, forCredit, flagged)
-  VALUES( "${data.text}", ${data.rating}, "${data.userID}", "${data.courseID}", "${data.profID}", "${data.date}", "${data.grade}", ${data.forCredit}, False)`
+
+  let sql = `INSERT INTO reviews 
+  (body, rating, difficulty, user_id, course_id, prof_id, submitted_at, grade, for_credit)
+  VALUES( "${data.text}", ${data.rating}, ${data.difficulty}, "${data.userID}", "${data.courseID}", "${data.profID}", "${data.date}", "${data.grade}", ${data.forCredit})`
+
   res.locals.connection.query(sql , function(error, results, fields) {
     if(error) throw error;
     res.send(JSON.stringify(results));
   });
 })
 
-router.put('/flagReview', function(req, res) {  
-  let sql = `UPDATE Reviews SET flagged=true WHERE reviewID = ${req.body.reviewID}`
-  res.locals.connection.query(sql, function (error, results, fields) {
+router.put('/upVoteReview', function(req, res) {
+  let sql = `UPDATE reviews SET up_votes = up_votes + 1 WHERE id = ${req.body.reviewID}`
+
+  res.locals.connection.query(sql, function(error, results, fields) {
     if(error) throw error;
     res.send(JSON.stringify(results));
   });
 });
 
-router.get('/getFlagged', function(req, res) {
-  let sql = `SELECT * FROM Reviews AS r WHERE r.flagged = true`
+router.put('/downVoteReview', function(req, res) {
+  let sql = `UPDATE reviews SET down_votes = down_votes + 1 WHERE id = ${req.body.reviewID}`
+
   res.locals.connection.query(sql, function(error, results, fields) {
     if(error) throw error;
     res.send(JSON.stringify(results));
-  })
-})
+  });
+});
+
+
+
+// router.put('/flagReview', function(req, res) {  
+//   let sql = `UPDATE reviews SET flagged=true WHERE id = ${req.body.reviewID}`
+//   res.locals.connection.query(sql, function (error, results, fields) {
+//     if(error) throw error;
+//     res.send(JSON.stringify(results));
+//   });
+// });
+
+// router.get('/getFlagged', function(req, res) {
+//   let sql = `SELECT * FROM reviews AS r WHERE r.flagged = true`
+//   res.locals.connection.query(sql, function(error, results, fields) {
+//     if(error) throw error;
+//     res.send(JSON.stringify(results));
+//   })
+// })
 
 router.delete('/deleteReview', function(req, res) {
-  let sql = `DELETE FROM Reviews WHERE reviewID = ${req.body.reviewID}`
+  let sql = `DELETE FROM reviews WHERE id = ${req.body.reviewID}`
+
   res.locals.connection.query(sql, function(error, results, fields) {
     if(error) throw error;
     res.send(JSON.stringify(results));
