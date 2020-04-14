@@ -4,7 +4,7 @@
   "description": "The One-Stop-Shop for course discovery at UC Irvine.",
   "main": "index.js",
   "scripts": {
-    "build-client": "cd client && npm build && mv build ../server/",
+    "build-client": "cd client && npm run build && mv build ../server/",
     "install": "(cd client && npm install) && (cd server && npm install)",
     "start-client-dev": "(cd client && npm start)",
     "start-server-dev": "(cd server && nodemon ./bin/www)",

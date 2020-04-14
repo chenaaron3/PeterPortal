@@ -1,14 +1,23 @@
 import json
 import pyperclip
 
-# script to convert messy JSON format to a readable one for documentation
-keyOrder = ["id", "id_number", "id_department", "id_school", "department", "name", "description", "dept_alias", "course_level",
-            "prerequisite", "prerequisiteList", "prerequisiteJSON", "dependencies", 
+# Script to convert messy JSON format to a readable one for documentation.
+# HOW TO USE:
+# 1. Paste the order of JSON keys in keyOrder list
+# 2. Paste the JSON generated from Scraper.py
+# 3. Run python docJSON.py
+
+courseKeyOrder = ["id", "id_number", "id_department", "id_school", "department", "name", "description", "dept_alias", "course_level",
+            "prerequisite", "prerequisiteList", "prerequisiteJSON", "dependencies", "professorHistory",
             "repeatability", "corequisite", "overlaps", "restriction", "concurrent", "units", "same as", "grading option", 
             "ge_string", "ge_types"]
 
+professorKeyOrder = ["ucinetid", "name", "title", "department", "phone", "relatedDepartments", "courseHistory"]
+
+keyOrder = courseKeyOrder
+
 messyJSON = """
-{"dept_alias": ["CS"], "repeatability": "", "id_department": "COMPSCI", "concurrent": "", "id_number": "178", "id": "COMPSCI 178", "grading option": "", "name": "Machine Learning and Data-Mining", "course_level": "Upper Division (100-199)", "overlaps": "", "units": [4.0, 4.0], "id_school": "Donald Bren School of Information and Computer Sciences", "prerequisite": "Prerequisite: I&C SCI 6B and I&C SCI 6D and (I&C SCI 6N or MATH 3A) and MATH 2B and (STATS 67 or (STATS 7 and STATS 120A))", "ge_string": "", "corequisite": "", "dependencies": ["STATS 170A", "COMPSCI 274C", "COMPSCI 172B", "COMPSCI 117", "COMPSCI 175", "COMPSCI 272"], "department": "Computer Science", "prerequisiteJSON": "{AND:['I&C SCI 6B','I&C SCI 6D',{OR:['I&C SCI 6N','MATH 3A']},'MATH 2B',{OR:['STATS 67',{AND:['STATS 7','STATS 120A']}]}]}", "same as": "", "description": "Introduction to principles of machine learning and data-mining applied to real-world datasets. Typical applications include spam filtering, object recognition, and credit scoring.", "restriction": "Restriction: School of Info & Computer Sci students have first consideration for enrollment. Computer Science Engineering Majors have first consideration for enrollment.", "ge_types": [], "prerequisiteList": ["I&C SCI 6B", "I&C SCI 6D", "I&C SCI 6N", "MATH 3A", "MATH 2B", "STATS 67", "STATS 7", "STATS 120A"]}
+{"id": "AFAM 50", "id_department": "AFAM", "id_number": "50", "id_school": "School of Humanities", "name": "Introductory Topics in African American Studies", "course_level": "Lower Division (1-99)", "dept_alias": [], "units": [4.0, 4.0], "description": "Introduction to a broad range of topics in African American studies, exploring history, literature, art, culture, politics, and contemporary social issues. Topical organization of courses addresses issues that have been of importance historically and are reshaping the African diaspora today.", "department": "African American Studies", "professorHistory": [], "prerequisiteJSON": "", "prerequisiteList": [], "prerequisite": "", "dependencies": [], "repeatability": " unlimited as topics vary.", "grading option": "", "concurrent": "", "same as": "", "restriction": "", "overlaps": "", "corequisite": "", "ge_types": [], "ge_string": ""}
 """
 
 # convert string to dictionary
