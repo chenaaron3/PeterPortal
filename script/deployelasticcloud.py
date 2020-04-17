@@ -21,11 +21,7 @@ elasticEndpointURL = os.getenv("ELASTIC_ENDPOINT_URL")
 # elasticEndpointURL = old
 
 # jsonToUpload = "resources/all_courses.json"
-<<<<<<< HEAD
-jsonToUpload = "resources/all_professors.json"
-=======
 # jsonToUpload = "resources/all_professors.json"
->>>>>>> df180f7d48ae1c6504f3850af9746f9745ab1438
 
 headers = {
     'Content-type' : 'application/json'
@@ -37,10 +33,5 @@ url = elasticEndpointURL + "/_bulk/"
 with open(path_to_json) as f:
   data = f.read()
 
-<<<<<<< HEAD
 r = requests.put(url, data=data, headers=headers)
-=======
-r = requests.put(url, data=data, headers=headers, auth=(os.getenv("ELASTIC_BASICAUTH_USER"), os.getenv("ELASTIC_BASICAUTH_PASS")))
-# r = requests.put(url, data=data, headers=headers)
->>>>>>> df180f7d48ae1c6504f3850af9746f9745ab1438
 print(r)
