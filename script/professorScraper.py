@@ -24,7 +24,7 @@ URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
 URL_TO_CATALOGUE = "http://catalogue.uci.edu/donaldbrenschoolofinformationandcomputersciences/#faculty"
 URL_TO_DIRECTORY = "https://directory.uci.edu/"
-URL_TO_INSTRUCT_HISTORY = "https://www.reg.uci.edu/perl/InstructHist"
+URL_TO_INSTRUCT_HISTORY = "http://www.reg.uci.edu/perl/InstructHist"
 
 # output file names
 FOUND_NAME = "output/found_profs.txt"
@@ -44,9 +44,6 @@ def scrape(driver, url):
     # Use Selenium to load entire page
     driver.get(url)
     html = driver.page_source
-
-    # Use requests to load part of the page (Way faster than Selenium)
-    # html = requests.get(url).text
     return BeautifulSoup(html, 'html.parser')
 
 # driver: the Selenium Chrome driver
@@ -147,20 +144,37 @@ def getAllProfessors(soup, departmentCodes:list, school:str):
         else:
             # add to dictionary if not already seen
             if results["ucinetid"] not in facultyDictionary:
-                results['school'] = school
-                results['relatedDepartments'] = departmentCodes
-                facultyDictionary[results["ucinetid"]] = results
-                getCourseHistory(results)
+                results['schools'] = [school]
+                results['relatedDepartments'] = list(departmentCodes)
+                getCourseHistory(driver, results)
                 name_text = unicodedata.normalize("NFKD", name.text)
-                # debug output
-                ffound.write(name_text + ":" + str(results) + "\n")
-                hits += 1
                 # split names to test validity
                 name_split = name_text.split()
                 result_name_split = results["name"].split()
-                # check if results have the same first and last name as the query
+                # check for valid faulty results
                 if name_split[0].lower() != result_name_split[0].lower() or name_split[-1].lower() != result_name_split[-1].lower():
-                    fquestionable.write(name_text + ":" + str(results) + "\n")
+                    # if have class history, probably got the right person
+                    if len(results['courseHistory']) > 0:
+                        # debug output
+                        ffound.write(name_text + ":" + str(results) + "\n")
+                        hits += 1
+                        facultyDictionary[results["ucinetid"]] = results
+                    else:
+                        misses += 1
+                # name on faculty page checks out with directory name
+                else:
+                    # debug output
+                    ffound.write(name_text + ":" + str(results) + "\n")
+                    hits += 1
+                    facultyDictionary[results["ucinetid"]] = results
+            # if show up in multiple faculty pages
+            else:
+                results = facultyDictionary[results["ucinetid"]]
+                if school not in results['schools']:
+                    results['schools'].append(school)
+                    fquestionable.write(str(results) + "\n")
+                results['relatedDepartments'] += departmentCodes
+                getCourseHistory(driver, results)
         bar.inc()
     print("Hits:", hits, "Misses:", misses)
 
@@ -199,7 +213,7 @@ def getDirectoryInfo(driver, query):
             search_soup = BeautifulSoup(html, 'html.parser')
             txt_url = search_soup.find("tbody").tr.td.find('a').get('href') + '.txt'
             # construct soup for detailed page
-            info_soup = BeautifulSoup(requests.get(URL_TO_DIRECTORY + txt_url).text, 'html.parser')
+            info_soup = scrape(driver, URL_TO_DIRECTORY + txt_url)
             # parse name, netid, phone, title, department
             for line in info_soup.body.text.strip().split("\n"):
                 segments = line.split(": ")
@@ -211,10 +225,11 @@ def getDirectoryInfo(driver, query):
             return None
     return info
 
+# driver: the Selenium driver
 # query: a dictionary with professor information (eg. {'name': 'Kei Akagi', 'ucinetid': 'kakagi', 'phone': '(949) 824-2171', 'title': "Chancellor's Professor", 'department': 'Arts-Music', 'relatedDepartments': ['ARTS', 'ART', 'DANCE', 'DRAMA', 'MUSIC']})
 # socName: the Schedule of Classes name if known
 # returns nothing, adds a field 'courseHistory' to the dictionary passed in 
-def getCourseHistory(query:dict, socName=""):
+def getCourseHistory(driver, query:dict, socName=""):
     # set of courseHistory
     courseHistory = set()
     # reformat name to Lastname, First Initial (Kei Akagi => Akagi, K.)
@@ -228,9 +243,7 @@ def getCourseHistory(query:dict, socName=""):
               "input_name":reformatName,
               "term_yyyyst":"ANY",
               "start_row":""}
-    r = requests.get(url = URL_TO_INSTRUCT_HISTORY, params = PARAMS)
-    html = r.text
-    historySoup = BeautifulSoup(html, 'html.parser')
+    historySoup = scrape(driver, URL_TO_INSTRUCT_HISTORY + "?" + urllib.parse.urlencode(PARAMS))
     # parse the first page
     parseHistoryPage.firstEntry = ""
     shouldContinue = parseHistoryPage(historySoup, query["relatedDepartments"], courseHistory)
@@ -240,9 +253,7 @@ def getCourseHistory(query:dict, socName=""):
     PARAMS["start_row"] = str(row)
     # keep loading next page
     while(shouldContinue):
-        r = requests.get(url = URL_TO_INSTRUCT_HISTORY, params = PARAMS)
-        html = r.text
-        historySoup = BeautifulSoup(html, 'html.parser')
+        historySoup = scrape(driver, URL_TO_INSTRUCT_HISTORY + "?" + urllib.parse.urlencode(PARAMS))
         shouldContinue = parseHistoryPage(historySoup, query["relatedDepartments"], courseHistory)
         row += 101
         PARAMS["start_row"] = str(row)
