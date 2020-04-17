@@ -45,7 +45,6 @@ class ReviewsModule extends React.Component {
       text: "",
       rating: 0,
       difficulty: 0,
-      userID: "raman",
       // courseID: "",//this.props.courseID,
       profID: "",
       date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
@@ -70,10 +69,26 @@ class ReviewsModule extends React.Component {
   getProfessorNames() {
     console.log("Getting the professors");
     let names = []
-    for (var i = 0; i < this.props.professorHistory.length; i++) {       
+    for (var i = 0; i < this.props.professorHistory.length; i++) {    
+      var searchParams = {
+        query: {
+          terms: {
+            _id: [this.props.professorHistory[i]]
+          }
+        }
+      };
+  
+      var requestHeader = {
+        headers: new Headers({
+          "content-type": "application/json; charset=UTF-8",
+          "content-length": 140
+        }),
+        body: JSON.stringify(searchParams),
+        method: "POST"
+      };   
       fetch(
-        "https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/professors/_doc/"+this.props.professorHistory[i],
-        {method: "GET"}
+        "/professors/_search",
+        requestHeader
       )
         .then(data => {
           return data.json();
@@ -81,7 +96,8 @@ class ReviewsModule extends React.Component {
         .then(res => {
           console.log(res);
           this.setState({})
-          names.push({ key: res._source.ucinetid, value: res._source.ucinetid, text: res._source.name })
+          let prof_data = res.hits.hits[0]._source
+          names.push({ key: prof_data.ucinetid, value: prof_data.ucinetid, text: prof_data.name })
           this.setState({professorOptions: names});
         })
         .catch(e => console.log(e));
@@ -89,33 +105,42 @@ class ReviewsModule extends React.Component {
   }
 
   addReview = () => {
-
-    var queryParams = {
-      text: this.state.text,
-      rating: this.state.rating,
-      difficulty: this.state.difficulty,
-      userID: this.state.userID,
-      courseID: this.props.courseID,//this.props.courseID,
-      profID: this.state.profID,
-      date: this.state.date,
-      grade: this.state.grade,
-      forCredit: this.state.forCredit,
-    }
-    var requestHeader= {
-      'Content-Type': 'application/json',
-    };
-    console.log(queryParams);
-    fetch("/reviews/addReview", {
-      method: "POST",
-      headers: requestHeader,
-      body: JSON.stringify(queryParams),
-    }).then(data => {return data.json()})
-    .then(res => {
-      console.log("it worked");
-      this.getReviews();
-    }).catch(() => {
-      console.log("No Course Found")
+    fetch("/users/loggedIn", {method: "GET"}).then((res)=> {
+      return res.json();
+    }).then((data) => {
+      if (data.status) {
+        var queryParams = {
+          text: this.state.text,
+          rating: this.state.rating,
+          difficulty: this.state.difficulty,
+          // userID: this.state.userID,
+          courseID: this.props.courseID,//this.props.courseID,
+          profID: this.state.profID,
+          date: this.state.date,
+          grade: this.state.grade,
+          forCredit: this.state.forCredit,
+        }
+        var requestHeader= {
+          'Content-Type': 'application/json',
+        };
+        console.log(queryParams);
+        fetch("/reviews/addReview", {
+          method: "POST",
+          headers: requestHeader,
+          body: JSON.stringify(queryParams),
+        }).then(data => {return data.json()})
+        .then(res => {
+          console.log("it worked");
+          this.getReviews();
+        }).catch((err) => {
+          console.log(err);
+          console.log("No Course Found")
+        });
+      } else {
+        alert("Log in to post a review!")
+      }
     });
+    
   }
   
   getReviews = () => {

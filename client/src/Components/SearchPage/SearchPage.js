@@ -1,6 +1,7 @@
 import React from "react";
 import "./SearchPage.scss";
 import SearchEngine from "./SearchEngine.js";
+import queryString from "query-string";
 
 class SearchPage extends React.Component {
   state = { activeItem: "courses" };
