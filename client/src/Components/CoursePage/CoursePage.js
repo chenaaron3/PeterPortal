@@ -36,8 +36,7 @@ class CoursePage extends React.Component {
 
     // console.log(process.env.REACT_APP_ELASTIC_ENDPOINT_URL_COURSES)
 
-    fetch(
-      "https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/courses/_search",
+    fetch("/courses/_search",
       requestHeader
     )
       .then(data => {

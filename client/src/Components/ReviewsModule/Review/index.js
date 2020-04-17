@@ -11,23 +11,31 @@ class Review extends React.Component {
   }
 
   vote = (direction) => {
-    var body = {
-      reviewID: this.props.reviewData.id,
-    }
-    var requestHeader= {
-      'Content-Type': 'application/json',
-    };
-    console.log(body);
-    fetch(`/reviews/${direction}VoteReview`, {
-      method: "PUT",
-      headers: requestHeader,
-      body: JSON.stringify(body),
-    }).then(data => {return data.json()})
-    .then(res => {
-      console.log("it worked");
-      this.props.getReviews()
-    }).catch(() => {
-      console.log("No Course Found")
+    fetch("/users/loggedIn", {method: "GET"}).then((res)=> {
+      return res.json();
+    }).then((data) => {
+      if (data.status) {
+        var body = {
+          reviewID: this.props.reviewData.id,
+        }
+        var requestHeader= {
+          'Content-Type': 'application/json',
+        };
+        console.log(body);
+        fetch(`/reviews/${direction}VoteReview`, {
+          method: "PUT",
+          headers: requestHeader,
+          body: JSON.stringify(body),
+        }).then(data => {return data.json()})
+        .then(res => {
+          console.log("it worked");
+          this.props.getReviews()
+        }).catch(() => {
+          console.log("No Course Found")
+        });
+      } else {
+        alert("Login to vote!")
+      }
     });
   }
 

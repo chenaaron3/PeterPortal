@@ -5,12 +5,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var subdomain = require('express-subdomain');
-
+var passport = require('passport');
 var cors = require('cors');
 var dotenv = require('dotenv');
+var session = require('express-session')
+
 // var indexRouter = require('./routes/index');
 var apiRouter = require('./api/v1');
-// var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/users');
 var reviewsRouter = require('./routes/reviews');
 var coursesRouter = require('./routes/courses')
 var professorsRouter = require('./routes/professors')
@@ -18,24 +20,32 @@ var professorsRouter = require('./routes/professors')
 var app = express();
 var mysql = require("mysql");
 
-var corsOptions = {
-	origin: "http://localhost:3000"
-}
 port = process.env.PORT || 3001;
 
 // dotenv.config();
 
 // Database connection
-app.use(function(req, res, next){
-	res.locals.connection = mysql.createConnection({
-		host     : process.env.REVIEWS_DB_ENDPOINT,
-		user     : process.env.DB_USERNAME,
-		password : process.env.DB_PASSWORD,
-		database : 'peterportal'
-	});
-	res.locals.connection.connect();
-	next();
-});
+// app.use(function(req, res, next){
+// 	res.locals.connection = mysql.createConnection({
+// 		host     : process.env.REVIEWS_DB_ENDPOINT,
+// 		user     : process.env.DB_USERNAME,
+// 		password : process.env.DB_PASSWORD,
+// 		database : 'peterportal'
+// 	});
+// 	res.locals.connection.connect();
+// 	next();
+// });
+
+app.use(session({
+	secret: 'keyboard anteater',
+	resave: false,
+	saveUninitialized: false,
+	cookie: {maxAge: 1000 * 60 * 60 * 24}
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+require("./config/passport.js")
 
 // Serve the static files from the React app
 app.use(express.static(path.join(__dirname, 'build')));
@@ -57,7 +67,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+app.use('/users', usersRouter);
 app.use('/reviews', reviewsRouter);
 app.use("/courses", coursesRouter)
 app.use("/professors", professorsRouter)

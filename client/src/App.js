@@ -10,6 +10,9 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-d
 import { SearchkitManager, SearchkitProvider } from "searchkit";
 
 class App extends React.Component {
+
+  
+  
   render() {
     return (
       // <SearchkitProvider {/*searchkit= {

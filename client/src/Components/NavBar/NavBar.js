@@ -1,16 +1,30 @@
 import React from "react";
 import { Menu, Segment, Label, Popup, Grid, Header, Button, Icon } from "semantic-ui-react";
+// import {useCookies} from 'react-cookie';
+
 import Logo from "../../Assets/peterportal-banner-logo.svg";
 import "./NavBar.scss";
 
 class NavBar extends React.Component {
   state = { activeItem: "search" };
+  // cookies = useCookies(['name']);
+  constructor(props) {
+    super(props);
+    // const [cookies, setCookie] = useCookies(['name']);
+    fetch("/users/getName", {method: "GET"}).then((res)=> {
+      return res.json();
+    }).then((data) => {
+      this.setState({name: data.name});
+    });
+  }
+
+
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   render() {
     const { activeItem } = this.state;
-    
+
     return (
       <div className={"top-bar"} style={{ overflowX: "hidden" }}>
         <Menu secondary className="nav-menu">
@@ -65,6 +79,20 @@ class NavBar extends React.Component {
                     <p className={"school-term"} style={{marginBottom: "-1px"}}>Week 2, Spring 2020</p>
                   </div>
                 </Menu.Item>
+
+                {this.state.name && <Menu.Item position="right">
+                  <div className={"school-term_container"}>
+                    <p>Hi, {this.state.name}</p>
+                  </div>
+                </Menu.Item>}
+
+                <Menu.Item position="right">
+                  <div className={"school-term_container"}>
+                    {!this.state.name ? <a href="/users/auth/google"> {'LOGIN'}</a> : <a href="/users/logout">{'LOGOUT'}</a>}
+                  </div>
+                </Menu.Item>
+
+                
 
 
               </Menu>
