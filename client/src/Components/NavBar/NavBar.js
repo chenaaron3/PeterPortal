@@ -6,7 +6,7 @@ import Logo from "../../Assets/peterportal-banner-logo.svg";
 import "./NavBar.scss";
 
 class NavBar extends React.Component {
-  state = { activeItem: "search" };
+  state = { activeItem: "search", week: "" };
   // cookies = useCookies(['name']);
   constructor(props) {
     super(props);
@@ -16,6 +16,10 @@ class NavBar extends React.Component {
     }).then((data) => {
       this.setState({name: data.name});
     });
+
+    fetch("/week",{method: "GET"})
+    .then(res=>res.text())
+    .then(text=>this.setState({week:text}))
   }
 
 
@@ -23,7 +27,7 @@ class NavBar extends React.Component {
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   render() {
-    const { activeItem } = this.state;
+    const activeItem = this.state.activeItem;
 
     return (
       <div className={"top-bar"} style={{ overflowX: "hidden" }}>
@@ -76,7 +80,7 @@ class NavBar extends React.Component {
 
                 <Menu.Item position="right">
                   <div className={"school-term_container"}>
-                    <p className={"school-term"} style={{marginBottom: "-1px"}}>Week 2, Spring 2020</p>
+                    <p className={"school-term"} style={{marginBottom: "-1px"}}>{this.state.week}</p>
                   </div>
                 </Menu.Item>
 
@@ -88,7 +92,7 @@ class NavBar extends React.Component {
 
                 <Menu.Item position="right">
                   <div className={"school-term_container"}>
-                    {!this.state.name ? <a href="/users/auth/google"> {'LOGIN'}</a> : <a href="/users/logout">{'LOGOUT'}</a>}
+                    {!this.state.name ? <><a href="/users/auth/google"> {'GLOGIN'}</a><a href="/users/auth/facebook"> {'FLOGIN'}</a></> : <a href="/users/logout">{'LOGOUT'}</a>}
                   </div>
                 </Menu.Item>
 

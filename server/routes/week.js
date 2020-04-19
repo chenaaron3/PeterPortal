@@ -6,7 +6,6 @@ const cheerio = require('cheerio');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
     let date = new Date(Date.now());
-    date = new Date("03/30/2020");
     let year = date.getFullYear();
     getQuarterMapping(year, (mapping) => {
         respondWeek(date, mapping, res)
