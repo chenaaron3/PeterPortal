@@ -22,8 +22,6 @@ class NavBar extends React.Component {
     .then(text=>this.setState({week:text}))
   }
 
-
-
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   render() {
@@ -92,13 +90,14 @@ class NavBar extends React.Component {
 
                 <Menu.Item position="right">
                   <div className={"school-term_container"}>
-                    {!this.state.name ? <><a href="/users/auth/google"> {'GLOGIN'}</a><a href="/users/auth/facebook"> {'FLOGIN'}</a></> : <a href="/users/logout">{'LOGOUT'}</a>}
+                    {!this.state.name ? <>
+                                          <a href="/users/auth/google"> {'GOOGLE LOGIN'}</a>
+                                          <a href="/users/auth/facebook"> {'FACEBOOK LOGIN'}</a>
+                                          <a href="/users/auth/github"> {'GITHUB LOGIN'}</a>
+                                        </> 
+                                      : <a href="/users/logout">{'LOGOUT'}</a>}
                   </div>
                 </Menu.Item>
-
-                
-
-
               </Menu>
             </Segment>
           </Menu.Item>

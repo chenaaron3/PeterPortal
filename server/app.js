@@ -9,6 +9,8 @@ var passport = require('passport');
 var cors = require('cors');
 var dotenv = require('dotenv');
 var session = require('express-session')
+var MySQLStore = require('express-mysql-session')(session);
+var {pool} = require("./config/database")
 
 // var indexRouter = require('./routes/index');
 var apiRouter = require('./api/v1');
@@ -19,29 +21,15 @@ var professorsRouter = require('./routes/professors')
 var weekRouter = require('./routes/week')
 
 var app = express();
-var mysql = require("mysql");
 
 port = process.env.PORT || 3001;
 
-// dotenv.config();
-
-// Database connection
-// app.use(function(req, res, next){
-// 	res.locals.connection = mysql.createConnection({
-// 		host     : process.env.REVIEWS_DB_ENDPOINT,
-// 		user     : process.env.DB_USERNAME,
-// 		password : process.env.DB_PASSWORD,
-// 		database : 'peterportal'
-// 	});
-// 	res.locals.connection.connect();
-// 	next();
-// });
-
 app.use(session({
-	secret: 'keyboard anteater',
+	secret: process.env.SESSION_SECRET,
 	resave: false,
 	saveUninitialized: false,
-	cookie: {maxAge: 1000 * 60 * 60 * 24}
+  cookie: {maxAge: 1000 * 60 * 60 * 24},
+  store: new MySQLStore({}, pool)
 }));
 app.use(passport.initialize());
 app.use(passport.session());
