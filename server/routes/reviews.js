@@ -1,8 +1,7 @@
 var express = require('express');
-var executeQuery = require('../config/database.js')
+var {executeQuery} = require('../config/database.js')
 var router = express.Router();
 
-var getConnection = ""
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource reviews');
@@ -71,8 +70,7 @@ router.put('/upVoteReview', function(req, res) {
       //   UPDATE votes SET up=true WHERE email="${req.user.email}" AND review_id=${req.body.reviewID};`
 
       // executeQuery(sql, function(results) {});
-      res.send("FUCK YOU")
-      
+      res.send("You already downvoted the review.")
     } else { //if it is a upvote delete it
       sql = `UPDATE reviews SET up_votes = up_votes - 1 WHERE id = ${req.body.reviewID};
       DELETE FROM votes WHERE email="${req.user.email}" AND review_id=${req.body.reviewID}`
@@ -102,7 +100,7 @@ router.put('/downVoteReview', function(req, res) {
       //   UPDATE votes SET up=false WHERE email="${req.user.email}" AND review_id=${req.body.reviewID};`
 
       // executeQuery(sql, function(results) {});
-      res.send("FUCK YOU")
+      res.send("You already upvoted the review.")
 
     } else { //if it is a downvote delete it
       sql = `UPDATE reviews SET down_votes = down_votes - 1 WHERE id = ${req.body.reviewID};
@@ -114,8 +112,6 @@ router.put('/downVoteReview', function(req, res) {
     }
   });
 });
-
-
 
 // router.put('/flagReview', function(req, res) {  
 //   let sql = `UPDATE reviews SET flagged=true WHERE id = ${req.body.reviewID}`

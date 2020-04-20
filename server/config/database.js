@@ -2,7 +2,6 @@ const dotenv = require('dotenv');
 const path = require('path')
 var mysql = require('mysql');
 
-
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 //create global connection to database
@@ -32,4 +31,4 @@ var executeQuery = function(sql, callback) {
       });
 }
 
-module.exports = executeQuery;
+module.exports = {executeQuery, pool};

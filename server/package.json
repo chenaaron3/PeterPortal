@@ -13,6 +13,7 @@
     "dotenv": "^8.2.0",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
+    "express-mysql-session": "^2.1.4",
     "express-session": "^1.17.0",
     "express-subdomain": "^1.0.5",
     "http-errors": "~1.6.3",
@@ -22,6 +23,7 @@
     "nodemon": "^2.0.2",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
+    "passport-github": "^1.1.0",
     "passport-google-oauth": "^2.0.0",
     "websoc-api": "^0.0.5"
   }
