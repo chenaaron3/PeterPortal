@@ -166,10 +166,10 @@ class CoursePage extends React.Component {
               </Card>
             </Grid.Row>
             <Grid.Row>
-              {/* <ReviewsModule
+              <ReviewsModule
                courseID={this.props.match.params.id}
                professorHistory={this.state.courseData.professorHistory ? this.state.courseData.professorHistory : []}
-               /> */}
+               />
             </Grid.Row>
 
             {/* <Grid.Row className="course_content-container course_prereq-tree-container">
