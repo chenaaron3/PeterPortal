@@ -54,7 +54,9 @@ const CourseHitItem = (props) => (
             ),
           }}
         ></p>
-        <p>{props.result._source.prerequisite}</p>
+        {props.result._source.prerequisite != "" && 
+          <p><b>Prerequisite: </b> {props.result._source.prerequisite}</p>
+        }
   
         <p className={"course-department_unit"}>
           {props.result._source.ge_string}

@@ -4,7 +4,7 @@
 }
 
 .course_content-container {
-    width: 800px;
+    width: 1000px;
     margin: auto;
     
     .course_info-container {
@@ -13,6 +13,7 @@
             color: #5E9EC1;
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
         }
 
         #course_name {
@@ -29,15 +30,11 @@
             
             #course_desc-container {
                 padding-right: 2rem;
-                min-width: 80% !important;
             }
 
             #course_ge-info {
                 width: 75%;
                 color: gray;
-                .course_ge-info-container{
-                    margin-bottom: 18px;
-                }
             }
         }
 
