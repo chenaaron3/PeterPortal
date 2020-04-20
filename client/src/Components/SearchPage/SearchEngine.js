@@ -1,12 +1,24 @@
 import React from "react";
 import "./SearchPage.scss";
 import CourseFilter from "./CourseFilter.js";
+import ProfessorFilter from "./ProfessorFilter.js";
 import ProfessorHitItem from "./ProfessorHitItem.js";
 import CourseHitItem from "./CourseHitItem.js";
-import { Icon, Menu } from "semantic-ui-react";
-import { Pagination, SearchkitComponent, Hits, NoHits, InitialLoader, SearchBox, SearchkitManager, SearchkitProvider } from "searchkit";
+import { Icon, Menu} from "semantic-ui-react";
+import { Pagination, 
+    SearchkitComponent, 
+    Hits, HitsStats, 
+    InitialLoader, SearchBox, 
+    SearchkitManager, SearchkitProvider 
+} from "searchkit";
 
-const InitialLoaderComponent = (props) => <div>Fetching course data...</div>;
+const InitialLoaderComponent = props => <div>Fetching course data...</div>;
+
+const customHitStats = props => (
+    <div>
+      <p style={{textAlign: "right", fontSize: "8pt"}}>{props.hitsCount.value} results found in {props.timeTaken}ms</p>
+  </div>
+)
 
 class SearchEngine extends SearchkitComponent {
 
@@ -64,33 +76,31 @@ class SearchEngine extends SearchkitComponent {
                             </Menu>
                             
                             {this.props.activeItem == "courses" && <CourseFilter/>}
+                            {this.props.activeItem == "professors" && <ProfessorFilter/>}
 
-                            <div class="footer">
-                                <a href="https://github.com/icssc-projects">Github</a>
-                                <a href="/">API</a>
-                                <a href="/">About</a>
-                                <a href="/">Team</a>
-                                <a href="/">FAQ</a>
-                                <div class="copyright">
-                                    <br/>
-                                    <p>Made with ♥ by <a href="https://studentcouncil.ics.uci.edu/">ICSSC Project Committee</a>
-                                    <br/>Copyright © 2020, ICSSC.</p>
-                                </div>
-                            </div>
                         </div>
 
                         <div className="search-pane-container">
+
                             <div className="searchbox-container">
+                                <div style={{display: "flex"}}>
                                 <Icon name='search' size='large' className="search-icon"/>
                                 <SearchBox
+                                    autofocus={true}
                                     searchOnChange={true}
                                     queryFields={this.queryFieldValues[this.props.activeItem]}
                                     searchThrottleTime={300}
                                     placeholder={this.props.activeItem == "courses" ? "Course number, title and description" : "Professor name, title, and department"}
                                 />
-                            </div>
+                                </div>
                             
-                            <div>
+                                <div>
+                                    <HitsStats component={customHitStats} />
+                                </div>
+                            </div>
+
+
+                            <div style={{minHeight: "100vh"}}>
                                 <Hits
                                     itemComponent={this.props.activeItem == "courses" ? CourseHitItem : ProfessorHitItem}
                                     hitsPerPage={20}
@@ -105,6 +115,20 @@ class SearchEngine extends SearchkitComponent {
                             <InitialLoader component={InitialLoaderComponent} />
 
                             <Pagination showNumbers={true} />
+                            
+                            <footer class="footer">
+                                <div>
+                                <a href="https://github.com/icssc-projects">Github</a>
+                                <a href="/">API</a>
+                                <a href="/">About</a>
+                                <a href="/">Team</a>
+                                <a href="/">FAQ</a>
+                                </div>
+                                <div class="copyright">
+                                    <p>Made with ♥ by <a href="https://studentcouncil.ics.uci.edu/">ICSSC Project Committee</a></p>
+                                </div>
+                            </footer>
+
                         </div>
                     </div>
                 </div>
