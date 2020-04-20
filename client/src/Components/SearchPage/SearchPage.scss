@@ -58,6 +58,7 @@
     .searchbox-container {
       position: fixed; 
       display: flex;
+      flex-direction: column;
       background: white;
       padding-top: 28px !important;
       .search-icon {
@@ -91,30 +92,14 @@
   position: fixed;
   margin-top: 28px;
   margin-bottom: 28px;
-  .footer {
-    background-color: #f9f9f9; 
-    height: auto;
-    margin-top: 28px;
-    padding: 16px;
-    a {
-      margin-right: 8px;
-      color: gray;
-      font-weight: bold;
-      font-size: 12px;
-    }
-    a:hover {
-      color: $primary-color-1;
-    }
-
-    .copyright>p{
-      font-size: 12px;
-      color: gray;
-    }
-  }
+  height: 90%;
+  display: flex;
+  flex-direction: column;
 }
 
 .mode-switcher {
     width: 280px !important;
+    min-height: 76px !important;
 }
 
 .ui.secondary.menu .item {
@@ -146,3 +131,34 @@
     }
   }
   
+  .footer {
+    margin-left: -360px;
+    background-color: #f9f9f9; 
+    height: auto;
+    margin-top: 28px;
+    padding: 16px 40px;
+    position: relative;
+    left: 0;
+    width: 100vw;
+    display: flex;
+    a {
+      margin-right: 16px;
+      color: gray;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    a:hover {
+      color: $primary-color-1;
+    }
+
+    .copyright{
+      margin-left: auto;
+      p{
+        font-size: 12px;
+        color: gray;
+      }
+      a {
+        margin-right: 0;
+      }
+    }
+  }
