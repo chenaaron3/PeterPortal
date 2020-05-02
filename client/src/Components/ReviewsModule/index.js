@@ -105,41 +105,66 @@ class ReviewsModule extends React.Component {
   }
 
   addReview = () => {
-    fetch("/users/loggedIn", {method: "GET"}).then((res)=> {
-      return res.json();
-    }).then((data) => {
-      if (data.status) {
-        var queryParams = {
-          text: this.state.text,
-          rating: this.state.rating,
-          difficulty: this.state.difficulty,
-          // userID: this.state.userID,
-          courseID: this.props.courseID,//this.props.courseID,
-          profID: this.state.profID,
-          date: this.state.date,
-          grade: this.state.grade,
-          forCredit: this.state.forCredit,
-        }
-        var requestHeader= {
-          'Content-Type': 'application/json',
-        };
-        console.log(queryParams);
-        fetch("/reviews/addReview", {
-          method: "POST",
-          headers: requestHeader,
-          body: JSON.stringify(queryParams),
-        }).then(data => {return data.json()})
-        .then(res => {
-          console.log("it worked");
-          this.getReviews();
-        }).catch((err) => {
-          console.log(err);
-          console.log("No Course Found")
-        });
-      } else {
-        alert("Log in to post a review!")
-      }
+
+    var queryParams = {
+      text: this.state.text,
+      rating: this.state.rating,
+      difficulty: this.state.difficulty,
+      courseID: this.props.courseID,//this.props.courseID,
+      profID: this.state.profID,
+      date: this.state.date,
+      grade: this.state.grade,
+    }
+    var requestHeader= {
+      'Content-Type': 'application/json',
+    };
+    console.log(queryParams);
+    fetch("/reviews/addReview", {
+      method: "POST",
+      headers: requestHeader,
+      body: JSON.stringify(queryParams),
+    }).then(data => {return data.json()})
+    .then(res => {
+      console.log("it worked");
+      this.getReviews();
+    }).catch((err) => {
+      console.log(err);
+      console.log("No Course Found")
     });
+
+    // fetch("/users/loggedIn", {method: "GET"}).then((res)=> {
+    //   return res.json();
+    // }).then((data) => {
+    //   if (data.status) {
+    //     var queryParams = {
+    //       text: this.state.text,
+    //       rating: this.state.rating,
+    //       difficulty: this.state.difficulty,
+    //       courseID: this.props.courseID,//this.props.courseID,
+    //       profID: this.state.profID,
+    //       date: this.state.date,
+    //       grade: this.state.grade,
+    //     }
+    //     var requestHeader= {
+    //       'Content-Type': 'application/json',
+    //     };
+    //     console.log(queryParams);
+    //     fetch("/reviews/addReview", {
+    //       method: "POST",
+    //       headers: requestHeader,
+    //       body: JSON.stringify(queryParams),
+    //     }).then(data => {return data.json()})
+    //     .then(res => {
+    //       console.log("it worked");
+    //       this.getReviews();
+    //     }).catch((err) => {
+    //       console.log(err);
+    //       console.log("No Course Found")
+    //     });
+    //   } else {
+    //     alert("Log in to post a review!")
+    //   }
+    // });
     
   }
   
@@ -193,13 +218,13 @@ class ReviewsModule extends React.Component {
                 onChange={(event,  data) => {this.setState({profID: data.value})}}                
               />
 
-              <Dropdown
+              {/* <Dropdown
                 placeholder="Grade Option"
                 fluid
                 selection
                 options={creditOptions}
                 onChange={(event, data) => {this.setState({forCredit: data.value})}}
-              />
+              /> */}
 
               <Dropdown
                 placeholder="Grade Received"

@@ -104,10 +104,14 @@ function successLogin(req, res){
     // if not in the database
     if (results.length == 0) {
       // add them
-      let sql = `INSERT INTO users VALUES('${req.user.email}', '${req.user.name}')`
+      let sql = `INSERT INTO users (email, full_name) VALUES('${req.user.email}', '${req.user.name}')`
       executeQuery(sql, function(results) {
         console.log(results)
       });
+    } else {
+      console.log(results)
+      req.user['userID'] = results[0].user_id;
+      
     }
   });
   // redirect browser to the page they came from
@@ -120,7 +124,7 @@ function successLogin(req, res){
 router.get('/logout', function(req, res){
   req.session.destroy(function (err) {
     if (err) console.log(err)
-    res.redirect('/');
+    res.redirect('back');
   });
 });
 
