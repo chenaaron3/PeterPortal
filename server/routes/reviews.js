@@ -29,23 +29,21 @@ router.get('/course', function(req, res, next)  {
 
 router.post('/addReview', function(req, res) {
   
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
-
   const data = {
     text: req.body.text,
     rating: req.body.rating,
     difficulty: req.body.difficulty,
-    userID: req.user.email,
+    userID: req.user ? `"${req.user.userID}"`: "NULL",
     courseID: req.body.courseID,
     profID: req.body.profID,
     date: req.body.date,  //format: "2020-02-10"
     grade: req.body.grade,
-    forCredit: req.body.forCredit,
+    pubStatus: req.user ? "published": "unverified"
   }
 
   let sql = `INSERT INTO reviews 
-  (body, rating, difficulty, user_id, course_id, prof_id, submitted_at, grade, for_credit)
-  VALUES( "${data.text}", ${data.rating}, ${data.difficulty}, "${data.userID}", "${data.courseID}", "${data.profID}", "${data.date}", "${data.grade}", ${data.forCredit})`
+  (body, rating, difficulty, user_id, course_id, prof_id, submitted_at, grade, pub_status)
+  VALUES( "${data.text}", ${data.rating}, ${data.difficulty}, ${data.userID}, "${data.courseID}", "${data.profID}", "${data.date}", "${data.grade}", "${data.pubStatus}")`
 
   executeQuery(sql, function(results) {
     res.send(JSON.stringify(results));
@@ -53,13 +51,14 @@ router.post('/addReview', function(req, res) {
 })
 
 router.put('/upVoteReview', function(req, res) {
-  let sql = `SELECT * FROM votes WHERE email="${req.user.email}" AND review_id=${req.body.reviewID}`
+  console.log("CHECK", req)
+  let sql = `SELECT * FROM votes WHERE user_id="${req.user.userID}" AND review_id=${req.body.reviewID}`
 
   executeQuery(sql, function(results) {
     //if there is no vote
     if (results.length == 0) {
       sql = `UPDATE reviews SET up_votes = up_votes + 1 WHERE id = ${req.body.reviewID};
-      INSERT INTO votes VALUES("${req.user.email}", ${req.body.reviewID}, true);`
+      INSERT INTO votes VALUES("${req.user.userID}", ${req.body.reviewID}, true);`
 
       executeQuery(sql, function(results) {
         res.send(JSON.stringify(results));
@@ -73,7 +72,7 @@ router.put('/upVoteReview', function(req, res) {
       res.send("You already downvoted the review.")
     } else { //if it is a upvote delete it
       sql = `UPDATE reviews SET up_votes = up_votes - 1 WHERE id = ${req.body.reviewID};
-      DELETE FROM votes WHERE email="${req.user.email}" AND review_id=${req.body.reviewID}`
+      DELETE FROM votes WHERE user_id="${req.user.userID}" AND review_id=${req.body.reviewID}`
 
       executeQuery(sql, function(results) {
         res.send(JSON.stringify(results));
@@ -83,13 +82,13 @@ router.put('/upVoteReview', function(req, res) {
 });
 
 router.put('/downVoteReview', function(req, res) {
-  let sql = `SELECT * FROM votes WHERE email="${req.user.email}" AND review_id=${req.body.reviewID}`
+  let sql = `SELECT * FROM votes WHERE user_id="${req.user.userID}" AND review_id=${req.body.reviewID}`
 
   executeQuery(sql, function(results) {
     //if there is no vote
     if (results.length == 0) {
       sql = `UPDATE reviews SET down_votes = down_votes + 1 WHERE id = ${req.body.reviewID};
-      INSERT INTO votes VALUES("${req.user.email}", ${req.body.reviewID}, false);`
+      INSERT INTO votes VALUES("${req.user.userID}", ${req.body.reviewID}, false);`
 
       executeQuery(sql, function(results) {
         res.send(JSON.stringify(results));
@@ -104,7 +103,7 @@ router.put('/downVoteReview', function(req, res) {
 
     } else { //if it is a downvote delete it
       sql = `UPDATE reviews SET down_votes = down_votes - 1 WHERE id = ${req.body.reviewID};
-      DELETE FROM votes WHERE email="${req.user.email}" AND review_id=${req.body.reviewID}`
+      DELETE FROM votes WHERE user_id="${req.user.userID}" AND review_id=${req.body.reviewID};`
 
       executeQuery(sql, function(results) {
         res.send(JSON.stringify(results));

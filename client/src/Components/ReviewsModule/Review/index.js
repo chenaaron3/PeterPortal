@@ -62,11 +62,11 @@ class Review extends React.Component {
                   </h5>
                 </div>
 
-                <div>
+                {/* <div>
                   <h5>
                     <b>For Credit:</b> {this.props.reviewData.for_credit ? "Yes" : "No"}
                   </h5>
-                </div>
+                </div> */}
 
                 <div>
                   <h5>
