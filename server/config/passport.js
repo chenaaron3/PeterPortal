@@ -26,7 +26,8 @@ passport.use(
             console.log(profile)
             var userData = {
                 email: profile.emails[0].value,
-                name: profile.displayName
+                name: profile.displayName,
+                picture: profile._json.picture
             };
             done(null, userData);
         }

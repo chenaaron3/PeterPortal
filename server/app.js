@@ -6,11 +6,7 @@ var bodyParser = require('body-parser');
 var logger = require('morgan');
 var subdomain = require('express-subdomain');
 var passport = require('passport');
-var cors = require('cors');
-var dotenv = require('dotenv');
 var session = require('express-session')
-var MySQLStore = require('express-mysql-session')(session);
-var {pool} = require("./config/database")
 
 // var indexRouter = require('./routes/index');
 var apiRouter = require('./api/v1');
@@ -25,11 +21,10 @@ var app = express();
 port = process.env.PORT || 3001;
 
 app.use(session({
-	secret: process.env.SESSION_SECRET,
+	secret: 'keyboard anteater',
 	resave: false,
 	saveUninitialized: false,
-  cookie: {maxAge: 1000 * 60 * 60 * 24},
-  store: new MySQLStore({}, pool)
+	cookie: {maxAge: 1000 * 60 * 60 * 24}
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -54,8 +49,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/about', (req, res) => {
+  res.render('about');
+});
+app.use(express.static(__dirname + "/public"));
 
-// app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/reviews', reviewsRouter);
 app.use("/courses", coursesRouter)

@@ -1,7 +1,7 @@
 import React from "react";
-import Review from "./Review";
+import Review from "./Review.js";
 import { Form, TextArea, Checkbox, Dropdown, Button } from "semantic-ui-react";
-
+import "./ReviewsModule.scss";
 // const professorOptions = [
 //   { key: "pattis", value: "pattis", text: "Richard Pattis" },
 //   { key: "thornton", value: "thornton", text: "Alexander Thornton" }
@@ -36,8 +36,6 @@ const gradeReceived = [
 ];
 
 class ReviewsModule extends React.Component {
-
-
   constructor(props) {
     super(props);
     let date = new Date();
@@ -60,7 +58,6 @@ class ReviewsModule extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    console.log("hi")
     this.setState({courseID: this.props.courseID});
     this.getReviews();
     this.getProfessorNames();
@@ -69,6 +66,7 @@ class ReviewsModule extends React.Component {
   getProfessorNames() {
     console.log("Getting the professors");
     let names = []
+    let prof_json = {};
     for (var i = 0; i < this.props.professorHistory.length; i++) {    
       var searchParams = {
         query: {
@@ -94,11 +92,14 @@ class ReviewsModule extends React.Component {
           return data.json();
         })
         .then(res => {
-          console.log(res);
           this.setState({})
-          let prof_data = res.hits.hits[0]._source
-          names.push({ key: prof_data.ucinetid, value: prof_data.ucinetid, text: prof_data.name })
+          let prof_data = res.hits.hits[0]._source;
+          prof_json[prof_data.ucinetid] = prof_data.name;
+        
+          names.push({ prof_ucinetid: prof_data.name });
           this.setState({professorOptions: names});
+          // this.setState({professorOptions: prof_json});
+          console.log(prof_data);
         })
         .catch(e => console.log(e));
     }
@@ -158,10 +159,9 @@ class ReviewsModule extends React.Component {
 
   render() {
     return (
-      <div style={{ marginTop: "26px", marginBottom: "200px" }}>
-        <h1>Review and Discussion</h1>
+      <div className="review-module-container" style={{ marginTop: "36px", marginBottom: "200px" }}>
+        <h2>Review and Discussion</h2>
         <div>
-          
           {this.state.reviews && this.state.reviews.map(item => (
             <>
               <Review reviewData={item} getReviews={this.getReviews}/>
