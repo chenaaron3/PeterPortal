@@ -1,5 +1,5 @@
 <h1>
-  <img src="misc/peterportal-banner-logo.svg" alt="PeterPortal" width="400" />
+  <img src="server/public/img/peterportal-banner-logo.svg" alt="PeterPortal" width="400" />
 </h1>
 
 The One-Stop-Shop for course discovery at UC Irvine.

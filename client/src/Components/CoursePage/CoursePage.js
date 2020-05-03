@@ -1,6 +1,6 @@
 import React from "react";
 import Timetable from "../Timetable";
-import ReviewsModule from "../ReviewsModule";
+import ReviewsModule from "../ReviewsModule/ReviewsModule.js";
 import PrereqTree from "../PrereqTree";
 import { Grid, Icon, Divider, Card, Radio, Button } from "semantic-ui-react";
 import "./CoursePage.scss";
@@ -165,6 +165,7 @@ class CoursePage extends React.Component {
                 </Card.Content>
               </Card>
             </Grid.Row>
+
             <Grid.Row>
               <ReviewsModule
                courseID={this.props.match.params.id}

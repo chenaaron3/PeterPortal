@@ -1,6 +1,10 @@
-import React from "react";
-import { Menu, Segment, Label, Popup, Grid, Header, Button, Icon } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Icon } from "semantic-ui-react";
 // import {useCookies} from 'react-cookie';
+
+import { ReactComponent as CogIcon } from "../../Assets/cog.svg";
+import { ReactComponent as ArrowIcon } from "../../Assets/arrow.svg";
+import { CSSTransition } from "react-transition-group";
 
 import Logo from "../../Assets/peterportal-banner-logo.svg";
 import "./NavBar.scss";
@@ -11,15 +15,18 @@ class NavBar extends React.Component {
   constructor(props) {
     super(props);
     // const [cookies, setCookie] = useCookies(['name']);
-    fetch("/users/getName", {method: "GET"}).then((res)=> {
-      return res.json();
-    }).then((data) => {
-      this.setState({name: data.name});
-    });
+    fetch("/users/getName", { method: "GET" })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        this.setState({ name: data.name, picture: data.picture });
+      });
 
-    fetch("/week",{method: "GET"})
-    .then(res=>res.text())
-    .then(text=>this.setState({week:text}))
+    fetch("/week", { method: "GET" })
+      .then((res) => res.text())
+      .then((text) => this.setState({ week: text }));
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -28,83 +35,150 @@ class NavBar extends React.Component {
     const activeItem = this.state.activeItem;
 
     return (
-      <div className={"top-bar"} style={{ overflowX: "hidden" }}>
-        <Menu secondary className="nav-menu">
-          <Menu.Item>
+
+      <nav className="navbar">
+        <div className="navbar-nav">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              marginRight: "auto",
+              alignItems: "center",
+            }}
+          >
             <div class="peterportal-logo-container">
-              <a href="/"><img alt="PeterPortal" id="peterportal-logo" src={Logo}></img></a>
+              <a href="/">
+                <img alt="PeterPortal" id="peterportal-logo" src={Logo}></img>
+              </a>
             </div>
-          </Menu.Item>
-          <Menu.Item>
             <div>
-
-            <Popup style={{padding: "36px", width: "400px"}} trigger={<Label as='a' color='yellow' image>alpha<Label.Detail>v0.2</Label.Detail></Label>} flowing hoverable >
-              <Grid centered columns={1}>
-                <Grid.Column textAlign='left'>
-                  <Header as='h4'>Alpha Disclaimer</Header>
-                  <p>
-                  Please note that this is an alpha version of PeterPortal, which is still undergoing development. 
-                  Some content on this web application may not be accurate. Users are encouraged to double check details.
-                  <br/>
-                  <br/> 
-                  Should you encounter any bugs, glitches, lack of functionality or other problems on the application, 
-                  please let us know immediately so we can rectify these accordingly. Your help in this regard is greatly appreciated.
-                  </p>
-                  <a class="ui button" href="https://github.com/icssc-projects/PeterPortal/issues/new"><Icon name='github'/>Report an issue</a>
-                </Grid.Column>
-          
-              </Grid>
-            </Popup>
-
+              <div className={"school-term_container"}>
+                <p className={"school-term"} style={{ marginBottom: "-1px" }}>
+                  {this.state.week}
+                </p>
+              </div>
             </div>
-          </Menu.Item>
+          </div>
 
-          <Menu.Item position="right">
-            <Segment>
-              <Menu pointing secondary className="nav-menu">
-                <Menu.Item
-                  name="search"
-                  icon="search"
-                  active={activeItem === "search"}
-                  onClick={this.handleItemClick}
-                />
 
-                <Menu.Item
-                  name="settings"
-                  icon="settings"
-                  active={activeItem === "settings"}
-                  onClick={this.handleItemClick}
-                />
+          <NavItem userPicture={this.state.picture} icon={<Icon name="user outline" />}>
+            <DropdownMenu name={this.state.name} picture={this.state.picture}/>
+          </NavItem>
+        </div>
+      </nav>
+    );
+  }
+}
 
-                <Menu.Item position="right">
-                  <div className={"school-term_container"}>
-                    <p className={"school-term"} style={{marginBottom: "-1px"}}>{this.state.week}</p>
-                  </div>
-                </Menu.Item>
+function NavItem(props) {
+  const [open, setOpen] = useState(false);
 
-                {this.state.name && <Menu.Item position="right">
-                  <div className={"school-term_container"}>
-                    <p>Hi, {this.state.name}</p>
-                  </div>
-                </Menu.Item>}
+  return (
+    <li className="nav-item">
+      <div className="icon-button" 
+      style={{backgroundImage: "url(" + props.userPicture + ")", backgroundSize: "contain" }} 
+      onClick={() => setOpen(!open)}>
+        {!props.userPicture ? props.icon : ""}
+      </div>
 
-                <Menu.Item position="right">
-                  <div className={"school-term_container"}>
-                    {!this.state.name ? <>
-                                          <a href="/users/auth/google"> {'GOOGLE LOGIN'}</a>
-                                          <a href="/users/auth/facebook"> {'FACEBOOK LOGIN'}</a>
-                                          <a href="/users/auth/github"> {'GITHUB LOGIN'}</a>
-                                        </> 
-                                      : <a href="/users/logout">{'LOGOUT'}</a>}
-                  </div>
-                </Menu.Item>
-              </Menu>
-            </Segment>
-          </Menu.Item>
-        </Menu>
+      {open && props.children}
+    </li>
+  );
+}
+
+function DropdownMenu(props) {
+  const [activeMenu, setActiveMenu] = useState("main");
+
+  function DropdownItem(props) {
+    return (
+      <div
+        className={["menu-item", props.className].join(" ")}
+        onClick={() => props.goToMenu && setActiveMenu(props.goToMenu)}
+      >
+        <span className="icon-button" 
+        style={{backgroundImage: "url(" + props.picture + ")", backgroundSize: "contain" }}>
+          {props.leftIcon}
+        </span>
+        <span className="button-text">{props.children}</span>
       </div>
     );
   }
+
+  return (
+    <div className="dropdown-menu">
+      <CSSTransition
+        in={activeMenu === "main"}
+        unmountOnExit
+        timeout={500}
+        classNames="menu-primary"
+      >
+        <div className="menu">
+        {!props.name ?
+          <DropdownItem leftIcon={<Icon name="sign in" />} goToMenu="login">
+            Log In
+          </DropdownItem> : <>
+
+            <DropdownItem picture= {props.picture} >
+              {props.name}
+            </DropdownItem>
+
+          <a href="/users/logout">  
+            <DropdownItem leftIcon={<Icon name="log out" />}>
+              Log Out
+            </DropdownItem>
+          </a> </>
+        }
+          <DropdownItem leftIcon={<CogIcon />} goToMenu="settings">
+            Settings
+          </DropdownItem>
+        </div>
+      </CSSTransition>
+
+      <CSSTransition
+        in={activeMenu === "login"}
+        unmountOnExit
+        timeout={500}
+        classNames="menu-secondary"
+      >
+        <div className="menu">
+          <DropdownItem leftIcon={<ArrowIcon />} goToMenu="main"></DropdownItem>
+          <a href="/users/auth/google"> 
+            <DropdownItem
+              className="google-login"
+              leftIcon={<Icon name="google" />}
+            >
+              Log In using Google
+            </DropdownItem>
+          </a>
+          <a href="/users/auth/facebook"> 
+            <DropdownItem
+              className="facebook-login"
+              leftIcon={<Icon name="facebook f" />}
+            >
+              Log In using Facebook
+            </DropdownItem>
+          </a>
+        </div>
+      </CSSTransition>
+
+      <CSSTransition
+        in={activeMenu === "settings"}
+        unmountOnExit
+        timeout={500}
+        classNames="menu-secondary"
+      >
+        <div className="menu">
+          <DropdownItem leftIcon={<ArrowIcon />} goToMenu="main"></DropdownItem>
+          <DropdownItem
+            className="dark-mode"
+            leftIcon={<Icon name="moon" />}
+          >
+            Dark Mode <i style={{color: "gray"}}>Coming Soon!</i>
+          </DropdownItem>
+        </div>
+      </CSSTransition>
+    </div>
+  );
 }
 
 export default NavBar;
