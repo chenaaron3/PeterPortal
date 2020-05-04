@@ -45,13 +45,14 @@ passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_CLIENT,
     clientSecret: process.env.FACEBOOK_SECRET,
     callbackURL: "/users/auth/facebook/callback",
-    profileFields: ['id', 'emails', 'displayName']
+    profileFields: ['id', 'emails', 'displayName', 'photos']
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile)
     var userData = {
         email: profile.emails[0].value,
         name: profile.displayName,
+        picture: profile.photos[0].value
     };
     done(null, userData);
   }

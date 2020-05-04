@@ -7,6 +7,8 @@ var logger = require('morgan');
 var subdomain = require('express-subdomain');
 var passport = require('passport');
 var session = require('express-session')
+var MySQLStore = require('express-mysql-session')(session);
+var {pool} = require("./config/database")
 
 // var indexRouter = require('./routes/index');
 var apiRouter = require('./api/v1');
@@ -18,13 +20,12 @@ var weekRouter = require('./routes/week')
 
 var app = express();
 
-port = process.env.PORT || 3001;
-
 app.use(session({
-	secret: 'keyboard anteater',
+	secret: process.env.SESSION_SECRET,
 	resave: false,
 	saveUninitialized: false,
-	cookie: {maxAge: 1000 * 60 * 60 * 24}
+  cookie: {maxAge: 1000 * 60 * 60 * 24},
+  store: new MySQLStore({}, pool)
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -56,9 +57,10 @@ app.use(express.static(__dirname + "/public"));
 
 app.use('/users', usersRouter);
 app.use('/reviews', reviewsRouter);
-app.use("/courses", coursesRouter)
-app.use("/professors", professorsRouter)
-app.use("/week", weekRouter)
+app.use("/courses", coursesRouter);
+app.use("/professors", professorsRouter);
+app.use("/week", weekRouter);
+app.use("/api", apiRouter);
 
 app.get('*', (req,res) =>{
   res.sendFile(path.join(__dirname+'/build/index.html'));

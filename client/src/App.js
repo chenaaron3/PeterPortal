@@ -9,13 +9,8 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-d
 
 class App extends React.Component {
 
-  
-  
   render() {
     return (
-      // <SearchkitProvider {/*searchkit= {
-      //   new SearchkitManager("/courses")
-      // */}>
         <Router>
           <NavBar/>
           <Switch>
@@ -27,8 +22,6 @@ class App extends React.Component {
             <Route path="/professor/:id" component={ProfessorPage} />
           </Switch>
         </Router>
-
-      // </SearchkitProvider>
     );
   }
 }
