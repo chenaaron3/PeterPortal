@@ -2,15 +2,10 @@ import React from "react";
 import Review from "./Review.js";
 import { Form, TextArea, Checkbox, Dropdown, Button } from "semantic-ui-react";
 import "./ReviewsModule.scss";
-// const professorOptions = [
-//   { key: "pattis", value: "pattis", text: "Richard Pattis" },
-//   { key: "thornton", value: "thornton", text: "Alexander Thornton" }
-// ];
+import ReCAPTCHA from "react-google-recaptcha";
 
-const creditOptions = [
-  { key: "credit", value: "True", text: "Taken for credit" },
-  { key: "p/np", value: "False", text: "Taken as P/NP" }
-];
+// reference to the captcha element
+const recaptchaRef = React.createRef();
 
 const ratingOptions = [
   { key: "1", value: "1", text: "1" },
@@ -50,11 +45,11 @@ class ReviewsModule extends React.Component {
       forCredit: "",
       professorOptions: [],
       reviews: [],
+      verified: false
     };
     console.log(this.state);
     this.getProfessorNames();
     this.getReviews();
-    
   }
 
   componentWillReceiveProps(props) {
@@ -66,7 +61,7 @@ class ReviewsModule extends React.Component {
   getProfessorNames() {
     console.log("Getting the professors");
     let names = []
-    let prof_json = {};
+    // go through each professor ucinetid
     for (var i = 0; i < this.props.professorHistory.length; i++) {    
       var searchParams = {
         query: {
@@ -75,7 +70,6 @@ class ReviewsModule extends React.Component {
           }
         }
       };
-  
       var requestHeader = {
         headers: new Headers({
           "content-type": "application/json; charset=UTF-8",
@@ -88,25 +82,25 @@ class ReviewsModule extends React.Component {
         "/professors/_search",
         requestHeader
       )
-        .then(data => {
-          return data.json();
-        })
-        .then(res => {
-          this.setState({})
-          let prof_data = res.hits.hits[0]._source;
-          prof_json[prof_data.ucinetid] = prof_data.name;
-        
-          names.push({ prof_ucinetid: prof_data.name });
-          this.setState({professorOptions: names});
-          // this.setState({professorOptions: prof_json});
-          console.log(prof_data);
-        })
-        .catch(e => console.log(e));
+      .then(data => {
+        return data.json();
+      })
+      .then(res => {
+        this.setState({})
+        let prof_data = res.hits.hits[0]._source;
+        names.push({ "key": prof_data.ucinetid, "value": prof_data.ucinetid, "text": prof_data.name });
+        this.setState({professorOptions: names});
+      })
+      .catch(e => console.log(e));
     }
   }
 
   addReview = () => {
-
+    if(!this.state.verified){
+      alert("Please Complete the reCAPTCHA!");
+      return;
+    }
+    this.setState({verified:false})
     var queryParams = {
       text: this.state.text,
       rating: this.state.rating,
@@ -126,47 +120,13 @@ class ReviewsModule extends React.Component {
       body: JSON.stringify(queryParams),
     }).then(data => {return data.json()})
     .then(res => {
-      console.log("it worked");
+      console.log("Review Posted!");
+      recaptchaRef.current.reset();
       this.getReviews();
     }).catch((err) => {
       console.log(err);
-      console.log("No Course Found")
+      console.log("No Course Found!")
     });
-
-    // fetch("/users/loggedIn", {method: "GET"}).then((res)=> {
-    //   return res.json();
-    // }).then((data) => {
-    //   if (data.status) {
-    //     var queryParams = {
-    //       text: this.state.text,
-    //       rating: this.state.rating,
-    //       difficulty: this.state.difficulty,
-    //       courseID: this.props.courseID,//this.props.courseID,
-    //       profID: this.state.profID,
-    //       date: this.state.date,
-    //       grade: this.state.grade,
-    //     }
-    //     var requestHeader= {
-    //       'Content-Type': 'application/json',
-    //     };
-    //     console.log(queryParams);
-    //     fetch("/reviews/addReview", {
-    //       method: "POST",
-    //       headers: requestHeader,
-    //       body: JSON.stringify(queryParams),
-    //     }).then(data => {return data.json()})
-    //     .then(res => {
-    //       console.log("it worked");
-    //       this.getReviews();
-    //     }).catch((err) => {
-    //       console.log(err);
-    //       console.log("No Course Found")
-    //     });
-    //   } else {
-    //     alert("Log in to post a review!")
-    //   }
-    // });
-    
   }
   
   getReviews = () => {
@@ -255,7 +215,8 @@ class ReviewsModule extends React.Component {
               onChange={(event, data) => {this.setState({text: data.value})}}
                />
 
-              <Button onClick={this.addReview}>Submit</Button>
+              <ReCAPTCHA ref={recaptchaRef} sitekey="6LfXKvIUAAAAABKztB38awR3584CBva6bEvuU8wm" onChange={(value)=>{this.setState({verified:value})}}/>
+              <Button onClick={this.addReview}>Submit</Button>              
             </Form>
           </div>
         </div>

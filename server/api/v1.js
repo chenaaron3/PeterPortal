@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
   res.send('Welcome to our API!');
 });
 
-
+// returns a list of all courses
 router.get("/v1/courses", function(req, res, next) {
   fetch(process.env.ELASTIC_ENDPOINT_URL_COURSES, {
       method: 'POST',
@@ -24,7 +24,6 @@ router.get("/v1/courses", function(req, res, next) {
         "size": 10000
         })
   }).then((response) => response.json()).then((data) => res.send(generateArrayOfCourses(data)));
-    
 });
 
 function generateArrayOfCourses(result) {
@@ -34,8 +33,6 @@ function generateArrayOfCourses(result) {
   })
   return {count: array_result.length, courses: array_result}
 }
-
-
 
 router.get("/v1/courses/:id", function(req, res, next) {
   fetch(process.env.ELASTIC_ENDPOINT_URL_COURSES, {
@@ -54,7 +51,6 @@ router.get("/v1/courses/:id", function(req, res, next) {
   }).then((response) => response.json()).then((data) => res.send(data.hits.hits[0]._source));
 });
 
-
 router.get("/v1/schedule/:term/:id", function(req, res, next) {
   // res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   const opts = {
@@ -68,7 +64,6 @@ router.get("/v1/schedule/:term/:id", function(req, res, next) {
      course: coursesJson["courses"][req.params.id]["dept"] + " " + coursesJson["courses"][req.params.id]["num"],
      name: coursesJson["courses"][req.params.id]["name"],
      sessions: ScheduleParser.ParsedSectionsByDay(json) }));
-  
 });
 
 module.exports = router;
