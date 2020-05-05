@@ -28,7 +28,7 @@ const options = {
                 description: "Local Development"
             },
             {
-                url: "https://peter-portal/api/v1",
+                url: "https://peter-portal.com/api/v1",
                 description: "Production Environment"
             }
         ]
