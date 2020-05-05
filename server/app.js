@@ -60,7 +60,7 @@ app.use('/reviews', reviewsRouter);
 app.use("/courses", coursesRouter);
 app.use("/professors", professorsRouter);
 app.use("/week", weekRouter);
-app.use("/api", apiRouter);
+app.use("/api/v1", apiRouter);
 
 app.get('*', (req,res) =>{
   res.sendFile(path.join(__dirname+'/build/index.html'));
