@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var fetch = require("node-fetch");
+var {executeQuery} = require('../../config/database.js')
 
 const PROFESSOR_INDEX = "professors";
 
@@ -69,11 +70,7 @@ function generateArrayOfProfessors(result) {
  *      summary: Get detailed information for a specific professor
  *      tags: [Professors]
  *      parameters:
- *        - in: path
- *          name: ucinetid
- *          required: true
- *          schema:
- *            $ref: '#/components/schemas/ProfessorID'
+ *        - $ref: '#/components/parameters/ucinetidParam'
  *      responses:
  *        "200":
  *          description: Detailed information for a professor
@@ -110,5 +107,131 @@ function getProfessor(ucinetid, callback) {
         .then((data) => callback(null, data.hits.hits[0]._source))
         .catch((err) => callback(err, null));
 }
+
+/**
+ * @swagger
+ * path:
+ *  /professors/avgRating/{ucinetid}:
+ *    get:
+ *      summary: Get average overall rating for a professor
+ *      tags: [Professors]
+ *      parameters:
+ *        - $ref: '#/components/parameters/ucinetidParam'
+ *      responses:
+ *        "200":
+ *          description: Detailed information for a professor
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties: 
+ *                  avgRating:
+ *                    $ref: '#/components/schemas/Rating'
+ */
+router.get("/avgRating/:ucinetid", function (req, res, next) {
+    let sql = `SELECT AVG(rating) AS avgRating
+               FROM reviews AS r 
+               WHERE r.prof_id = "${req.params.ucinetid}"`
+    executeQuery(sql, function (results) {
+        res.json(results[0]);
+    });
+})
+
+/**
+ * @swagger
+ * path:
+ *  /professors/avgRatings/{ucinetid}:
+ *    get:
+ *      summary: Get average rating for a professor grouped by courses
+ *      tags: [Professors]
+ *      parameters:
+ *        - $ref: '#/components/parameters/ucinetidParam'
+ *      responses:
+ *        "200":
+ *          description: Detailed information for a professor
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items: 
+ *                  type: object
+ *                  properties:
+ *                    avgRating:
+ *                      $ref: '#/components/schemas/Rating'
+ *                    courseID:
+ *                      $ref: '#/components/schemas/CourseID'
+ */
+router.get("/avgRatings/:ucinetid", function (req, res, next) {
+    let sql = `SELECT AVG(rating) AS avgRating, course_id as courseID
+               FROM reviews AS r 
+               WHERE r.prof_id = "${req.params.ucinetid}"
+               GROUP BY course_id`
+    executeQuery(sql, function (results) {
+        res.json(results);
+    });
+})
+
+/**
+ * @swagger
+ * path:
+ *  /professors/avgDifficulty/{ucinetid}:
+ *    get:
+ *      summary: Get average overall difficulty for a professor
+ *      tags: [Professors]
+ *      parameters:
+ *        - $ref: '#/components/parameters/ucinetidParam'
+ *      responses:
+ *        "200":
+ *          description: Detailed information for a professor
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties: 
+ *                  avgDifficulty:
+ *                    $ref: '#/components/schemas/Difficulty'
+ */
+router.get("/avgDifficulty/:ucinetid", function (req, res, next) {
+    let sql = `SELECT AVG(difficulty) AS avgDifficulty 
+               FROM reviews AS r 
+               WHERE r.prof_id = "${req.params.ucinetid}"`
+    executeQuery(sql, function (results) {
+        res.json(results[0]);
+    });
+})
+
+/**
+ * @swagger
+ * path:
+ *  /professors/avgDifficulties/{ucinetid}:
+ *    get:
+ *      summary: Get average difficulty for a professor grouped by courses
+ *      tags: [Professors]
+ *      parameters:
+ *        - $ref: '#/components/parameters/ucinetidParam'
+ *      responses:
+ *        "200":
+ *          description: Detailed information for a professor
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items: 
+ *                  type: object
+ *                  properties:
+ *                    avgDifficulty:
+ *                      $ref: '#/components/schemas/Difficulty'
+ *                    courseID:
+ *                      $ref: '#/components/schemas/CourseID'
+ */
+router.get("/avgDifficulties/:ucinetid", function (req, res, next) {
+    let sql = `SELECT AVG(difficulty) AS avgRating, course_id as courseID
+               FROM reviews AS r 
+               WHERE r.prof_id = "${req.params.ucinetid}"
+               GROUP BY course_id`
+    executeQuery(sql, function (results) {
+        res.json(results);
+    });
+})
 
 module.exports = router;
