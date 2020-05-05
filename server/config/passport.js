@@ -9,7 +9,6 @@ var GitHubStrategy = require('passport-github').Strategy;
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 passport.serializeUser(function(user, done) {
-    console.log(user)
     done(null, user);
 });
 
@@ -17,7 +16,6 @@ passport.deserializeUser(function(user, done) {
     let sql = `SELECT * FROM users AS r WHERE r.email = "${user.email}"`
     executeQuery(sql, function(results) {
         user.userID = results[0].user_id;
-        console.log(user)
         done(null, user);
     });
 });
@@ -30,7 +28,6 @@ passport.use(
             callbackURL: "/users/auth/google/callback"
         },
         function(accessToken, refreshToken, profile, done) {
-            console.log(profile)
             var userData = {
                 email: profile.emails[0].value,
                 name: profile.displayName,
@@ -48,7 +45,6 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'emails', 'displayName', 'photos']
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log(profile)
     var userData = {
         email: profile.emails[0].value,
         name: profile.displayName,
@@ -65,10 +61,10 @@ passport.use(new GitHubStrategy({
     scope: [ 'user:email', 'user:displayName' ]
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log(profile)
     var userData = {
         email: profile.emails[0].value,
         name: profile.displayName,
+        picture: profile.photos[0].value,
         username: profile.username
     };
     done(null, userData);

@@ -8,13 +8,12 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 // get the logged in user
 router.get('/', function(req, res, next) {
-  console.log(req.sessionID)
   res.json(req.session)
 });
 
 // get the name of the logged in user
 router.get('/getName', function(req, res, next) {
-  console.log(req.user);
+  console.log("User:", req.user);
   res.json( {name: (req.user ? req.user.name: undefined), 
     picture: (req.user ? req.user.picture: undefined) });
 });
