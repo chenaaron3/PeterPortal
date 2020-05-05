@@ -11,7 +11,7 @@ var MySQLStore = require('express-mysql-session')(session);
 var {pool} = require("./config/database")
 
 // var indexRouter = require('./routes/index');
-var apiRouter = require('./api/v1');
+var apiRouter = require('./api/versionController');
 var usersRouter = require('./routes/users');
 var reviewsRouter = require('./routes/reviews');
 var coursesRouter = require('./routes/courses')
@@ -60,7 +60,7 @@ app.use('/reviews', reviewsRouter);
 app.use("/courses", coursesRouter);
 app.use("/professors", professorsRouter);
 app.use("/week", weekRouter);
-app.use("/api/v1", apiRouter);
+app.use("/api", apiRouter);
 
 app.get('*', (req,res) =>{
   res.sendFile(path.join(__dirname+'/build/index.html'));

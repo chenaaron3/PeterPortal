@@ -18,8 +18,8 @@ const options = {
             },
             contact: {
                 name: "Peter Anteater",
-                url: "FILL_WEBSITE",
-                email: "FILL_EMAIL"
+                url: "https://peter-portal.com/contact",
+                email: "peterportal.dev@gmail.com"
             }
         },
         servers: [
@@ -33,7 +33,7 @@ const options = {
             }
         ]
     },
-    apis: ["./api/docs.yaml", "./api/v1.js"]
+    apis: ["./api/v1/docs.yaml", "./api/v1/courses.js", "./api/v1/professors.js", "./api/v1/schedule.js"]
 };
 const specs = swaggerJsdoc(options);
 router.use("/", swaggerUi.serve);
