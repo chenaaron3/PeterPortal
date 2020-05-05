@@ -215,7 +215,7 @@ class ReviewsModule extends React.Component {
               onChange={(event, data) => {this.setState({text: data.value})}}
                />
 
-              <ReCAPTCHA ref={recaptchaRef} sitekey="6LfXKvIUAAAAABKztB38awR3584CBva6bEvuU8wm" onChange={(value)=>{this.setState({verified:value})}}/>
+              <ReCAPTCHA ref={recaptchaRef} sitekey="6Le6rfIUAAAAAOdqD2N-QUEW9nEtfeNyzkXucLm4" onChange={(value)=>{this.setState({verified:value})}}/>
               <Button onClick={this.addReview}>Submit</Button>              
             </Form>
           </div>
