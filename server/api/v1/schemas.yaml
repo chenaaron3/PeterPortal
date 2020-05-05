@@ -155,3 +155,15 @@ components:
         ucinetid:
           type: string
           example: "thornton"
+    Rating:
+      type: number
+      nullable: true
+      minimum: 0
+      maximum: 5
+      example: 4.2
+    Difficulty:
+      type: number
+      nullable: true
+      minimum: 0
+      maximum: 5
+      example: 2.2
