@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const path = require('path')
 var passport = require("passport");
-var {executeQuery} = require("../config/database.js")
+var {executeQuery, escape} = require("../config/database.js")
 var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var GitHubStrategy = require('passport-github').Strategy;
@@ -9,15 +9,13 @@ var GitHubStrategy = require('passport-github').Strategy;
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 passport.serializeUser(function(user, done) {
-    console.log(user)
     done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-    let sql = `SELECT * FROM users AS r WHERE r.email = "${user.email}"`
+    let sql = `SELECT * FROM users AS r WHERE r.email = ${escape(user.email)}`
     executeQuery(sql, function(results) {
         user.userID = results[0].user_id;
-        console.log(user)
         done(null, user);
     });
 });
@@ -30,7 +28,6 @@ passport.use(
             callbackURL: "/users/auth/google/callback"
         },
         function(accessToken, refreshToken, profile, done) {
-            console.log(profile)
             var userData = {
                 email: profile.emails[0].value,
                 name: profile.displayName,
@@ -44,11 +41,10 @@ passport.use(
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_CLIENT,
     clientSecret: process.env.FACEBOOK_SECRET,
-    callbackURL: "/users/auth/facebook/callback",
+    callbackURL: (process.env.NODE_ENV == "development" ? "" : `https://${process.env.DOMAIN}`) + "/users/auth/facebook/callback",
     profileFields: ['id', 'emails', 'displayName', 'photos']
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log(profile)
     var userData = {
         email: profile.emails[0].value,
         name: profile.displayName,
@@ -65,10 +61,10 @@ passport.use(new GitHubStrategy({
     scope: [ 'user:email', 'user:displayName' ]
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log(profile)
     var userData = {
         email: profile.emails[0].value,
         name: profile.displayName,
+        picture: profile.photos[0].value,
         username: profile.username
     };
     done(null, userData);

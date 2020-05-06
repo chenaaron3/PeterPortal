@@ -1,6 +1,6 @@
 var express = require('express');
 var passport = require("passport");
-var {executeQuery} = require("../config/database.js")
+var {executeQuery, escape} = require("../config/database.js")
 var router = express.Router();
 const path = require('path')
 const dotenv = require('dotenv');
@@ -8,13 +8,12 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 // get the logged in user
 router.get('/', function(req, res, next) {
-  console.log(req.sessionID)
   res.json(req.session)
 });
 
 // get the name of the logged in user
 router.get('/getName', function(req, res, next) {
-  console.log(req.user);
+  console.log("User:", req.user);
   res.json( {name: (req.user ? req.user.name: undefined), 
     picture: (req.user ? req.user.picture: undefined) });
 });
@@ -101,7 +100,7 @@ router.get('/auth/github/callback',
 // call after successful authentication
 function successLogin(req, res){
   // check if user is in the database
-  let sql = `SELECT * FROM users AS r WHERE r.email = "${req.user.email}"`
+  let sql = `SELECT * FROM users AS r WHERE r.email = ${escape(req.user.email)}`
   executeQuery(sql, function(results) {
     // if not in the database
     if (results.length == 0) {
