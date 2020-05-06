@@ -1,6 +1,6 @@
 var express = require('express');
 var passport = require("passport");
-var {executeQuery} = require("../config/database.js")
+var {executeQuery, escape} = require("../config/database.js")
 var router = express.Router();
 const path = require('path')
 const dotenv = require('dotenv');
@@ -100,7 +100,7 @@ router.get('/auth/github/callback',
 // call after successful authentication
 function successLogin(req, res){
   // check if user is in the database
-  let sql = `SELECT * FROM users AS r WHERE r.email = "${req.user.email}"`
+  let sql = `SELECT * FROM users AS r WHERE r.email = ${escape(req.user.email)}`
   executeQuery(sql, function(results) {
     // if not in the database
     if (results.length == 0) {

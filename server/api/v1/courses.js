@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var fetch = require("node-fetch");
-var {executeQuery} = require('../../config/database.js')
+var {executeQuery, escape} = require('../../config/database.js')
 
 const COURSE_INDEX = "courses";
 
@@ -108,7 +108,14 @@ function getCourse(id, callback) {
                 }
             })
     }).then((response) => response.json())
-        .then((data) => callback(null, data.hits.hits[0]._source))
+        .then((data) => {
+            if(data.hits.hits.length > 0){
+                callback(null, data.hits.hits[0]._source)
+            }
+            else{
+                callback(`${id} does not exist!`, null)
+            }
+        })
         .catch((err) => callback(err, null));
 }
 
@@ -135,7 +142,8 @@ function getCourse(id, callback) {
 router.get("/avgRating/:courseID", function (req, res, next) {
     let sql = `SELECT AVG(rating) AS avgRating
                FROM reviews AS r 
-               WHERE r.course_id = "${req.params.courseID}"`
+               WHERE r.course_id = ${escape(req.params.courseID)}`
+    console.log(sql);
     executeQuery(sql, function (results) {
         res.json(results[0]);
     });
@@ -163,12 +171,12 @@ router.get("/avgRating/:courseID", function (req, res, next) {
  *                    avgRating:
  *                      $ref: '#/components/schemas/Rating'
  *                    ucinetid:
- *                      $ref: '#/components/schemas/ProfessorID'
+ *                      $ref: '#/components/schemas/Ucinetid'
  */
 router.get("/avgRatings/:courseID", function (req, res, next) {
     let sql = `SELECT AVG(rating) AS avgRating, prof_id as ucinetid
                FROM reviews AS r 
-               WHERE r.course_id = "${req.params.courseID}"
+               WHERE r.course_id = ${escape(req.params.courseID)}
                GROUP BY prof_id`
     executeQuery(sql, function (results) {
         res.json(results);
@@ -198,7 +206,7 @@ router.get("/avgRatings/:courseID", function (req, res, next) {
 router.get("/avgDifficulty/:courseID", function (req, res, next) {
     let sql = `SELECT AVG(difficulty) AS avgDifficulty 
                FROM reviews AS r 
-               WHERE r.course_id = "${req.params.courseID}"`
+               WHERE r.course_id = ${escape(req.params.courseID)}`
     executeQuery(sql, function (results) {
         res.json(results[0]);
     });
@@ -226,12 +234,12 @@ router.get("/avgDifficulty/:courseID", function (req, res, next) {
  *                    avgDifficulty:
  *                      $ref: '#/components/schemas/Difficulty'
  *                    ucinetid:
- *                      $ref: '#/components/schemas/ProfessorID'
+ *                      $ref: '#/components/schemas/Ucinetid'
  */
 router.get("/avgDifficulties/:courseID", function (req, res, next) {
     let sql = `SELECT AVG(difficulty) AS avgDifficulty, prof_id as ucinetid
                FROM reviews AS r 
-               WHERE r.course_id = "${req.params.courseID}"
+               WHERE r.course_id = ${escape(req.params.courseID)}
                GROUP BY prof_id`
     executeQuery(sql, function (results) {
         res.json(results);
