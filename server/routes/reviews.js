@@ -127,13 +127,13 @@ router.put('/downVoteReview', function(req, res) {
 //   })
 // })
 
-router.delete('/deleteReview', function(req, res) {
-  let sql = `DELETE FROM reviews WHERE id = ${req.body.reviewID}`
+// router.delete('/deleteReview', function(req, res) {
+//   let sql = `DELETE FROM reviews WHERE id = ${req.body.reviewID}`
 
-  executeQuery(sql, function(results) {
-    res.send(JSON.stringify(results));
-  });
-})
+//   executeQuery(sql, function(results) {
+//     res.send(JSON.stringify(results));
+//   });
+// })
 
 
 module.exports = router;
