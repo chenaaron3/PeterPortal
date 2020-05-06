@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const path = require('path')
 var passport = require("passport");
-var {executeQuery} = require("../config/database.js")
+var {executeQuery, escape} = require("../config/database.js")
 var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var GitHubStrategy = require('passport-github').Strategy;
@@ -13,7 +13,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(user, done) {
-    let sql = `SELECT * FROM users AS r WHERE r.email = "${user.email}"`
+    let sql = `SELECT * FROM users AS r WHERE r.email = ${escape(user.email)}`
     executeQuery(sql, function(results) {
         user.userID = results[0].user_id;
         done(null, user);

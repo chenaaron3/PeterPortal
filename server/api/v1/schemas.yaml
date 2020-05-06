@@ -2,7 +2,7 @@ components:
   schemas:
     CourseID:
       type: string
-      description: Course ID with no spaces
+      description: Course Department + Course Number with no spaces
       example: I&CSCI46
     CourseList:
       type: array
@@ -89,7 +89,7 @@ components:
         professorHistory:
           type: array
           items:
-            $ref: "#/components/schemas/ProfessorID"
+            $ref: "#/components/schemas/Ucinetid"
         repeatability:
           type: string
           example: ""
@@ -104,7 +104,7 @@ components:
           items:
             type: integer
             example: 4
-    ProfessorID:
+    Ucinetid:
       type: string
       description: Professor ucinetid
       example: thornton
@@ -117,7 +117,7 @@ components:
           - name
         properties:
           ucinetid:
-            $ref: "#/components/schemas/ProfessorID"
+            $ref: "#/components/schemas/Ucinetid"
           name:
             type: string
             description: Professor Name from the Directory.

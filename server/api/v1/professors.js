@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var fetch = require("node-fetch");
-var {executeQuery} = require('../../config/database.js')
+var {executeQuery, escape} = require('../../config/database.js')
 
 const PROFESSOR_INDEX = "professors";
 
@@ -104,7 +104,14 @@ function getProfessor(ucinetid, callback) {
                 }
             })
     }).then((response) => response.json())
-        .then((data) => callback(null, data.hits.hits[0]._source))
+        .then((data) => {
+            if(data.hits.hits.length > 0){
+                callback(null, data.hits.hits[0]._source)
+            }
+            else{
+                callback(`${ucinetid} does not exist!`, null)
+            }
+        })
         .catch((err) => callback(err, null));
 }
 
@@ -119,7 +126,7 @@ function getProfessor(ucinetid, callback) {
  *        - $ref: '#/components/parameters/ucinetidParam'
  *      responses:
  *        "200":
- *          description: Detailed information for a professor
+ *          description: Average overall rating
  *          content:
  *            application/json:
  *              schema:
@@ -131,7 +138,7 @@ function getProfessor(ucinetid, callback) {
 router.get("/avgRating/:ucinetid", function (req, res, next) {
     let sql = `SELECT AVG(rating) AS avgRating
                FROM reviews AS r 
-               WHERE r.prof_id = "${req.params.ucinetid}"`
+               WHERE r.prof_id = ${escape(req.params.ucinetid)}`
     executeQuery(sql, function (results) {
         res.json(results[0]);
     });
@@ -148,7 +155,7 @@ router.get("/avgRating/:ucinetid", function (req, res, next) {
  *        - $ref: '#/components/parameters/ucinetidParam'
  *      responses:
  *        "200":
- *          description: Detailed information for a professor
+ *          description: Average rating grouped by courses
  *          content:
  *            application/json:
  *              schema:
@@ -164,7 +171,7 @@ router.get("/avgRating/:ucinetid", function (req, res, next) {
 router.get("/avgRatings/:ucinetid", function (req, res, next) {
     let sql = `SELECT AVG(rating) AS avgRating, course_id as courseID
                FROM reviews AS r 
-               WHERE r.prof_id = "${req.params.ucinetid}"
+               WHERE r.prof_id = ${escape(req.params.ucinetid)}
                GROUP BY course_id`
     executeQuery(sql, function (results) {
         res.json(results);
@@ -182,7 +189,7 @@ router.get("/avgRatings/:ucinetid", function (req, res, next) {
  *        - $ref: '#/components/parameters/ucinetidParam'
  *      responses:
  *        "200":
- *          description: Detailed information for a professor
+ *          description: Average overall difficulty
  *          content:
  *            application/json:
  *              schema:
@@ -194,7 +201,7 @@ router.get("/avgRatings/:ucinetid", function (req, res, next) {
 router.get("/avgDifficulty/:ucinetid", function (req, res, next) {
     let sql = `SELECT AVG(difficulty) AS avgDifficulty 
                FROM reviews AS r 
-               WHERE r.prof_id = "${req.params.ucinetid}"`
+               WHERE r.prof_id = ${escape(req.params.ucinetid)}`
     executeQuery(sql, function (results) {
         res.json(results[0]);
     });
@@ -211,7 +218,7 @@ router.get("/avgDifficulty/:ucinetid", function (req, res, next) {
  *        - $ref: '#/components/parameters/ucinetidParam'
  *      responses:
  *        "200":
- *          description: Detailed information for a professor
+ *          description: Average difficulty grouped by courses
  *          content:
  *            application/json:
  *              schema:
@@ -227,7 +234,7 @@ router.get("/avgDifficulty/:ucinetid", function (req, res, next) {
 router.get("/avgDifficulties/:ucinetid", function (req, res, next) {
     let sql = `SELECT AVG(difficulty) AS avgRating, course_id as courseID
                FROM reviews AS r 
-               WHERE r.prof_id = "${req.params.ucinetid}"
+               WHERE r.prof_id = ${escape(req.params.ucinetid)}
                GROUP BY course_id`
     executeQuery(sql, function (results) {
         res.json(results);

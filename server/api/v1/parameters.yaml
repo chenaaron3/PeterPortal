@@ -5,7 +5,7 @@ components:
       name: ucinetid
       required: true
       schema:
-        $ref: '#/components/schemas/ProfessorID'
+        $ref: '#/components/schemas/Ucinetid'
     courseIDParam:
       in: path
       name: courseID
