@@ -31,4 +31,4 @@ var executeQuery = function(sql, callback) {
       });
 }
 
-module.exports = {executeQuery, pool};
+module.exports = {executeQuery: executeQuery, pool: pool, escape: mysql.escape};
