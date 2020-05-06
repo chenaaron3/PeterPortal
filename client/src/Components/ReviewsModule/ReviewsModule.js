@@ -1,6 +1,6 @@
 import React from "react";
 import Review from "./Review.js";
-import { Form, TextArea, Checkbox, Dropdown, Button } from "semantic-ui-react";
+import { Form, TextArea, Checkbox, Dropdown, Button, Grid, Divider } from "semantic-ui-react";
 import "./ReviewsModule.scss";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -145,7 +145,12 @@ class ReviewsModule extends React.Component {
   render() {
     return (
       <div className="review-module-container" style={{ marginTop: "36px", marginBottom: "200px" }}>
-        <h2>Review and Discussion</h2>
+        <Grid.Row className="feature-label">
+          <h2>💬 Review & Discussion</h2>
+          <Divider />
+        </Grid.Row>
+
+        
         <div>
           {this.state.reviews && this.state.reviews.map(item => (
             <>
