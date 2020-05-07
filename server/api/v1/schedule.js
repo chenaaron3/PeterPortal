@@ -3,6 +3,15 @@ var router = express.Router();
 var ScheduleParser = require("./schedule-parser.js")
 const WebSocAPI = require("websoc-api");
 
+const TERM_SEASONS = ['Winter', 'Spring', 'Summer1','Summer10wk', 'Summer2',  'Fall']
+
+/**
+ * @swagger
+ * tags:
+ *   name: Schedule
+ *   description: Schedule Queries
+ */
+
 // term: school year + season (eg. "2020 Spring")
 // id: the courseID with no spaces (eg. "COMPSCI143A")
 // returns schedule information for a course 
@@ -23,5 +32,48 @@ router.get("/:term/:id", function (req, res, next) {
       }));
   });
 });
+
+/**
+ * @swagger
+ * path:
+ *  /schedule/getTerms:
+ *    get:
+ *      summary: Gets the terms for the current and past years
+ *      tags: [Schedule]
+ *      parameters:
+ *        - in: query
+ *          name: pastYears
+ *          required: false
+ *          schema:
+ *            type: integer
+ *            example: 3
+ *            default: 1
+ *            description: How many years to go in the past.
+ *      responses:
+ *        "200":
+ *          description: A list of valid terms
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  type: string
+ *                  example: "2020 Fall"
+ *                  description: A valid term for the Fall season of the year 2020.
+ */
+router.get("/getTerms", function(req, res){
+  let pastYears = req.query.pastYears;
+  if(!pastYears)
+    pastYears = 1;
+  let d = new Date();
+  let year = d.getFullYear();
+  terms = [];
+  for(let y = year - pastYears; y <= year; ++y){
+      for(let i = 0; i < TERM_SEASONS.length; ++i){
+          terms.push(`${y} ${TERM_SEASONS[i]}`);
+      }
+  }
+  res.json(terms);
+})
 
 module.exports = router;

@@ -30,9 +30,6 @@ const gradeReceived = [
   { key: "IP", value: "IP", text: "IP" },
 ];
 
-
-let termOptions = []
-
 class ReviewsModule extends React.Component {
 
 
@@ -50,7 +47,8 @@ class ReviewsModule extends React.Component {
       takenIn: "",
       professorOptions: [],
       reviews: [],
-      verified: false
+      verified: false,
+      termOptions: []
     };
     console.log(this.state);
     this.getTerms();
@@ -58,22 +56,17 @@ class ReviewsModule extends React.Component {
     this.getReviews();
   }
 
-  
-
   getTerms() {
-    let seasons = ['Fall', 'Summer', 'Spring', 'Winter']
+    let termOptions = [];
     const range = 5;
-    let year = this.state.date.getFullYear();
-    for (let i = 0; i < range; i++) {
-      for (let j = 0; j < seasons.length; j++) {
-        let q = `${year - i} ${seasons[j]}`;
-        termOptions.push({ key: q, value: q, text: q });
-      }
-    }
-    // console.log(terms)
-    // this.setState({termOptions: terms});
-    // console.log(this.state.termOptions);
-    
+    fetch(`/api/v1/schedule/getTerms?pastYears=${range}`)
+    .then(res => res.json())
+    .then(terms => {
+      terms.forEach(term => {
+        termOptions.unshift({ key: term, value: term, text: term })
+      })
+      this.setState({termOptions: termOptions})
+    });
   }
 
   getProfessorNames() {
@@ -206,7 +199,7 @@ class ReviewsModule extends React.Component {
                 placeholder="Taken In"
                 fluid
                 selection
-                options={termOptions}
+                options={this.state.termOptions}
                 onChange={(event, data) => {this.setState({takenIn: data.value})}}
               />
 
