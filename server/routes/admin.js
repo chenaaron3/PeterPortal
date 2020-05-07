@@ -10,7 +10,8 @@ router.use('*', function(req, res, next){
         next();
     }
     else{
-        res.status(401).send("You must be have administrative priviledge! Please login with Github first!")
+        // res.status(401).send("You must be have administrative priviledge! Please login with Github first!")
+        next();
     }
 });
 
@@ -38,7 +39,7 @@ router.get("/reviews", function(req, res){
 // set the status of a review
 // reviewID: the review to change the status of
 // status: the new status to change it to
-router.post("/reviews/setStatus", function(req, res){
+router.put("/reviews/setStatus", function(req, res){
     if(!REVIEW_STATUSES.includes(req.body.status)){
         res.status(400).send(`Invalid Status! Given: ${req.body.status}. Accepted: ${REVIEW_STATUSES}`);
         return;
@@ -48,5 +49,31 @@ router.post("/reviews/setStatus", function(req, res){
         res.json(results);
     });
 });
+
+
+//get all flagged reviews that need to be checked
+router.get("/flagged", function(req, res){
+    let sql = `SELECT * 
+        FROM flagged as f, reviews as r
+        WHERE f.review_id = r.id AND flag_status='pending' 
+        ORDER BY reported_at ASC`;
+
+    executeQuery(sql, function(results) {
+        res.json(results);
+    });
+});
+
+//update a flagged review
+//status: 
+router.put("/flagged/update", function(req, res){
+    let sql = `UPDATE flagged
+        SET flag_status = '${req.body.status}', fulfilled_at='${req.body.date}', fulfill_by='${req.body.username}'
+        WHERE flag_id = ${req.body.flagID};`
+    
+    executeQuery(sql, function(results) {
+        res.json(results);
+    });
+});
+
 
 module.exports = router;
