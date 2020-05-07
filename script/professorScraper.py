@@ -20,9 +20,9 @@ import courseScraper
 from progressBar import ProgressBar
 
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
+# links
 URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
-URL_TO_CATALOGUE = "http://catalogue.uci.edu/donaldbrenschoolofinformationandcomputersciences/#faculty"
 URL_TO_DIRECTORY = "https://directory.uci.edu/"
 URL_TO_INSTRUCT_HISTORY = "http://www.reg.uci.edu/perl/InstructHist"
 
