@@ -15,7 +15,7 @@ const PROFESSOR_INDEX = "professors";
 /**
  * @swagger
  * path:
- *  /professors/:
+ *  /professors/getProfessors:
  *    get:
  *      summary: Get all professors
  *      tags: [Professors]
@@ -33,7 +33,7 @@ const PROFESSOR_INDEX = "professors";
  *                  professors:
  *                    $ref: '#/components/schemas/ProfessorList'
  */
-router.get("/", function (req, res, next) {
+router.get("/getProfessors", function (req, res, next) {
     getAllProfessors(function (err, data) {
         if (err)
             res.status(400).send(err.toString());

@@ -15,7 +15,7 @@ const COURSE_INDEX = "courses";
 /**
  * @swagger
  * path:
- *  /courses/:
+ *  /courses/getCourses:
  *    get:
  *      summary: Get all courses
  *      tags: [Courses]
@@ -33,7 +33,7 @@ const COURSE_INDEX = "courses";
  *                  courses:
  *                    $ref: '#/components/schemas/CourseList'
  */
-router.get("/", function (req, res, next) {
+router.get("/getCourses", function (req, res, next) {
     getAllCourses(function (err, data) {
         if (err)
             res.status(400).send(err.toString());
@@ -253,27 +253,5 @@ router.get("/avgDifficulties/:courseID", function (req, res, next) {
         res.json(results);
     });
 })
-
-// // term: year followed by season (eg. "Fall 2020")
-// // adds to the term field for each course in elasticsearch index
-// router.get("/assignTerm", function (req, res) {
-//     // construct update json
-//     json = `{ "update" : {"_id" : "I&CSCI32A", "_index" : "courses"} }\n{ "doc" : {"terms" : ["2020 Fall"]} }`
-//     // bulk update
-//     fetch(`${process.env.ELASTIC_ENDPOINT_URL}/${PROFESSOR_INDEX}/_search`, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body:
-//             JSON.stringify({
-//                 "_source": ["ucinetid", "name"],
-//                 "query": {
-//                     "match_all": {}
-//                 },
-//                 "size": 10000
-//             })
-//     })
-// });
 
 module.exports = router;
