@@ -1,17 +1,18 @@
 # Python Dependencies:  
     pip install beautifulsoup4 selenium elasticsearch requests progressbar python-dotenv gspread oauth2client
 
-# Basic Workflows:
-A. Generate Class JSON -> Deploy the Class JSON Data to ElasticSearch  
-B. Generate Professor JSON -> Deploy the Professor JSON Data to ElasticSearch
-
-## Generate Class JSON:
-1. cd into script
-2. Run 'python courseScraper.py'
+# Basic Workflow:
+A. Generate Professor JSON -> Generate Course JSON  
+    - Note: Must generate Professor JSON before Course JSON. Course scraper needs professor teaching history data.
+B. Deploy the Professor/Course JSON Data to ElasticSearch
 
 ## Generate Professor JSON:
 1. cd into script
 2. Run 'python professorScraper.py'
+
+## Generate Course JSON:
+1. cd into script
+2. Run 'python courseScraper.py'
 
 ## Cloud Deploy Data (in Bulk) to AWS ElasticSearch:  
 1. cd into script

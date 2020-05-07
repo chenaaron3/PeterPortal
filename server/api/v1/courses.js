@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var fetch = require("node-fetch");
-var {executeQuery, escape} = require('../../config/database.js')
+var { executeQuery, escape } = require('../../config/database.js')
 
 const COURSE_INDEX = "courses";
 
@@ -34,6 +34,18 @@ const COURSE_INDEX = "courses";
  *                    $ref: '#/components/schemas/CourseList'
  */
 router.get("/", function (req, res, next) {
+    getAllCourses(function (err, data) {
+        if (err)
+            res.status(400).send(err.toString());
+        else {
+            res.json(data);
+        }
+    });
+});
+
+// result: data returned from elasticsearch
+// returns refined information about all courses
+function getAllCourses(callback) {
     fetch(`${process.env.ELASTIC_ENDPOINT_URL}/${COURSE_INDEX}/_search`, {
         method: 'POST',
         headers: {
@@ -48,18 +60,14 @@ router.get("/", function (req, res, next) {
                 "size": 10000
             })
     }).then((response) => response.json())
-        .then((data) => { console.log(data); return res.json(generateArrayOfCourses(data)) })
-        .catch((err) => res.status(400).send(err.toString()));
-});
-
-// result: data returned from elasticsearch
-// returns refined information about all courses
-function generateArrayOfCourses(result) {
-    var array_result = []
-    result.hits.hits.forEach((e) => {
-        array_result.push({ courseID: e._source.id.replace(/ /g, ''), name: e._source.name })
-    })
-    return { count: array_result.length, courses: array_result }
+        .then((result) => {
+            var array_result = []
+            result.hits.hits.forEach((e) => {
+                array_result.push({ courseID: e._source.id.replace(/ /g, ''), name: e._source.name })
+            })
+            callback(null, { count: array_result.length, courses: array_result });
+        })
+        .catch((err) => callback(err, null));
 }
 
 /**
@@ -109,10 +117,10 @@ function getCourse(id, callback) {
             })
     }).then((response) => response.json())
         .then((data) => {
-            if(data.hits.hits.length > 0){
+            if (data.hits.hits.length > 0) {
                 callback(null, data.hits.hits[0]._source)
             }
-            else{
+            else {
                 callback(`${id} does not exist!`, null)
             }
         })
@@ -245,5 +253,27 @@ router.get("/avgDifficulties/:courseID", function (req, res, next) {
         res.json(results);
     });
 })
+
+// // term: year followed by season (eg. "Fall 2020")
+// // adds to the term field for each course in elasticsearch index
+// router.get("/assignTerm", function (req, res) {
+//     // construct update json
+//     json = `{ "update" : {"_id" : "I&CSCI32A", "_index" : "courses"} }\n{ "doc" : {"terms" : ["2020 Fall"]} }`
+//     // bulk update
+//     fetch(`${process.env.ELASTIC_ENDPOINT_URL}/${PROFESSOR_INDEX}/_search`, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body:
+//             JSON.stringify({
+//                 "_source": ["ucinetid", "name"],
+//                 "query": {
+//                     "match_all": {}
+//                 },
+//                 "size": 10000
+//             })
+//     })
+// });
 
 module.exports = router;
