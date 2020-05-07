@@ -30,7 +30,12 @@ const gradeReceived = [
   { key: "IP", value: "IP", text: "IP" },
 ];
 
+
+let termOptions = []
+
 class ReviewsModule extends React.Component {
+
+
   constructor(props) {
     super(props);
     let date = new Date();
@@ -40,22 +45,35 @@ class ReviewsModule extends React.Component {
       difficulty: 0,
       // courseID: "",//this.props.courseID,
       profID: "",
-      date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
+      date: date,
       grade: "",
-      forCredit: "",
+      takenIn: "",
       professorOptions: [],
       reviews: [],
       verified: false
     };
     console.log(this.state);
+    this.getTerms();
     this.getProfessorNames();
     this.getReviews();
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({courseID: this.props.courseID});
-    this.getReviews();
-    this.getProfessorNames();
+  
+
+  getTerms() {
+    let seasons = ['Fall', 'Summer', 'Spring', 'Winter']
+    const range = 5;
+    let year = this.state.date.getFullYear();
+    for (let i = 0; i < range; i++) {
+      for (let j = 0; j < seasons.length; j++) {
+        let q = `${year - i} ${seasons[j]}`;
+        termOptions.push({ key: q, value: q, text: q });
+      }
+    }
+    // console.log(terms)
+    // this.setState({termOptions: terms});
+    // console.log(this.state.termOptions);
+    
   }
 
   getProfessorNames() {
@@ -107,8 +125,9 @@ class ReviewsModule extends React.Component {
       difficulty: this.state.difficulty,
       courseID: this.props.courseID,//this.props.courseID,
       profID: this.state.profID,
-      date: this.state.date,
+      date: this.state.date.getFullYear() + "-" + (this.state.date.getMonth() + 1) + "-" + this.state.date.getDate(),
       grade: this.state.grade,
+      takenIn: this.state.takenIn
     }
     var requestHeader= {
       'Content-Type': 'application/json',
@@ -183,13 +202,13 @@ class ReviewsModule extends React.Component {
                 onChange={(event,  data) => {this.setState({profID: data.value})}}                
               />
 
-              {/* <Dropdown
-                placeholder="Grade Option"
+              <Dropdown
+                placeholder="Taken In"
                 fluid
                 selection
-                options={creditOptions}
-                onChange={(event, data) => {this.setState({forCredit: data.value})}}
-              /> */}
+                options={termOptions}
+                onChange={(event, data) => {this.setState({takenIn: data.value})}}
+              />
 
               <Dropdown
                 placeholder="Grade Received"
