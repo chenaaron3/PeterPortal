@@ -16,12 +16,18 @@ import professorScraper
 # DO NOT CHANGE
 # Automatically determines the path based on your operating system
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
-URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
+
+# scrape links
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
+URL_TO_ALL_COURSES = CATALOGUE_BASE_URL + "/allcourses/"
+
+# output file names
 GENERATE_JSON_NAME = "resources/all_courses.json"
 DEPT_SCHOOL_MAP_NAME = "resources/dept_school_map.json"
 SPECIAL_REQS_NAME = "output/special_reqs.txt"
 SCHOOL_LIST_NAME = "output/school_list.txt" 
+
+# references
 GE_DICTIONARY = {"Ia":"GE Ia: Lower Division Writing",
                  "Ib":"GE Ib: Upper Division Writing",
                  "II":"GE II: Science and Technology",
@@ -32,7 +38,6 @@ GE_DICTIONARY = {"Ia":"GE Ia: Lower Division Writing",
                  "VI":"GE VI: Language Other Than English",
                  "VII":"GE VII: Multicultural Studies",
                  "VIII":"GE VIII: International/Global Issues"}
-
 # allow non-digit prerequisite tokens if they contain one of these words 
 # Example: Allow CHEM 1A to have "CHEM 1P or SAT Mathematics"
 SPECIAL_PREREQUISITE_WHITE_LIST = ["SAT ", "ACT ", "AP "]
@@ -347,10 +352,11 @@ def setDependencies(json_data:dict):
         bar.inc()
 
 # json_data: collection of class information generated from getAllCourses
-# professor_data: collection of professor information generated from professorScraper.py
 # sets the professorHistory for courses
-def setProfessorHistory(json_data:dict, professor_data:dict):
+def setProfessorHistory(json_data:dict):
     print("\nSetting Professor History...")
+    # collection of professor information generated from professorScraper.py
+    professor_data = json.load(open(professorScraper.PROFESSOR_DATA_NAME))
     bar = ProgressBar(len(professor_data), debug)
     # go through each profesor data values
     for professor in professor_data.values():
@@ -403,7 +409,6 @@ if __name__ == "__main__":
     driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
     # store all of the data
     json_data = {}
-    professor_data = json.load(open(professorScraper.PROFESSOR_DATA_NAME))
     # maps department code to school 
     departmentToSchoolMapping = getDepartmentToSchoolMapping(driver)
     # debugging information
@@ -421,7 +426,7 @@ if __name__ == "__main__":
         getAllCourses(scrape(driver, classURL), json_data, departmentToSchoolMapping)
         bar.inc()
     setDependencies(json_data)
-    setProfessorHistory(json_data, professor_data)
+    setProfessorHistory(json_data)
     writeJsonData(json_data)
 
     # Debug information about school

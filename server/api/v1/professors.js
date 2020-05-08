@@ -15,7 +15,7 @@ const PROFESSOR_INDEX = "professors";
 /**
  * @swagger
  * path:
- *  /professors/:
+ *  /professors/getProfessors:
  *    get:
  *      summary: Get all professors
  *      tags: [Professors]
@@ -33,7 +33,19 @@ const PROFESSOR_INDEX = "professors";
  *                  professors:
  *                    $ref: '#/components/schemas/ProfessorList'
  */
-router.get("/", function (req, res, next) {
+router.get("/getProfessors", function (req, res, next) {
+    getAllProfessors(function (err, data) {
+        if (err)
+            res.status(400).send(err.toString());
+        else {
+            res.json(data);
+        }
+    });
+});
+
+// result: data returned from elasticsearch
+// returns refined information about all professors
+function getAllProfessors(callback) {
     fetch(`${process.env.ELASTIC_ENDPOINT_URL}/${PROFESSOR_INDEX}/_search`, {
         method: 'POST',
         headers: {
@@ -48,18 +60,14 @@ router.get("/", function (req, res, next) {
                 "size": 10000
             })
     }).then((response) => response.json())
-        .then((data) => res.json(generateArrayOfProfessors(data)))
-        .catch((err) => res.status(400).send(err.toString()));
-});
-
-// result: data returned from elasticsearch
-// returns refined information about all professors
-function generateArrayOfProfessors(result) {
-    var array_result = []
-    result.hits.hits.forEach((e) => {
-        array_result.push({ ucinetid: e._source.ucinetid, name: e._source.name })
+    .then((result) => {
+        var array_result = []
+        result.hits.hits.forEach((e) => {
+            array_result.push({ ucinetid: e._source.ucinetid, name: e._source.name })
+        })
+        callback(null, { count: array_result.length, professors: array_result });
     })
-    return { count: array_result.length, professors: array_result }
+    .catch((err) => callback(err, null));
 }
 
 /**
