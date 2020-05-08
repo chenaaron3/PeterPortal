@@ -6,6 +6,9 @@ A. Generate Professor JSON -> Generate Course JSON
     - Note: Must generate Professor JSON before Course JSON. Course scraper needs professor teaching history data.
 B. Deploy the Professor/Course JSON Data to ElasticSearch
 
+## Deployment Commands:
+1. Complete Reset: 'python professorScraper.py && python courseScraper.py && python deleteelasticcloud.py professors && python deleteelasticcloud.py courses && deployelasticcloud.py professors && deployelasticcloud.py courses'
+
 ## Generate Professor JSON:
 1. cd into script
 2. Run 'python professorScraper.py'
@@ -16,10 +19,8 @@ B. Deploy the Professor/Course JSON Data to ElasticSearch
 
 ## Cloud Deploy Data (in Bulk) to AWS ElasticSearch:  
 1. cd into script
-2. Optionally uncomment corresponding 'indexToDelete' variable in deleteelasticcloud.py
-3. Optionally delete the existing index by running 'python deleteelasticcloud.py'
-4. Uncomment desired 'jsonToUpload' variable in deployelasticcloud.py
-5. Index the data by running 'python deployelasticcloud.py'
+2. Optionally delete the existing index by running 'python deleteelasticcloud.py [courses|professors]'
+3. Index the data by running 'python deployelasticcloud.py [courses|professors]'
 
 # Deploying Scripts to AWS EC2 Instance:  
 ## Create an AWS EC2 Instance
