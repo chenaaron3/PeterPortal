@@ -21,7 +21,7 @@ const PROFESSOR_INDEX = "professors";
  *      tags: [Professors]
  *      responses:
  *        "200":
- *          description: A list of professor ucinetid and names
+ *          description: A JSON that maps all professor ucinetid to names
  *          content:
  *            application/json:
  *              schema:
@@ -31,7 +31,12 @@ const PROFESSOR_INDEX = "professors";
  *                    type: integer
  *                    example: 1
  *                  professors:
- *                    $ref: '#/components/schemas/ProfessorList'
+ *                    type: object
+ *                    properties:
+ *                      thornton:
+ *                        type: string
+ *                        description: Professor Name from the Directory.
+ *                        example: Alexander W Thornton
  */
 router.get("/getProfessors", function (req, res, next) {
     getAllProfessors(function (err, data) {
@@ -61,11 +66,11 @@ function getAllProfessors(callback) {
             })
     }).then((response) => response.json())
     .then((result) => {
-        var array_result = []
+        var jsonResult = {}
         result.hits.hits.forEach((e) => {
-            array_result.push({ ucinetid: e._source.ucinetid, name: e._source.name })
+            jsonResult[e._source.ucinetid] = e._source.name
         })
-        callback(null, { count: array_result.length, professors: array_result });
+        callback(null, { count: Object.keys(jsonResult).length, professors: jsonResult });
     })
     .catch((err) => callback(err, null));
 }

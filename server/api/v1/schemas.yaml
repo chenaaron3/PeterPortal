@@ -4,20 +4,6 @@ components:
       type: string
       description: Course Department + Course Number with no spaces
       example: I&CSCI46
-    CourseList:
-      type: array
-      items:
-        type: object
-        required:
-          - course
-          - name
-        properties:
-          courseID:
-            $ref: "#/components/schemas/CourseID"
-          name:
-            type: string
-            description: Course Name from the Catalogue.
-            example: Data Structure Implementation and Analysis
     CourseDetails:
       type: object
       properties:
@@ -108,20 +94,6 @@ components:
       type: string
       description: Professor ucinetid
       example: thornton
-    ProfessorList:
-      type: array
-      items:
-        type: object
-        required:
-          - ucinetid
-          - name
-        properties:
-          ucinetid:
-            $ref: "#/components/schemas/Ucinetid"
-          name:
-            type: string
-            description: Professor Name from the Directory.
-            example: Alexander W Thornton
     ProfessorDetails:
       type: object
       properties:

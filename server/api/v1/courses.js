@@ -21,7 +21,7 @@ const COURSE_INDEX = "courses";
  *      tags: [Courses]
  *      responses:
  *        "200":
- *          description: A list of course id and names
+ *          description: A JSON that maps all course ids to names
  *          content:
  *            application/json:
  *              schema:
@@ -31,7 +31,12 @@ const COURSE_INDEX = "courses";
  *                    type: integer
  *                    example: 1
  *                  courses:
- *                    $ref: '#/components/schemas/CourseList'
+ *                    type: object
+ *                    properties:
+ *                      I&CSCI46:
+ *                        type: string
+ *                        description: Course Name from the Catalogue.
+ *                        example: Data Structure Implementation and Analysis
  */
 router.get("/getCourses", function (req, res, next) {
     getAllCourses(function (err, data) {
@@ -61,11 +66,11 @@ function getAllCourses(callback) {
             })
     }).then((response) => response.json())
         .then((result) => {
-            var array_result = []
+            var jsonResult = {}
             result.hits.hits.forEach((e) => {
-                array_result.push({ courseID: e._source.id.replace(/ /g, ''), name: e._source.name })
+                jsonResult[e._source.id.replace(/ /g, '')] = e._source.name
             })
-            callback(null, { count: array_result.length, courses: array_result });
+            callback(null, { count: Object.keys(jsonResult).length, courses: jsonResult });
         })
         .catch((err) => callback(err, null));
 }
