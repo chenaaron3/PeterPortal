@@ -162,3 +162,12 @@
 .ui.dropdown>.dropdown.icon {
     margin: -.78571429em !important;
 }
+
+
+.review_feature-label{
+  display: flex;
+  flex-direction: row;
+  .add_review-button{
+    margin-left: auto;
+  }
+}
