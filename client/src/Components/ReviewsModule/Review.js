@@ -84,14 +84,14 @@ class Review extends React.Component {
           </div>
 
 
-          <div class="vote-container">
-              <div class="vote-container_up" onClick={() => (this.vote('up'))}>
+          <div className="vote-container">
+              <div className="vote-container_up" onClick={() => (this.vote('up'))}>
                 <span>
                   <Icon className="vote-button upvote" name="arrow up"/>
                   <b className="vote-counter">{this.props.reviewData.up_votes}</b>
                 </span>
               </div>
-              <div class="vote-container_down" onClick={() => (this.vote('down'))}>
+              <div className="vote-container_down" onClick={() => (this.vote('down'))}>
                 <span>
                   <Icon className="vote-button downvote" name="arrow down"/>
                   <b className="vote-counter">{this.props.reviewData.down_votes}</b>
@@ -112,14 +112,14 @@ class Review extends React.Component {
           <div className="rating">
             <h4 className="rating-label">DIFFICULTY</h4>
             <div className={"rating-text-container"}>
-              <h2 class="rating-text">{this.props.reviewData.difficulty}</h2>
+              <h2 className="rating-text">{this.props.reviewData.difficulty}</h2>
             </div>
           </div>
 
           <div className="rating">
             <h4 className="rating-label">RATING</h4>
             <div className={"rating-text-container"}>
-              <h2 class="rating-text">{this.props.reviewData.rating}</h2>
+              <h2 className="rating-text">{this.props.reviewData.rating}</h2>
             </div>
           </div>
 

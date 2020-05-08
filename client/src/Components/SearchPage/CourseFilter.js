@@ -1,7 +1,7 @@
 import React from "react";
-import {Divider, Accordion, Menu, Form} from "semantic-ui-react";
+import { Accordion, Menu } from "semantic-ui-react";
 import "./Filter.scss";
-import {RefinementListFilter, SelectedFilters, ResetFilters, HitsStats, TermQuery, CheckboxFilter,  SearchkitComponent} from "searchkit";
+import {RefinementListFilter, SelectedFilters, TermQuery, CheckboxFilter} from "searchkit";
 
 const GEForm = (
   <div>

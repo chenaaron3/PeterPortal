@@ -1,19 +1,24 @@
 import React from "react";
-import Timetable from "../Timetable";
+// import Timetable from "../Timetable";
 import ReviewsModule from "../ReviewsModule/ReviewsModule.js";
 import CourseInfo from "./CourseInfo.js";
 import PrereqTree from "./PrereqTree.js";
-import { Grid, Icon, Divider, Card, Radio, Button } from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 import "./CoursePage.scss";
-import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 class CoursePage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      courseData: null
+      courseData: null,
+      professorHistory: {},
+      loaded: false
     };
+  }
+
+  componentDidMount() {
+    this.getcourseData(); 
   }
 
   getcourseData() {
@@ -24,16 +29,51 @@ class CoursePage extends React.Component {
 
     fetch("/api/v1/courses/" + this.props.match.params.id, requestHeader)
       .then(data => {return data.json();})
-      .then(res => {this.setState({ courseData: res });})
+      .then(res => {this.setState({ courseData: res }); this.getProfessorNames();})
       .catch(e => console.log(e));
   }
 
-  componentDidMount() {
-    this.getcourseData();
+  getProfessorNames() {
+    let prof_json = {}
+    
+    // go through each professor ucinetid
+    console.log(this.state.courseData);
+    for (var i = 0; i < this.state.courseData.professorHistory.length; i++) {    
+      var searchParams = {
+        query: {
+          terms: {
+            _id: [this.state.courseData.professorHistory[i]]
+          }
+        }
+      };
+      var requestHeader = {
+        headers: new Headers({
+          "content-type": "application/json; charset=UTF-8",
+          "content-length": 140
+        }),
+        body: JSON.stringify(searchParams),
+        method: "POST"
+      };   
+      fetch(
+        "/professors/_search",
+        requestHeader
+      )
+      .then(data => {
+        return data.json();
+      })
+      .then(res => {
+        this.setState({})
+        let prof_data = res.hits.hits[0]._source;
+        prof_json[prof_data.ucinetid] = prof_data.name;
+      })
+      .catch(e => console.log(e));
+    }
+    console.log(Object.keys(prof_json).length);
+    this.setState({professorHistory: prof_json, loaded: true});
   }
 
   render() {
-    if (this.state.courseData != null) {
+    if (this.state.loaded) {
       return (
         <div className="App" style={{ display: "flex", flexDirection: "column" }}>         
             <div id="course_main-header">
@@ -62,7 +102,8 @@ class CoursePage extends React.Component {
                 overlaps={this.state.courseData.overlaps}
                 concurrent={this.state.courseData.concurrent}
                 ge_types={this.state.courseData.ge_types}
-                professorHistory={this.state.courseData.professorHistory}
+                professorHistory={this.state.professorHistory}
+                professorCount={Object.keys(this.state.professorHistory).length}
               />
             </Grid.Row>
 
