@@ -201,7 +201,7 @@ def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
                     "dept_alias": ALIASES[id_department] if id_department in ALIASES else [],
                     "units":[float(x) for x in unit_range],"description":courseDescription, "department": department, "professorHistory":[],
                     "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"", "dependencies":[],"repeatability":"","grading option":"",
-                    "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":"","ge_types":[],"ge_string":""}
+                    "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":"","ge_types":[],"ge_string":"", "terms":[]}
 
             # stores dictionaries in json_data to add dependencies later 
             json_data[courseID] = {"metadata":metadata,
@@ -275,8 +275,8 @@ def parseCourseBody(courseBody, dic:dict):
             dic["ge_string"] = pTagText
         # try to match keywords like "grading option", "repeatability"
         for keyWord in dic.keys():
-            possibleMatch = re.match(f"^{keyWord}:?(?P<value>.*)", pTagText.lower())
-            if possibleMatch:
+            possibleMatch = re.match(f"^{keyWord}[? ](?P<value>.*)", pTagText.lower())
+            if possibleMatch and len(dic[keyWord]) == 0:
                 dic[keyWord] = possibleMatch.group("value")
                 break
 
