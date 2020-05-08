@@ -98,6 +98,8 @@ router.get("/assignTerm", function (req, res) {
     }
     getAllCourses((err, courses) => {
         if (err) console.log(err);
+        let updateJSON = ""
+        let hits = 0;
         // maps a department to a list of courses
         let departments = new Set()
         // maps a course to its data
@@ -105,11 +107,17 @@ router.get("/assignTerm", function (req, res) {
         courses.forEach((courseData) => {
             departments.add(courseData.department)
             courseToData[courseData.courseID] = courseData
+            // if no terms list
+            if(!courseData["terms"]){
+                console.log(courseData)
+                ++hits;
+                courseData["terms"] = []
+                updateJSON +=  `{ "update" : {"_id" : "${courseData.courseID}", "_index" : "courses"}}\n{ "doc" : {"terms" : ${JSON.stringify(courseData.terms)}}}\n`
+            }
         });
-        let updateJSON = ""
         let count = 0
         let finish = departments.size
-        let hits = 0;
+        // if no terms, give it an empty list
         // search up each department on websoc
         departments.forEach(department => {
             // get available courses for a department
@@ -121,10 +129,6 @@ router.get("/assignTerm", function (req, res) {
                     // if this course is indexed
                     if(courseData){
                         ++hits;
-                        // make sure it has a terms array
-                        if (!courseData["terms"]) {
-                            courseData["terms"] = []
-                        }
                         // add the term if it is not already included
                         if (!courseData["terms"].includes(term)) {
                             courseData["terms"].push(term);
