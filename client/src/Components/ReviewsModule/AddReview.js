@@ -13,24 +13,6 @@ const ratingOptions = [
   { key: "5", value: "5", text: "5" }
 ];
 
-const quarterOptions = [
-    { key: "Spring 2020", value: "Spring 2020", text: "Spring 2020" },
-    { key: "Winter 2020", value: "Winter 2020", text: "Winter 2020" },
-    { key: "Fall 2019", value: "Fall 2019", text: "Fall 2019" },
-    { key: "Summer Session 10-wk 2019", value: "Summer Session 10-wk 2019", text: "Summer Session 10-wk 2019" },
-    { key: "Summer Session II 2019", value: "Summer Session II 2019", text: "Summer Session II 2019" },
-    { key: "Summer Session I 2019", value: "Summer Session I 2019", text: "Summer Session I 2019" },
-    { key: "Spring 2019", value: "Spring 2019", text: "Spring 2019" },
-    { key: "Winter 2019", value: "Winter 2019", text: "Winter 2019" },
-    { key: "Fall 2018", value: "Fall 2018", text: "Fall 2018" },
-    { key: "Summer Session 10-wk 2018", value: "Summer Session 10-wk 2018", text: "Summer Session 10-wk 2018" },
-    { key: "Summer Session II 2018", value: "Summer Session II 2018", text: "Summer Session II 2018" },
-    { key: "Summer Session I 2018", value: "Summer Session I 2018", text: "Summer Session I 2018" },
-    { key: "Spring 2018", value: "Spring 2018", text: "Spring 2018" },
-    { key: "Winter 2018", value: "Winter 2018", text: "Winter 2018" },
-    { key: "Fall 2017", value: "Fall 2017", text: "Fall 2017" },
-];
-
 const gradeReceived = [
   { key: "A", value: "A", text: "A" },
   { key: "B", value: "B", text: "B" },
@@ -55,17 +37,32 @@ class AddReview extends React.Component {
             text: "",
             rating: 0,
             difficulty: 0,
-            courseID: "",
+            // courseID: "",//this.props.courseID,
             profID: "",
-            date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
+            date: date,
             grade: "",
-            quarterTaken: "",
+            takenIn: "",
             professorOptions: [],
+            reviews: [],
             verified: false,
-            review_completed: false
+            termOptions: []
           };
-
-        // this.getProfessorNames();
+          console.log(this.state);
+          this.getTerms();
+          this.getProfessorNames();
+        }
+      
+    getTerms() {
+        let termOptions = [];
+        const range = 5;
+        fetch(`/api/v1/schedule/getTerms?pastYears=${range}`)
+        .then(res => res.json())
+        .then(terms => {
+        terms.forEach(term => {
+            termOptions.unshift({ key: term, value: term, text: term })
+        })
+        this.setState({termOptions: termOptions})
+        });
     }
 
     componentDidMount(props) {
@@ -122,8 +119,9 @@ class AddReview extends React.Component {
           difficulty: this.state.difficulty,
           courseID: this.props.courseID,//this.props.courseID,
           profID: this.state.profID,
-          date: this.state.date,
+          date: this.state.date.getFullYear() + "-" + (this.state.date.getMonth() + 1) + "-" + this.state.date.getDate(),
           grade: this.state.grade,
+          takenIn: this.state.takenIn
         }
         var requestHeader= {
           'Content-Type': 'application/json',
@@ -142,7 +140,7 @@ class AddReview extends React.Component {
           console.log(err);
           console.log("No Course Found!")
         });
-      }
+    }
 
     render() {
         return(
@@ -172,6 +170,14 @@ class AddReview extends React.Component {
                 options={creditOptions}
                 onChange={(event, data) => {this.setState({forCredit: data.value})}}
               /> */}
+            
+                <Dropdown
+                placeholder="Taken In"
+                fluid
+                selection
+                options={this.state.termOptions}
+                onChange={(event, data) => {this.setState({takenIn: data.value})}}
+              />
 
               <Dropdown
                 placeholder="Grade Received"
