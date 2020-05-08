@@ -1,8 +1,9 @@
 import React from "react";
 import "./CoursePage.scss";
-import { Grid, Icon, Divider, Card, Radio, Button } from "semantic-ui-react";
+import { Grid, Divider } from "semantic-ui-react";
 
 class CourseInfo extends React.Component {
+
   render() {
     return (
       <div>
@@ -19,7 +20,7 @@ class CourseInfo extends React.Component {
               </p>
               <p>{this.props.description}</p>
             </div>
-            {this.props.restriction != "" && (
+            {this.props.restriction !== "" && (
               <div className="course_desc-field-container">
                 <p style={{ marginBottom: "6px" }}>
                   <b>Restriction</b>
@@ -28,7 +29,7 @@ class CourseInfo extends React.Component {
               </div>
             )}
 
-            {this.props.repeatability != "" && (
+            {this.props.repeatability !== "" && (
               <div className="course_desc-field-container">
                 <p style={{ marginBottom: "6px" }}>
                   <b>Repeatability</b>
@@ -37,14 +38,14 @@ class CourseInfo extends React.Component {
               </div>
             )}
 
-            {this.props.overlaps != "" && (
+            {this.props.overlaps !== "" && (
               <p>
                 <b>Overlaps with </b>
                 {this.props.overlaps}
               </p>
             )}
 
-            {this.props.concurrent != "" && (
+            {this.props.concurrent !== "" && (
               <p>
                 <b>Concurrent with </b>
                 {this.props.concurrent}
@@ -70,20 +71,21 @@ class CourseInfo extends React.Component {
             </div>
 
             <div className="course_ge-info-container">
-              {this.props.professorHistory.length > 0 && (
+              
+              {Object.keys(this.props.professorHistory).length > 0 && (
                 <p style={{ marginBottom: "6px" }}>
                   <b>Instructor History</b>
                 </p>
               )}
-              {this.props.professorHistory.map((value, index) => {
+
+              {Object.keys(this.props.professorHistory).map((key, index) => {
                 return (
-                  <p className="list-item">
+                  <p className="list-item" key={index}>
                     <a
-                      href={"/professor/" + value}
+                      href={"/professor/" + key}
                       className="list-item"
-                      key={index}
                     >
-                      {value}
+                      {this.props.professorHistory[key]}
                     </a>
                   </p>
                 );

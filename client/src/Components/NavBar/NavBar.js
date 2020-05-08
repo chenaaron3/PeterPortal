@@ -20,7 +20,6 @@ class NavBar extends React.Component {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         this.setState({ name: data.name, picture: data.picture });
       });
 
@@ -32,10 +31,7 @@ class NavBar extends React.Component {
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   render() {
-    const activeItem = this.state.activeItem;
-
     return (
-
       <nav className="navbar">
         <div className="navbar-nav">
           <div
@@ -46,7 +42,7 @@ class NavBar extends React.Component {
               alignItems: "center",
             }}
           >
-            <div class="peterportal-logo-container">
+            <div className="peterportal-logo-container">
               <a href="/">
                 <img alt="PeterPortal" id="peterportal-logo" src={Logo}></img>
               </a>
