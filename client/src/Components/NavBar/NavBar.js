@@ -23,7 +23,7 @@ class NavBar extends React.Component {
         this.setState({ name: data.name, picture: data.picture });
       });
 
-    fetch("/week", { method: "GET" })
+    fetch("/api/v1/schedule/getWeek", { method: "GET" })
       .then((res) => res.text())
       .then((text) => this.setState({ week: text }));
   }

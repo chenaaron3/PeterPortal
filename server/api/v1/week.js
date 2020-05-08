@@ -1,16 +1,14 @@
-var express = require('express');
-var router = express.Router();
 var fetch = require("node-fetch");
 const cheerio = require('cheerio');
 
-router.get('/', function(req, res, next) {
+function getWeek(req, res) {
     // current date
     let date = new Date(Date.now());
     // current year
     let year = date.getFullYear();
     // check for current year to current year + 1
     getQuarterMapping(year, (quarterMapping1) => {
-        let potentialWeek = getWeek(date, quarterMapping1);
+        let potentialWeek = findWeek(date, quarterMapping1);
         // if the date lies within this page
         if(potentialWeek){
             res.send(potentialWeek);
@@ -18,7 +16,7 @@ router.get('/', function(req, res, next) {
         else{
             // check for current year - 1 to current year
             getQuarterMapping(year - 1, (quarterMapping2) => {
-                potentialWeek = getWeek(date, quarterMapping2);
+                potentialWeek = findWeek(date, quarterMapping2);
                 if(potentialWeek){
                     res.send(potentialWeek);
                 }
@@ -29,12 +27,12 @@ router.get('/', function(req, res, next) {
             })
         }
     })
-});
+}
 
 // date: current date
 // quarterMapping: the quarterMapping
 // returns the week description if it lies within the quarter mapping
-function getWeek(date, quarterMapping)
+function findWeek(date, quarterMapping)
 {
     let result = undefined;
     // iterate through each quarter
@@ -44,6 +42,7 @@ function getWeek(date, quarterMapping)
         {
             result = `Week ${Math.floor(dateSubtract(quarterMapping[quarter]["begin"], date) / 7) + 1}, ${quarter}`
         }
+        // check if date is 1 week after end
         else if(date > quarterMapping[quarter]["end"] && date <= quarterMapping[quarter]["end"].addDays(7)){
             result = `Finals Week, ${quarter}. Good Luck!🤞`
         }
@@ -166,4 +165,4 @@ Date.prototype.addDays = function(days) {
     return date;
 }
 
-module.exports = router;
+module.exports = getWeek;
