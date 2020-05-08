@@ -16,7 +16,6 @@ var usersRouter = require('./routes/users');
 var reviewsRouter = require('./routes/reviews');
 var coursesRouter = require('./routes/courses');
 var professorsRouter = require('./routes/professors');
-var weekRouter = require('./routes/week');
 var adminRouter = require('./routes/admin');
 
 var app = express();
@@ -60,7 +59,6 @@ app.use('/users', usersRouter);
 app.use('/reviews', reviewsRouter);
 app.use("/courses", coursesRouter);
 app.use("/professors", professorsRouter);
-app.use("/week", weekRouter);
 app.use("/api", apiRouter);
 app.use("/admin", adminRouter);
 

@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
-var ScheduleParser = require("./schedule-parser.js")
+var getWeek = require("./week");
+var ScheduleParser = require("./schedule-parser.js");
 const WebSocAPI = require("websoc-api");
 
 const TERM_SEASONS = ['Winter', 'Spring', 'Summer1','Summer10wk', 'Summer2',  'Fall']
@@ -75,5 +76,23 @@ router.get("/getTerms", function(req, res){
   }
   res.json(terms);
 })
+
+/**
+ * @swagger
+ * path:
+ *  /schedule/getWeek:
+ *    get:
+ *      summary: Gets the current week in the quarter
+ *      tags: [Schedule]
+ *      responses:
+ *        "200":
+ *          description: A description of the current week
+ *          content:
+ *            text/plain:
+ *              schema:
+ *                type: string
+ *                example: "Week 3, Spring 2020"
+ */
+router.get("/getWeek", getWeek)
 
 module.exports = router;
