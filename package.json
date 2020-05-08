@@ -21,5 +21,6 @@
   "bugs": {
     "url": "https://github.com/icssc-projects/uci-catalogue-search/issues"
   },
-  "homepage": "https://github.com/icssc-projects/uci-catalogue-search#readme"
+  "homepage": "https://github.com/icssc-projects/uci-catalogue-search#readme",
+  "dependencies": {}
 }

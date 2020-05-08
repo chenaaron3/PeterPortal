@@ -2,6 +2,7 @@ import requests
 import json
 import os
 from dotenv import load_dotenv
+import sys
 
 # activate .env
 load_dotenv()
@@ -12,16 +13,18 @@ Setting Up Elasticsearch on AWS
 2. Set access policy to "Allow open access to the domain"
 3. Copy the endpoint URL to the elasticEndpointURL variable
 Deploying to AWS
-4. Run this script (python deployelasticcloud.py)
+4. Run this script (python deployelasticcloud.py [courses|professors])
 """
 
-old = "https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com"
+indexToJSON = {"courses": "resources/all_courses.json", 
+               "professors": "resources/all_professors.json"}
 
 elasticEndpointURL = os.getenv("ELASTIC_ENDPOINT_URL")
-# elasticEndpointURL = old
-
-# jsonToUpload = "resources/all_courses.json"
-# jsonToUpload = "resources/all_professors.json"
+if len(sys.argv) < 2:
+  sys.exit("Error: Please provide an index as an argument")
+if sys.argv[1] not in indexToJSON:
+  sys.exit(f"Error: Index not available. Given: {sys.argv[1]}. Expected: {list(indexToJSON.keys())}")
+jsonToUpload = indexToJSON[sys.argv[1]]
 
 headers = {
     'Content-type' : 'application/json'

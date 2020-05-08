@@ -26,6 +26,24 @@ const CourseLevelForm = (
   </div>
 )
 
+const ATermForm = (
+  <div>
+  <CheckboxFilter title="2020 Fall" id="2020 Fall" label="2020 Fall" filter={TermQuery("terms.keyword", "2020 Fall")} />
+  <CheckboxFilter title="2020 Spring" id="2020 Spring" label="2020 Spring" filter={TermQuery("terms.keyword", "2020 Spring")} />
+</div>
+)
+
+let generateTermForm = (terms) => {
+  let items = terms.map(term => <CheckboxFilter title={term} id={term} label={term} filter={TermQuery("terms.keyword", {term})}/>);
+  let test = React.createElement("div", {}, ...items);
+  console.log("TEST:",test);
+  return (
+  <div>
+    <CheckboxFilter title="2020 Fall" id="2020 Fall" label="2020 Fall" filter={TermQuery("terms.keyword", "2020 Fall")} />
+    {items}
+  </div>);
+}
+
 const SelectedFilter = (props) => (
   <div className={"sk-selected-filters-option sk-selected-filters__item"}>
     <div className={props.bemBlocks.option("name")}>{props.labelValue}</div>
@@ -36,25 +54,21 @@ const SelectedFilter = (props) => (
 class CourseFilter extends React.Component {
   state = {
     activeIndex: 0,
-    TermForm: <></>
+    terms: []
   }
+
 
   constructor(props) {
     super(props);
-    this.getTermForm();
+    this.getTerms();
   }
 
-  getTermForm = () => {
+  getTerms = () => {
     fetch(`/api/v1/schedule/getTerms`)
       .then(res => res.json())
       .then(terms => {
         terms.reverse();
-        let TermForm = (
-          <div>
-            {terms.map(term => <CheckboxFilter title={term} id={term} label={term} filter={TermQuery("terms.raw", {term})} />)}
-          </div>
-        );
-        this.setState({ TermForm: TermForm })
+        this.setState({ terms: terms })
       });
   }
 
@@ -68,12 +82,14 @@ class CourseFilter extends React.Component {
 
   render() {
     const { activeIndex } = this.state
+
+    let TermForm = generateTermForm(this.state.terms);
+
     return (
       <div className="filter-list-container">
 
         <h4>Search Filter</h4>
         <SelectedFilters itemComponent={SelectedFilter} />
-
 
         <div style={{ overflowY: "auto" }}>
           <Accordion vertical>
@@ -124,9 +140,8 @@ class CourseFilter extends React.Component {
                 index={4}
                 onClick={this.handleClick}
               />
-              <Accordion.Content active={activeIndex === 4} content={this.state.TermForm} />
+              <Accordion.Content active={activeIndex === 4} content={<RefinementListFilter id="terms" field="terms.keyword" operator="AND" orderKey="_term" orderDirection="desc" />} />
             </Menu.Item>
-
           </Accordion>
         </div>
 
