@@ -1,8 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var { executeQuery, escape } = require('../config/database.js')
+var { executeQuery, escape } = require('../config/database.js');
+var {clearCacheByID, clearCacheAll, statistics} = require('../api/v1/cache');
 var fetch = require("node-fetch");
 const WebSocAPI = require("websoc-api");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const REVIEW_STATUSES = ["published", "removed", "unverified"];
 const TERM_SEASONS = ['Winter', 'Spring', 'Summer1','Summer10wk', 'Summer2',  'Fall']
@@ -13,8 +16,12 @@ router.use('*', function (req, res, next) {
         next();
     }
     else {
-        // res.status(401).send("You must be have administrative priviledge! Please login with Github first!")
-        next();
+        if(process.env.NODE_ENV == "development"){
+            next();
+        }
+        else{
+            res.status(401).send("You must be have administrative priviledge! Please login with Github first!")
+        }        
     }
 });
 
@@ -77,6 +84,23 @@ router.put("/flagged/update", function (req, res) {
         res.json(results);
     });
 });
+
+// docID: the cache name
+// clears the cache
+router.delete("/clearCache", function(req, res){
+    let docID = req.body.docID;
+    if(docID){
+        res.send(clearCacheByID(docID));
+    }
+    else{
+        res.send(clearCacheAll());
+    }
+})
+
+// reports hits and misses for the cache
+router.get("/cache", function(req, res){
+    res.json(statistics());
+})
 
 // term: the year + season (eg. "2020 Fall")
 // adds to the term field for each course in elasticsearch index

@@ -13,6 +13,7 @@
 # production
 /server/build
 /client/build
+/server/api/*/cache
 
 # resources
 /script/resources/google_sheet.json

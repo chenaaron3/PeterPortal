@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var fetch = require("node-fetch");
 var { executeQuery, escape } = require('../../config/database.js')
+var { cacheMiddleware } = require("./cache")
 
 const COURSE_INDEX = "courses";
 
@@ -38,7 +39,7 @@ const COURSE_INDEX = "courses";
  *                        description: Course Name from the Catalogue.
  *                        example: Data Structure Implementation and Analysis
  */
-router.get("/getCourses", function (req, res, next) {
+router.get("/getCourses", cacheMiddleware, function (req, res, next) {
     getAllCourses(function (err, data) {
         if (err)
             res.status(400).send(err.toString());
@@ -96,7 +97,7 @@ function getAllCourses(callback) {
  *              schema:
  *                $ref: '#/components/schemas/CourseDetails'
  */
-router.get("/:courseID", function (req, res, next) {
+router.get("/:courseID", cacheMiddleware, function (req, res, next) {
     getCourse(req.params.courseID, function (err, data) {
         if (err)
             res.status(400).send(err.toString());
