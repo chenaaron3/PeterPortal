@@ -1,5 +1,6 @@
 var fetch = require("node-fetch");
 const cheerio = require('cheerio');
+var {getKey, setKey} = require("./cache")
 
 function getWeek(req, res) {
     // current date
@@ -37,13 +38,15 @@ function findWeek(date, quarterMapping)
     let result = undefined;
     // iterate through each quarter
     Object.keys(quarterMapping).forEach(function(quarter) {
+        let begin = new Date(quarterMapping[quarter]["begin"])
+        let end = new Date(quarterMapping[quarter]["end"])
         // check if the date lies within the start/end range
-        if(date >= quarterMapping[quarter]["begin"] && date <= quarterMapping[quarter]["end"])
+        if(date >= begin && date <= end)
         {
-            result = `Week ${Math.floor(dateSubtract(quarterMapping[quarter]["begin"], date) / 7) + 1}, ${quarter}`
+            result = `Week ${Math.floor(dateSubtract(begin, date) / 7) + 1}, ${quarter}`
         }
         // check if date is 1 week after end
-        else if(date > quarterMapping[quarter]["end"] && date <= quarterMapping[quarter]["end"].addDays(7)){
+        else if(date > end && date <= end.addDays(7)){
             result = `Finals Week, ${quarter}. Good Luck!🤞`
         }
     });
@@ -56,6 +59,13 @@ function findWeek(date, quarterMapping)
 // given a year, get quarter to date range mapping
 async function getQuarterMapping(year, callback)
 {
+    // check if is in the cache
+    let cacheKey = `quarterMapping${year}`
+    let cacheValue = getKey(cacheKey)
+    if(cacheValue){
+        callback(cacheValue);
+        return;
+    }
     // maps quarter description to day range
     let quarterToDayMapping = {}
     // url to academic calendar
@@ -70,6 +80,7 @@ async function getQuarterMapping(year, callback)
     tables.forEach(table => {
         processTable(table, $, quarterToDayMapping, year);
     })
+    setKey(cacheKey, quarterToDayMapping);
     // invoke the callback
     callback(quarterToDayMapping);
 }
