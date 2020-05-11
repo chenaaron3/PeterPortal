@@ -30,11 +30,11 @@ function checkDocExists(docID){
 }
 
 // each route has its own doc (Example: "/api/v1/courses" has its own doc)
-// each endpoint is the key (Example: "getCourses" is a key)
+// each endpoint is the key (Example: "all" is a key)
 let cacheMiddleware = (req, res, next) => {
     // Example: "apiv1courses"
     let docID = req.baseUrl.replace(/\//g, "");
-    // Example: "getCourses"
+    // Example: "all"
     let key = req.path;
     checkDocExists(docID);
     // create the cache given the doc

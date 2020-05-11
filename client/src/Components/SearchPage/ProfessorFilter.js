@@ -3,23 +3,11 @@ import { Accordion, Menu } from "semantic-ui-react";
 import "./Filter.scss";
 import {
   RefinementListFilter,
-  SelectedFilters,
 } from "searchkit";
 
-const SelectedFilter = (props) => (
-  <div className={"sk-selected-filters-option sk-selected-filters__item"}>
-    <div className={props.bemBlocks.option("name")}>{props.labelValue}</div>
-    <div
-      className={props.bemBlocks.option("remove-action")}
-      onClick={props.removeFilter}
-    >
-      x
-    </div>
-  </div>
-);
 
 class ProfessorFilter extends React.Component {
-  state = { activeIndex: 0 };
+  state = { activeIndex: 0 }; 
 
   handleClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -33,9 +21,8 @@ class ProfessorFilter extends React.Component {
     const { activeIndex } = this.state;
     return (
       <div className="filter-list-container">
+        <a href="https://forms.gle/Y5SjHoHM7iW4bes17"><h5 style={{margin: 0}}><span role="img" aria-label="thinking face">🤔</span> Can't find your professor?</h5></a>
         <h4>Search Filter</h4>
-        <SelectedFilters itemComponent={SelectedFilter} />
-
         <div style={{ overflowY: "auto" }}>
           <Accordion vertical>
             <Menu.Item>
