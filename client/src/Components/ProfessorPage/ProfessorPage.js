@@ -1,6 +1,6 @@
 import React from "react";
 import "./ProfessorPage.scss";
-import { Grid, Icon, Divider, Card, Radio, Button } from "semantic-ui-react";
+import { Grid, Divider } from "semantic-ui-react";
 
 
 class ProfessorPage extends React.Component {
@@ -32,8 +32,6 @@ class ProfessorPage extends React.Component {
       method: "POST"
     };
 
-    // console.log(process.env.REACT_APP_ELASTIC_ENDPOINT_URL_COURSES)
-
     fetch(
       "/professors/_search",
       requestHeader
@@ -43,7 +41,6 @@ class ProfessorPage extends React.Component {
       })
       .then(res => {
         this.setState({ professorData: res.hits.hits[0]._source });
-        console.log(this.state.professorData);
       })
       .catch(e => console.log(e));
   }
@@ -59,7 +56,7 @@ class ProfessorPage extends React.Component {
           className="App"
           style={{ display: "flex", flexDirection: "column" }}
         >
-          <div className="course_page">
+          <div className="professor_page">
             <Grid.Row className="course_content-container">
               <Grid.Column className="course_info-container">
                 <div style={{display: "flex", alignItems: "center", flexDirection: "row", marginLeft: "-68px"}}>

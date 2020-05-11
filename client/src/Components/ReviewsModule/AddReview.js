@@ -1,6 +1,6 @@
 import React from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { Form, TextArea, Checkbox, Dropdown, Button, Grid, Divider } from "semantic-ui-react";
+import { Form, TextArea, Dropdown, Button } from "semantic-ui-react";
 
 // reference to the captcha element
 const recaptchaRef = React.createRef();
@@ -47,7 +47,7 @@ class AddReview extends React.Component {
             verified: false,
             termOptions: []
           };
-          console.log(this.state);
+
           this.getTerms();
           this.getProfessorNames();
         }
@@ -71,7 +71,6 @@ class AddReview extends React.Component {
       }
     
     getProfessorNames() {
-        console.log("Getting the professors");
         let names = []
         // go through each professor ucinetid
         for (var i = 0; i < this.props.professorHistory.length; i++) {    
@@ -126,7 +125,7 @@ class AddReview extends React.Component {
         var requestHeader= {
           'Content-Type': 'application/json',
         };
-        console.log(queryParams);
+
         fetch("/reviews/addReview", {
           method: "POST",
           headers: requestHeader,
@@ -150,7 +149,7 @@ class AddReview extends React.Component {
                   </div> */}
 
             <Form>
-              <h1 id={"reviewer_name"}>✏️&nbsp;&nbsp;Add Review</h1>
+              <h1 id={"reviewer_name"}><span role="img" aria-label="pencil">✏️</span>&nbsp;&nbsp;Add Review</h1>
 
               <div style={{ display: "flex", marginBottom: "16px"}}>
               <Dropdown
@@ -172,7 +171,7 @@ class AddReview extends React.Component {
               /> */}
             
                 <Dropdown
-                placeholder="Taken In"
+                placeholder="Quarter Taken"
                 fluid
                 selection
                 options={this.state.termOptions}

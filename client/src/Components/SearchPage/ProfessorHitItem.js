@@ -1,8 +1,5 @@
 import React from "react";
 import { get } from "lodash";
-import {Divider} from "semantic-ui-react";
-import { avatar } from "../../Assets/default-avatar.png";
-import { FieldContext } from "searchkit";
 
 const ProfessorHitItem = (props) => (
     <div style={{display: "flex", margin: "0 0 42px"}}>
