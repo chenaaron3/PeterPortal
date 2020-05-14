@@ -14,11 +14,15 @@ class ReviewsModule extends React.Component {
       open: false
     };
     this.loadMore = this.loadMore.bind(this);
+    this.close = this.close.bind(this)
   }
 
   show = (dimmer) => () => this.setState({ dimmer, open: true })
 
-  close = () => this.setState({ open: false })
+  close() {
+    this.setState({ open: false });
+    // this.getReviews();
+  }
 
   loadMore() {
     this.setState((prev) => {
@@ -82,7 +86,7 @@ class ReviewsModule extends React.Component {
 
         <Modal dimmer={dimmer} open={open} onClose={this.close}>
           <Modal.Content>
-            <AddReview courseID={this.props.courseID} professorHistory={this.props.professorHistory}/>
+            <AddReview modalControllor={this.close} courseID={this.props.courseID} professorHistory={this.props.professorHistory}/>
           </Modal.Content>
         </Modal>
 

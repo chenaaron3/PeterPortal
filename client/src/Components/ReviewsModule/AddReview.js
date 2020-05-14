@@ -134,7 +134,7 @@ class AddReview extends React.Component {
         .then(res => {
           console.log("Review Posted!");
           recaptchaRef.current.reset();
-          this.getReviews();
+          this.props.modalControllor();
         }).catch((err) => {
           console.log(err);
           console.log("No Course Found!")
