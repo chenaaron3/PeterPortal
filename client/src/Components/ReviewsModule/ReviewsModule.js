@@ -21,7 +21,7 @@ class ReviewsModule extends React.Component {
 
   close() {
     this.setState({ open: false });
-    // this.getReviews();
+    this.getReviews();
   }
 
   loadMore() {
