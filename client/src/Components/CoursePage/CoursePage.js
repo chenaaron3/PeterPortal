@@ -129,6 +129,7 @@ class CoursePage extends React.Component {
             <Grid.Row id="course_review" style={{marginTop: "2em"}}>
               <ReviewsModule
                courseID={this.props.match.params.id}
+               professorNames={this.state.professorNames}
                professorHistory={this.state.courseData.professorHistory ? this.state.courseData.professorHistory : []}
                />
             </Grid.Row>

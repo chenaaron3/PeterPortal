@@ -52,7 +52,7 @@ class Review extends React.Component {
               <div className={"reviewer_meta_container"}>
                 <div>
                   <h5>
-                    <b>Taken With:</b> {this.props.reviewData.prof_id}
+                    <b>Taken With:</b> {this.props.professorNames[this.props.reviewData.prof_id]}
                   </h5>
                 </div>
 

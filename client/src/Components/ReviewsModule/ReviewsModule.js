@@ -65,7 +65,7 @@ class ReviewsModule extends React.Component {
           <div>
             {this.state.reviews.slice(0, this.state.visible).map((item, index) => (
               <div key={index}>
-                <Review reviewData={item} getReviews={this.getReviews}/>
+                <Review reviewData={item} professorNames={this.props.professorNames} getReviews={this.getReviews}/>
               </div>
             ))}
 
