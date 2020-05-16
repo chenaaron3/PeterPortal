@@ -1,42 +1,83 @@
 .course_page {
-    margin-top: 100px;
+    margin-top: 60px;
     margin-bottom: 100px;
+    margin: 60px auto;
+    .row {
+        width: 1000px;
+    }
 }
 
-.course_content-container {
-    width: 1000px;
-    margin: auto;
-    
+.feature-label {
+    position: sticky;
+    top: 168px;
+    background-color: white;
+    z-index: 150;
+    padding: 22px 0 0 0;
+}
+
+#course_main-header {
+    padding: 24px 0;
+    width: 100%;
+    background-color: #f5f5f5;
+    position: fixed;
+    margin: 60px 0 0 0;
+    z-index: 200;
     .course_info-container {
+        display: flex;
+        width: 1000px;
+        margin: auto;   
+    }
 
-        #course_id {
-            color: #5E9EC1;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+}
+
+
+.course_information-container {
+    flex-direction: row;
+    display: flex;
+}
+
+.course_info-container {
+
+    #course_id {
+        color: #5E9EC1;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    #course_name {
+        margin-top: 0;
+        margin-left: 16px;
+        font-weight: 400;
+
+    }
+
+    #course_dept-school-unit {
+        color: gray;
+    }
+
+}
+
+
+#course_addl-info {
+    display: flex;
+    flex-direction: column;
+    
+    .course_desc-field-container {
+        margin-bottom: 16px;
+        margin-right: 16px;
+    }
+    
+    #course_desc-container {
+        padding-right: 2rem;
+        min-width: 80% !important;
+    }
+
+    #course_ge-info {
+        width: 75%;
+        color: gray;
+        .course_ge-info-container{
+            margin-bottom: 18px;
         }
-
-        #course_name {
-            margin-top: 0;
-        }
-
-        #course_dept-school-unit {
-            color: gray;
-        }
-
-
-        #course_addl-info {
-            display: flex;
-            
-            #course_desc-container {
-                padding-right: 2rem;
-            }
-
-            #course_ge-info {
-                width: 75%;
-                color: gray;
-            }
-        }
-
     }
 }
 
@@ -64,4 +105,19 @@
 
 i.icon {
     margin-top: -2px;
+}
+
+.course-scrollspy_container {
+    display: flex;
+    border-bottom: 1px solid gray;
+    margin-bottom: 0.8em;
+    li {
+        padding: 0.5em 0 0.8em 0;
+        margin-right: 16px;
+    }
+
+    .is-current {
+        border-bottom: 2px solid black;
+        font-weight: bold;
+    }
 }

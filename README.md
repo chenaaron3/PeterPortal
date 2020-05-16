@@ -1,26 +1,33 @@
-# uci-catalogue-search
-ElasticSearch + Web Scraping implementation for UCI Catalogue search functionality
+<h1>
+  <img src="https://peter-portal.com/static/media/peterportal-banner-logo.5c2d806f.svg" alt="PeterPortal" width="400" />
+</h1>
 
-React server should run on port 3000
-and Express server should run on port 3001
-and Elasticsearch should run on port 9200
+The One-Stop-Shop for course discovery at UC Irvine.
 
-> Remember to start both apps in the client and api folder to begin working. Also remember to run yarn/npm install after each pull.
+## Overview
+PeterPortal is a web application aimed to aid UCI students with course discovery. We consolidate public data available on multiple UCI sources on the application to improve the user experience when planning their course schedule.
 
-**Starting the client:**
-```
-cd client
-yarn start or npm start
-```
+## Features
+- Filtered catalogue/professor search
+- Visual dependency/prerequisite tree
+- Visual grade distribution history
+- Visual schedule of classes
+- Professors rating/review
 
-**Starting the backend:**
-```
-cd api
-yarn start or npm start
-```
+## Development
+<h3>
+  <span>
+  This project is built with
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1280px-React-icon.svg.png" alt="React" height="18" />
+    <img src="https://expressjs.com/images/express-facebook-share.png" alt="Express" height="18"/>
+    <img src="https://cdn.freebiesupply.com/logos/large/2x/elastic-elasticsearch-logo-png-transparent.png" alt="Elasticsearch" height="18"/>
+  </span>
+</h3>
 
-**Starting Elasticsearch:**
-- Reference the README in the client folder.
+After cloning the project repo, run `npm install` on the PeterPortal directory to install all required NodeJS dependencies for both the React client and Express server of the application.
 
-If you don't have nodemon: `npm install -g nodemon
-`
+__To start the development server for the React client__, run `npm run start-server-dev` in the terminal from the PeterPortal directory. The React development server will run and listen for changes on `localhost:3000`.
+
+__To start the development server for the Express API and server__, install [Nodemon](https://nodemon.io/) and then run `npm run start-server-dev` in the terminal from the PeterPortal directory. The Express server will run and listen for changes on `localhost:5000`.
+
+

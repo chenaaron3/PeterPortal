@@ -1,9 +1,9 @@
 import React from "react";
-import Timetable from "../Timetable";
-import ReviewsModule from "../ReviewsModule";
-import PrereqTree from "../PrereqTree";
-import GradeDist from "../GradeDist";
-import { Grid, Icon, Divider, Card, Radio } from "semantic-ui-react";
+// import Timetable from "../Timetable";
+import ReviewsModule from "../ReviewsModule/ReviewsModule.js";
+import CourseInfo from "./CourseInfo.js";
+import PrereqTree from "./PrereqTree.js";
+import { Grid } from "semantic-ui-react";
 import "./CoursePage.scss";
 
 class CoursePage extends React.Component {
@@ -11,108 +11,126 @@ class CoursePage extends React.Component {
     super(props);
 
     this.state = {
-      courseData: null
+      courseData: null,
+      professorNames: {},
+      dependenciesNames: {},
+      prerequisiteNames: {},
+      loaded: false
     };
   }
 
-  getCourseData() {
-    var searchParams = {
-      query: {
-        terms: {
-          _id: [this.props.match.params.id]
-        }
-      }
-    };
+  componentDidMount() {
+    this.getcourseData();
+  }
 
+  getcourseData() {
     var requestHeader = {
-      headers: new Headers({
-        "content-type": "application/json; charset=UTF-8",
-        "content-length": 140
-      }),
-      body: JSON.stringify(searchParams),
-      method: "POST"
+      headers: new Headers({"content-type": "application/json; charset=UTF-8", "content-length": 140}),
+      method: "GET"
     };
 
-    // console.log(process.env.REACT_APP_ELASTIC_ENDPOINT_URL_COURSES)
+    fetch("/api/v1/courses/" + this.props.match.params.id, requestHeader)
+      .then(data => {return data.json();})
+      .then(res => {this.setState({ courseData: res }); this.getProfessorNames();})
+      .catch(e => console.log(e));
+  }
 
-    fetch(
-      "https://search-icssc-om3pkghp24gnjr4ib645vct64q.us-west-2.es.amazonaws.com/courses/_search",
-      requestHeader
-    )
-      .then(data => {
-        return data.json();
-      })
+  getProfessorNames() {
+    var requestHeader = {
+      headers: new Headers({"content-type": "application/json; charset=UTF-8", "content-length": 140}),
+      method: "GET"
+    };
+
+    fetch("/api/v1/professors/all", requestHeader)
+      .then(data => {return data.json();})
       .then(res => {
-        this.setState({ courseData: res.hits.hits[0]._source });
+        let professor_names = {};
+        this.state.courseData.professorHistory.map(i => {
+          professor_names[i] = res.professors[i];
+          return 0;
+        });
+        this.setState({ professorNames: professor_names });
+        this.getCourseNames();
       })
       .catch(e => console.log(e));
   }
 
-  componentDidMount() {
-    this.getCourseData();
+  getCourseNames() {
+    var requestHeader = {
+      headers: new Headers({"content-type": "application/json; charset=UTF-8", "content-length": 140}),
+      method: "GET"
+    };
+
+    fetch("/api/v1/courses/all", requestHeader)
+      .then(data => {return data.json();})
+      .then(res => {
+        let dependencies_names = {};
+        let prerequisite_names = {};
+        this.state.courseData.dependencies.map(i => {
+          dependencies_names[i] = res.courses[i.replace(/\s/g, '')];
+          return 0;
+        });
+        this.state.courseData.prerequisiteList.map(i => {
+          prerequisite_names[i] = res.courses[i.replace(/\s/g, '')];
+          return 0;
+        });
+
+        this.setState({ dependenciesNames: dependencies_names, prerequisiteNames: prerequisite_names, loaded: true });
+      })
+      .catch(e => console.log(e));
   }
 
-  render() {
-    if (this.state.courseData != null) {
-      return (
-        <div
-          className="App"
-          style={{ display: "flex", flexDirection: "column" }}
-        >
-          <div className="course_page">
-            <Grid.Row className="course_content-container">
-              <Grid.Column className="course_info-container">
-                <h1 id="course_id">{this.state.courseData.id}</h1>
-                <h2 id="course_name">{this.state.courseData.name}</h2>
-                <p id="course_dept-school-unit">
-                  {this.state.courseData.department}
-                  <br />
-                  {this.state.courseData.id_school}&nbsp;･&nbsp;
-                  {this.state.courseData.units[0]} units
-                </p>
-                <Divider />
-                <Grid.Row id="course_addl-info">
-                  <Grid.Column id="course_desc-container">
-                    <p>{this.state.courseData.description}</p>
-                    <p>
-                      <b>Restriction: </b>
-                      {this.state.courseData.restriction}
-                    </p>
-                  </Grid.Column>
-                  <Grid.Column id="course_ge-info">
-                      <p style={{marginBottom: "6px"}}><b>GE Criteria</b></p>
 
-                    {this.state.courseData.ge_types.map((value, index) => {
-                      return (
-                        <p className="list-item" key={index}>
-                          {value}
-                        </p>
-                      );
-                    })}
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row className="course_content-container course_prereq-tree-container">
-              <Card>
-                <Card.Content>
-                  <Card.Header>Prerequisite Tree</Card.Header>
-                </Card.Content>
-                <Card.Content>
-                  {this.state.courseData.id && (
-                    <PrereqTree
-                      id={this.state.courseData.id}
-                      dependencies={this.state.courseData.dependencies}
-                      prerequisiteJSON={this.state.courseData.prerequisiteJSON}
-                    />
-                  )}
-                  <br />
-                  <p>
-                    <b>Prerequisite: </b>
-                    {this.state.courseData.prerequisite}
+  render() {
+    if (this.state.courseData) {
+      return (
+        <div className="App" style={{ display: "flex", flexDirection: "column" }}>         
+            <div id="course_main-header">
+              <Grid.Row className="course_info-container">
+                <Grid.Column width={2} style={{display: "flex", marginRight: "2em"}} >
+                  <span style={{display: "flex", fontSize: "46px", margin: "auto"}}><span role="img" aria-label="laptop">💻</span></span>
+                </Grid.Column>
+                <Grid.Column width={10}>
+                  <h1 id="course_id">{this.state.courseData.id}<span id="course_name">{this.state.courseData.name}</span></h1>
+                  <p id="course_dept-school-unit">
+
+                    {this.state.courseData.id_school}&nbsp;･&nbsp;<span>{this.state.courseData.department}
+                    &nbsp;･&nbsp;{this.state.courseData.units[0]} units</span>
                   </p>
-                </Card.Content>
-              </Card>
+                </Grid.Column>
+              </Grid.Row>
+            </div> 
+          
+            
+          <div className="course_page">
+            <Grid.Row id="course_addl-info" style={{marginTop: "10em"}}>
+              <CourseInfo 
+                description={this.state.courseData.description}
+                restriction={this.state.courseData.restriction}
+                repeatability={this.state.courseData.repeatability}
+                overlaps={this.state.courseData.overlaps}
+                concurrent={this.state.courseData.concurrent}
+                geTypes={this.state.courseData.ge_types}
+                professorHistory={this.state.professorNames}
+              />
+            </Grid.Row>
+
+            <Grid.Row id="course_prereq-tree" style={{marginTop: "2em"}}>
+                <PrereqTree
+                  id={this.state.courseData.id}
+                  courseName={this.state.courseData.name}
+                  dependencies={this.state.dependenciesNames}
+                  prerequisite={this.state.prerequisiteNames}
+                  prerequisiteJSON={this.state.courseData.prerequisiteJSON}
+                  prerequisiteString={this.state.courseData.prerequisite}
+                />
+            </Grid.Row>
+
+            <Grid.Row id="course_review" style={{marginTop: "2em"}}>
+              <ReviewsModule
+               courseID={this.props.match.params.id}
+               professorHistory={this.state.courseData.professorHistory ? this.state.courseData.professorHistory : []}
+               />
             </Grid.Row>
             
             <GradeDist />
@@ -132,6 +150,7 @@ class CoursePage extends React.Component {
                 </Card.Content>
               </Card>
             </Grid.Row> */}
+
           </div>
         </div>
       );

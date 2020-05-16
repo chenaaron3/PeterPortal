@@ -1,20 +1,20 @@
 import React from "react";
-import { Table, Dropdown } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import "./timetable.scss";
-import { CourseSection } from "./CourseSection";
+// import { CourseSection } from "./CourseSection";
 
-const friendOptions = [
-  {
-    key: '2020 Winter',
-    text: '2020 Winter',
-    value: '2020 Winter',
-  },
-  {
-    key: '2020 Spring',
-    text: '2020 Spring',
-    value: '2020 Spring',
-  },
-]
+// const friendOptions = [
+//   {
+//     key: '2020 Winter',
+//     text: '2020 Winter',
+//     value: '2020 Winter',
+//   },
+//   {
+//     key: '2020 Spring',
+//     text: '2020 Spring',
+//     value: '2020 Spring',
+//   },
+// ]
 
 class Timeable extends React.Component {
   constructor(props) {

@@ -1,0 +1,173 @@
+@import '../../branding.scss';
+
+
+.review-module-container {
+  width: 1000px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+.vote-container {
+    margin-top: 1.6em;
+    display: flex;
+
+    .vote-counter {
+      margin: 0 4px;
+      transition: color 200ms;
+    }
+
+    .vote-button {
+      font-size: 1.0em !important;
+      transition: color 200ms;
+    }
+
+    .vote-container_up, .vote-container_down{
+      display: flex;
+      background-color: #e0e1e2 ;
+      padding: 0.2em 0.5em;
+      border-radius: 24px;
+      transition: background-color 200ms;
+    }
+
+    .vote-container_down{
+      margin-left: 6px;
+    }
+    
+    .vote-container_up:hover {
+      background-color: $primary-color-1;
+      cursor: pointer;
+      .vote-button, .vote-counter {
+          color: white;
+      }
+    }
+
+    .vote-container_down:hover {
+      display: flex;
+      background-color: #dc5246;
+      cursor: pointer;
+      .vote-button, .vote-counter {
+          color: white;
+      }
+    }
+
+  .report-container {
+    float: right;
+    border: 1px solid rgba(0,0,0,.87);
+    border-radius: 24px;
+    padding: 0.15em 0.5em;
+    font-size: 0.8em;
+    margin-left: auto;
+    background-color: #fff;
+    transition: border-color 200ms;
+  }
+
+  .report-container:hover {
+    cursor: pointer;
+    border-color: #dc5246;
+    color: #dc5246;
+  }
+}
+
+.review_container {
+  margin: 24px 0;
+  display: flex;
+  flex-direction: row;
+  .avatar_container {
+    margin-right: 12px;
+    width: 60px;
+    img {
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+    }
+  }
+
+.rating-container {
+  width: 10%;
+  display: flex;
+  flex-direction: column;
+  .rating {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.8em;
+    .rating-label {
+      font-size: 0.8em;
+      margin: 4px auto;
+      display: flex;
+    }
+    .rating-text-container {
+      background-color: #e0e1e2;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      margin: auto;
+      .rating-text {
+        display: flex;
+        margin: auto;
+      }
+    }
+  }
+
+  #timestamp {
+    margin: 0 auto;
+    color: grey;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 0.8em;
+}
+
+}
+
+  .content_container {
+    margin-left: 12px;
+    width: 80%;
+
+    .review_header_container {
+      display: flex;
+      flex-direction: row;
+      .review_header_info_container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        #reviewer_name {
+          margin: 0;
+          display: inline;
+        }
+
+        .reviewer_meta_container {
+          display: flex;
+          margin-top: 6px;
+
+
+          div {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+          }
+        }
+      }
+      .review_rating_container {
+        width: 10%;
+      }
+    }
+
+    .review_body_container {
+      min-height: 90px;
+      margin-top: 12px;
+    }
+  }
+}
+
+.ui.dropdown>.dropdown.icon {
+    margin: -.78571429em !important;
+}
+
+
+.review_feature-label{
+  display: flex;
+  flex-direction: row;
+  .add_review-button{
+    margin-left: auto;
+  }
+}
