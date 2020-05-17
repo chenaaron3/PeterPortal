@@ -11,6 +11,7 @@ from requirementNode import Node, nodify, CONFLICT_PREREQ_NAME
 from alias import ALIASES
 from progressBar import ProgressBar
 import professorScraper
+import prerequisiteScraper
 
 # DO NOT CHANGE
 # Automatically determines the path based on your operating system
@@ -203,6 +204,8 @@ def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
                     "prerequisiteJSON":"", "prerequisiteList":[], "prerequisite":"", "dependencies":[],"repeatability":"","grading option":"",
                     "concurrent":"","same as":"","restriction":"","overlaps":"","corequisite":"","ge_types":[],"ge_string":"", "terms":[]}
 
+            # key with no spaces
+            courseID = courseID.replace(" ", "")
             # stores dictionaries in json_data to add dependencies later 
             json_data[courseID] = {"metadata":metadata,
                                         "data":dic}
@@ -337,6 +340,22 @@ def parsePrerequisite(tag, dic:dict):
         if debug: print("\t\tNOREQS")
 
 # json_data: collection of class information generated from getAllCourses
+# sets the prerequisite info based on the prerequisite database instead of the catalogue
+def setReliablePrerequisites(json_data:dict):
+    print("\nSetting Reliable Prerequisites...")
+    prerequisite_data = json.load(open(prerequisiteScraper.PREREQUISITE_DATA_NAME, "r"))
+    bar = ProgressBar(len(prerequisite_data), debug)
+    # go through each prerequisite course
+    for courseID in prerequisite_data:
+        # if course exists in catalogue
+        if courseID in json_data:
+            # rewrite the prerequisite data
+            json_data[courseID]["data"]["prerequisiteJSON"] = prerequisite_data[courseID]["prerequisiteJSON"]
+            json_data[courseID]["data"]["prerequisiteList"] = prerequisite_data[courseID]["prerequisiteList"]
+            json_data[courseID]["data"]["prerequisite"] = prerequisite_data[courseID]["fullReqs"]
+        bar.inc()
+
+# json_data: collection of class information generated from getAllCourses
 # sets the dependencies for courses
 def setDependencies(json_data:dict):
     print("\nSetting Course Dependencies...")
@@ -345,9 +364,11 @@ def setDependencies(json_data:dict):
     for courseID in json_data:
         # iterate prerequisiteList
         for prerequisite in json_data[courseID]["data"]["prerequisiteList"]:
+            prerequisite = prerequisite.replace(" ", "")
             # prereq needs to exist as a class
             if prerequisite in json_data:
-                json_data[prerequisite]["data"]["dependencies"].append(courseID)
+                readableCourseID = json_data[courseID]["data"]["id"]
+                json_data[prerequisite]["data"]["dependencies"].append(readableCourseID)
         bar.inc()
 
 # json_data: collection of class information generated from getAllCourses
@@ -361,6 +382,7 @@ def setProfessorHistory(json_data:dict):
     for professor in professor_data.values():
         # go through each course that professor has taught
         for courseID in professor["courseHistory"]:
+            courseID = courseID.replace(" ", "")
             # course needs to exist as a class
             if courseID in json_data:
                 json_data[courseID]["data"]["professorHistory"].append(professor["ucinetid"])
@@ -408,19 +430,20 @@ if __name__ == "__main__":
     options = Options()
     options.headless = True
     driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
+
     # store all of the data
     json_data = {} if not cache else json.load(open(COURSES_DATA_NAME, "r"))
-    # maps department code to school 
-    departmentToSchoolMapping = getDepartmentToSchoolMapping(driver)
-    # debugging information
-    specialRequirements = set()
-    noSchoolDepartment = set()
-    conflictFile = open(CONFLICT_PREREQ_NAME, "w")
-    conflictFile.write("Following courses have conflicting AND/OR logic in their prerequisites\n")
-    conflictFile.close()
-
     # scrape data if not using cache option
     if not cache:
+        # maps department code to school 
+        departmentToSchoolMapping = getDepartmentToSchoolMapping(driver) if not cache else {}
+        # debugging information
+        specialRequirements = set()
+        noSchoolDepartment = set()
+        conflictFile = open(CONFLICT_PREREQ_NAME, "w")
+        conflictFile.write("Following courses have conflicting AND/OR logic in their prerequisites\n")
+        conflictFile.close()
+
         # get urls to scrape
         allCourseURLS = getAllCourseURLS(driver)
         print("\nParsing Each Course URL...")
@@ -430,6 +453,9 @@ if __name__ == "__main__":
             getAllCourses(scrape(driver, classURL), json_data, departmentToSchoolMapping)
             bar.inc()
         json.dump(json_data, open(COURSES_DATA_NAME, "w"))
+
+    # set reliable prerequisites
+    setReliablePrerequisites(json_data)
     # set dependencies between each course
     setDependencies(json_data)
     # set professor history
@@ -437,23 +463,24 @@ if __name__ == "__main__":
     # write data to index into elasticSearch
     writeJsonData(json_data)
 
-    # Debug information about school
-    schoolFile = open(SCHOOL_LIST_NAME, "w")
-    schoolFile.write("List of Schools:\n")
-    for school in sorted(list(set(departmentToSchoolMapping.values()))):
-        schoolFile.write(school + "\n")
-    schoolFile.close()
-    if len(noSchoolDepartment) == 0:
-        print("SUCCESS! ALL DEPARTMENTS HAVE A SCHOOL!")
-    else:
-        print("FAILED!", noSchoolDepartment, "DO NOT HAVE A SCHOOL!! MUST HARD CODE IT AT getDepartmentToSchoolMapping")
+    if not cache:
+        # Debug information about school
+        schoolFile = open(SCHOOL_LIST_NAME, "w")
+        schoolFile.write("List of Schools:\n")
+        for school in sorted(list(set(departmentToSchoolMapping.values()))):
+            schoolFile.write(school + "\n")
+        schoolFile.close()
+        if len(noSchoolDepartment) == 0:
+            print("SUCCESS! ALL DEPARTMENTS HAVE A SCHOOL!")
+        else:
+            print("FAILED!", noSchoolDepartment, "DO NOT HAVE A SCHOOL!! MUST HARD CODE IT AT getDepartmentToSchoolMapping")
 
-    # Debug information about special requirements
-    specialFile = open(SPECIAL_REQS_NAME, "w")
-    specialFile.write("Special Requirements:\n")
-    for sReq in sorted(specialRequirements):
-        specialFile.write(sReq+"\n")
-    specialFile.close()
+        # Debug information about special requirements
+        specialFile = open(SPECIAL_REQS_NAME, "w")
+        specialFile.write("Special Requirements:\n")
+        for sReq in sorted(specialRequirements):
+            specialFile.write(sReq+"\n")
+        specialFile.close()
 
     # testRequirements("I&C SCI 33", [""], False)
     # testRequirements("I&C SCI 33", ["I&C SCI 32A"], True)
