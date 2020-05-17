@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+var path = require('path');
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
@@ -33,7 +34,11 @@ const options = {
             }
         ]
     },
-    apis: ["./api/v1/schemas.yaml", "./api/v1/parameters.yaml", "./api/v1/courses.js", "./api/v1/professors.js", "./api/v1/schedule.js"]
+    apis: [path.join(__dirname, "schemas.yaml"), 
+           path.join(__dirname, "parameters.yaml"), 
+           path.join(__dirname, "courses.js"), 
+           path.join(__dirname, "professors.js"), 
+           path.join(__dirname, "schedule.js")]
 };
 const specs = swaggerJsdoc(options);
 router.use("/", swaggerUi.serve);
