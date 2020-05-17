@@ -79,6 +79,8 @@ def scrapePrerequisitePage(department, prerequisite_data):
                 reduced = reduceCNFNode(cnfNode)
                 if reduced:
                     print(courseID)
+                    print(cnfNode.prettyPrint())
+                    prerequisite_data[courseID]["courseReqs"] = cnfNode.prettyPrint()
             # assign prerequisiteJSON
             prerequisite_data[courseID]["prerequisiteJSON"] = str(cnfNode)
         else:
@@ -116,8 +118,8 @@ def trimPrerequisite(raw):
     raw = raw.replace("\n", " ")
     # get the minterms
     minterms = raw.split(" AND ")
-    trimTag(minterms)
-    trimDuplicates(minterms)
+    minterms = trimTag(minterms)
+    minterms = trimDuplicates(minterms)
     courseMinterms, specialMinterms = trimSpecialCourse(minterms)
     return {"courseMinterms": courseMinterms, "specialMinterms": specialMinterms, 
         "courseReqs": " AND ".join(courseMinterms), "fullReqs": " AND ".join(courseMinterms + specialMinterms)}
@@ -139,6 +141,7 @@ def trimTag(minterms):
         minterm = re.sub(innerParenthesesRegex, "", minterm)
         # assign new minterm
         minterms[i] = minterm
+    return minterms
 
 # removes the duplicates in each minterm then sorts it
 # Original: ( STATS 67 OR STATS 67 OR STATS 7 OR STATS 7 OR AP STATISTICS )
@@ -151,6 +154,7 @@ def trimDuplicates(minterms):
         courseSet = set([ course for course in minterm.split(" OR ") ])
         # sort and join the courses
         minterms[i] = "( " + " OR ".join(sorted(courseSet, key = lambda x : (len(x), x))) + " )"
+    return list(set(minterms))
 
 # classifies course and special minterms
 def trimSpecialCourse(minterms):

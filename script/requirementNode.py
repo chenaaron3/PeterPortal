@@ -19,6 +19,14 @@ class Node:
                 lonelyChild = self.values[0]
                 self.type = lonelyChild.type
                 self.values = lonelyChild.values
+            else:
+                newValues = []
+                for node in self.values:
+                    if self.type == node.type:
+                        newValues += node.values
+                    else:
+                        newValues.append(node)
+                self.values = newValues
 
     # classHistory: list of classes taken
     # return whether or not this requirement is met
@@ -56,6 +64,35 @@ class Node:
                 if value in node:
                     return True
             return False
+    
+    def prettyPrint(self):
+        # if origin only has 1 value
+        if self.type == "?":
+            return str(self.values[0])
+        # if is value node
+        elif self.type == "#":
+            return str(self.values[0])
+        # if is and node
+        elif self.type == "&":
+            # print within ()
+            res = '( '
+            for i in range(len(self.values)):
+                res += " AND " if i != 0 else ""
+                res += self.values[i].prettyPrint()
+            res += " )"
+            return res
+        # if is or node    
+        elif self.type == "|":
+            # print within ()
+            res = '( '
+            for i in range(len(self.values)):
+                res += " OR " if i != 0 else ""
+                res += self.values[i].prettyPrint()
+            res += " )"
+            return res
+        # should never reach here
+        else:
+            print("Node:__str__::Invalid Node Type", self.type)  
 
     # and nodes are surrounded with []
     # or nodes are surrounded with {}
