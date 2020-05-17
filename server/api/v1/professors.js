@@ -16,7 +16,7 @@ const PROFESSOR_INDEX = "professors";
 /**
  * @swagger
  * path:
- *  /professors/getProfessors:
+ *  /professors/all:
  *    get:
  *      summary: Get all professors
  *      tags: [Professors]
@@ -39,7 +39,7 @@ const PROFESSOR_INDEX = "professors";
  *                        description: Professor Name from the Directory.
  *                        example: Alexander W Thornton
  */
-router.get("/getProfessors", cacheMiddleware, function (req, res, next) {
+router.get("/all", cacheMiddleware, function (req, res, next) {
     getAllProfessors(function (err, data) {
         if (err)
             res.status(400).send(err.toString());

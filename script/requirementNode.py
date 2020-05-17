@@ -6,7 +6,20 @@ class Node:
         self.values = vals if vals != None else list()
         # can be ?|&,|,#
         self.type = type
-    
+        # if &| nodes only have 1 value, set them to their child
+
+    def collapse(self):
+        if self.type == "#" or self.type == "?":
+            return False
+        elif self.type == "|" or self.type == "&":
+            collasped = False
+            for node in self.values:
+                node.collapse()
+            if len(self.values) == 1:
+                lonelyChild = self.values[0]
+                self.type = lonelyChild.type
+                self.values = lonelyChild.values
+
     # classHistory: list of classes taken
     # return whether or not this requirement is met
     def prereqsMet(self, classHistory : list):
@@ -33,7 +46,17 @@ class Node:
         # should never reach here       
         else:
             print("prereqsMet::Invalid Node Type", self.type)   
-    
+
+    # see if a value is contained in any # node
+    def __contains__(self, value):
+        if self.type == "#" or self.type == "?":
+            return self.values[0] == value
+        elif self.type == "|" or self.type == "&":
+            for node in self.values:
+                if value in node:
+                    return True
+            return False
+
     # and nodes are surrounded with []
     # or nodes are surrounded with {}
     # Example: 1 and 2 and (3 or (4 and 5)) and 6 -> [1,2,{3,[4,5]},6]
@@ -81,9 +104,15 @@ def nodify(tokens, lookup, courseNumber):
         # adds the sub requirement
         elif token == ")":
             subNode = stack.pop(0)
+            # if node type is ?, it tried to be an &| node, but only had 1 value
+            if subNode.type == "?":
+                # convert the node into a # type 
+                subNode.type = "#"
+                # take out the nested # node
+                subNode.values = subNode.values[0].values
             stack[0].values.append(subNode)
         # sets the type to &
-        elif token == "and":
+        elif token.lower() == "and":
             # if has conflicting logic (eg. A or B and C)
             if stack[0].type == "|":
                 f = open(CONFLICT_PREREQ_NAME, "a")
@@ -95,7 +124,7 @@ def nodify(tokens, lookup, courseNumber):
                 stack[0].values = [subNode]
             stack[0].type = "&"
         # sets the type to |
-        elif token == "or":
+        elif token.lower() == "or":
             # if has conflicting logic (eg. A and B or C)
             if stack[0].type == "&":
                 f = open(CONFLICT_PREREQ_NAME, "a")

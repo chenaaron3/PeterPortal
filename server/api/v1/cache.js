@@ -4,6 +4,7 @@ var flatCache = require('flat-cache');
 
 let CACHE_DIRECTORY = path.join(__dirname, 'cache');
 
+// returns if directory existed before
 function checkDirectoryExists(){
     if(!fs.existsSync(CACHE_DIRECTORY)){
         fs.mkdirSync(CACHE_DIRECTORY);
@@ -30,11 +31,11 @@ function checkDocExists(docID){
 }
 
 // each route has its own doc (Example: "/api/v1/courses" has its own doc)
-// each endpoint is the key (Example: "getCourses" is a key)
+// each endpoint is the key (Example: "all" is a key)
 let cacheMiddleware = (req, res, next) => {
     // Example: "apiv1courses"
     let docID = req.baseUrl.replace(/\//g, "");
-    // Example: "getCourses"
+    // Example: "all"
     let key = req.path;
     checkDocExists(docID);
     // create the cache given the doc
@@ -88,6 +89,7 @@ let setKey = (key, value) => {
     cache.save(true);
 }
 
+// uses statistic cache
 let hit = () => {
     console.log("CACHE HIT!");
     let docID = "statistics"; 
@@ -99,6 +101,7 @@ let hit = () => {
     cache.save(true);
 }
 
+// uses statistic cache
 let miss = () => {
     console.log("CACHE MISS!");
     let docID = "statistics"; 
@@ -110,6 +113,7 @@ let miss = () => {
     cache.save(true);
 }
 
+// returns data from statistics cache
 let statistics = () => {
     let docID = "statistics"; 
     checkDocExists(docID);
@@ -118,6 +122,7 @@ let statistics = () => {
     return {hits:cache.getKey("hits"),misses:cache.getKey("misses")}
 }
 
+// clear cache doc
 let clearCacheByID = (docID) => {
     checkDirectoryExists();
     let docPath = path.join(CACHE_DIRECTORY, docID);
@@ -131,6 +136,7 @@ let clearCacheByID = (docID) => {
     }
 }
 
+// clear all docs
 let clearCacheAll = () => {
     if(!checkDirectoryExists()){
         return `Cache already cleared!`;
