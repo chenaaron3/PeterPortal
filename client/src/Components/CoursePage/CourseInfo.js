@@ -3,12 +3,11 @@ import "./CoursePage.scss";
 import { Grid, Divider } from "semantic-ui-react";
 
 class CourseInfo extends React.Component {
-
   render() {
     return (
       <div>
         <Grid.Row className="feature-label">
-          <h2>📘 Course Information</h2>
+          <h2><span role="img" aria-label="book">📘</span> Course Information</h2>
           <Divider />
         </Grid.Row>
         
@@ -55,13 +54,13 @@ class CourseInfo extends React.Component {
 
           <Grid.Column width={2} id="course_ge-info">
             <div className="course_ge-info-container">
-              {this.props.ge_types.length > 0 && (
+              {this.props.geTypes.length > 0 && (
                 <p style={{ marginBottom: "6px" }}>
                   <b>GE Criteria</b>
                 </p>
               )}
 
-              {this.props.ge_types.map((value, index) => {
+              {this.props.geTypes.map((value, index) => {
                 return (
                   <p className="list-item" key={index}>
                     {value}

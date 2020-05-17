@@ -6,7 +6,7 @@ var version1Router = require('./v1/v1');
 var version2Router = require('./v2/v2');
 
 router.get('/', function(req, res) {
-    res.send("Available Versions: v1");
+    res.redirect('/api/v1');
 });
 
 router.use("/v1", version1Router);

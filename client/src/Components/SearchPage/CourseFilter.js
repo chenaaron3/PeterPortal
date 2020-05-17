@@ -1,7 +1,7 @@
 import React from "react";
-import { Accordion, Menu} from "semantic-ui-react";
+import { Accordion, Menu } from "semantic-ui-react";
 import "./Filter.scss";
-import { RefinementListFilter, SelectedFilters, TermQuery, CheckboxFilter } from "searchkit";
+import { RefinementListFilter, Select, TermQuery, CheckboxFilter, MenuFilter } from "searchkit";
 
 const GEForm = (
   <div>
@@ -23,31 +23,6 @@ const CourseLevelForm = (
     <CheckboxFilter title="course-level-lower" id="course-level-lower" label="Lower Division (1-99)" filter={TermQuery("course_level.keyword", "Lower Division (1-99)")} />
     <CheckboxFilter title="course-level-upper" id="course-level-upper" label="Upper Division (100-199)" filter={TermQuery("course_level.keyword", "Upper Division (100-199)")} />
     <CheckboxFilter title="course-level-grad" id="course-level-grad" label="Graduate/Professional Only (200+)" filter={TermQuery("course_level.keyword", "Graduate/Professional Only (200+)")} />
-  </div>
-)
-
-const ATermForm = (
-  <div>
-  <CheckboxFilter title="2020 Fall" id="2020 Fall" label="2020 Fall" filter={TermQuery("terms.keyword", "2020 Fall")} />
-  <CheckboxFilter title="2020 Spring" id="2020 Spring" label="2020 Spring" filter={TermQuery("terms.keyword", "2020 Spring")} />
-</div>
-)
-
-let generateTermForm = (terms) => {
-  let items = terms.map(term => <CheckboxFilter title={term} id={term} label={term} filter={TermQuery("terms.keyword", {term})}/>);
-  let test = React.createElement("div", {}, ...items);
-  console.log("TEST:",test);
-  return (
-  <div>
-    <CheckboxFilter title="2020 Fall" id="2020 Fall" label="2020 Fall" filter={TermQuery("terms.keyword", "2020 Fall")} />
-    {items}
-  </div>);
-}
-
-const SelectedFilter = (props) => (
-  <div className={"sk-selected-filters-option sk-selected-filters__item"}>
-    <div className={props.bemBlocks.option("name")}>{props.labelValue}</div>
-    <div className={props.bemBlocks.option("remove-action")} onClick={props.removeFilter}>x</div>
   </div>
 )
 
@@ -81,66 +56,60 @@ class CourseFilter extends React.Component {
   }
 
   render() {
-    const { activeIndex } = this.state
-
-    let TermForm = generateTermForm(this.state.terms);
+    const { activeIndex } = this.state;
 
     return (
       <div className="filter-list-container">
-
         <h4>Search Filter</h4>
-        <SelectedFilters itemComponent={SelectedFilter} />
-
         <div style={{ overflowY: "auto" }}>
-          <Accordion vertical>
-            <Menu.Item>
-              <Accordion.Title
-                active={activeIndex === 0}
-                content='General Education'
+          <Accordion>
+          <Menu.Item>
+              <Accordion.Title active={activeIndex === 0}
+                content='Term Offered'
                 index={0}
                 onClick={this.handleClick}
               />
-              <Accordion.Content active={activeIndex === 0} content={GEForm} />
+              <Accordion.Content active={activeIndex === 0} content={<MenuFilter field="terms.keyword" id="terms" listComponent={Select}/>} />
             </Menu.Item>
 
             <Menu.Item>
               <Accordion.Title
                 active={activeIndex === 1}
-                content='Course Level'
+                content='General Education'
                 index={1}
                 onClick={this.handleClick}
               />
-              <Accordion.Content active={activeIndex === 1} content={CourseLevelForm} />
+              <Accordion.Content active={activeIndex === 1} content={GEForm} />
             </Menu.Item>
 
             <Menu.Item>
               <Accordion.Title
                 active={activeIndex === 2}
-                content='School'
+                content='Course Level'
                 index={2}
                 onClick={this.handleClick}
               />
-              <Accordion.Content active={activeIndex === 2} content={<RefinementListFilter id="school" field="id_school.keyword" operator="OR" />} />
+              <Accordion.Content active={activeIndex === 2} content={CourseLevelForm} />
             </Menu.Item>
 
             <Menu.Item>
               <Accordion.Title
                 active={activeIndex === 3}
-                content='Department'
+                content='School'
                 index={3}
                 onClick={this.handleClick}
               />
-              <Accordion.Content active={activeIndex === 3} content={<RefinementListFilter id="depts" field="id_department.keyword" operator="OR" size={200} />} />
+              <Accordion.Content active={activeIndex === 3} content={<RefinementListFilter id="school" field="id_school.keyword" operator="OR" title="" />} />
             </Menu.Item>
 
             <Menu.Item>
               <Accordion.Title
                 active={activeIndex === 4}
-                content='Term Offered'
+                content='Department'
                 index={4}
                 onClick={this.handleClick}
               />
-              <Accordion.Content active={activeIndex === 4} content={<RefinementListFilter id="terms" field="terms.keyword" operator="AND" orderKey="_term" orderDirection="desc" />} />
+              <Accordion.Content active={activeIndex === 4} content={<RefinementListFilter id="depts" field="id_department.keyword" operator="OR" size={200} title="" />} />
             </Menu.Item>
           </Accordion>
         </div>
