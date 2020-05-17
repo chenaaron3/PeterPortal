@@ -1,5 +1,4 @@
 import unicodedata
-import requests
 import re
 from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
@@ -24,8 +23,9 @@ URL_TO_ALL_COURSES = CATALOGUE_BASE_URL + "/allcourses/"
 # output file names
 GENERATE_JSON_NAME = "resources/all_courses.json"
 DEPT_SCHOOL_MAP_NAME = "resources/dept_school_map.json"
+COURSES_DATA_NAME = "resources/course_data.json"
 SPECIAL_REQS_NAME = "output/special_reqs.txt"
-SCHOOL_LIST_NAME = "output/school_list.txt" 
+SCHOOL_LIST_NAME = "output/school_list.txt"
 
 # references
 GE_DICTIONARY = {"Ia":"GE Ia: Lower Division Writing",
@@ -205,8 +205,7 @@ def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
 
             # stores dictionaries in json_data to add dependencies later 
             json_data[courseID] = {"metadata":metadata,
-                                        "data":dic,
-                                        "node":None}
+                                        "data":dic}
             
             # populates the dic with simple information
             parseCourseBody(courseBody, dic)
@@ -215,7 +214,7 @@ def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
             if len(courseBody) > 1:
                 node = parsePrerequisite(courseBody[1], dic)
                 # maps the course to its requirement Node
-                json_data[courseID]["node"] = node
+                # json_data[courseID]["node"] = node
             # doesn't have any prerequisites
             else:
                 if debug: print("\t\tNOREQS")
@@ -403,12 +402,14 @@ def testRequirements(targetClass, takenClasses, expectedValue):
 if __name__ == "__main__":
     # whether to print out info
     debug = False
+    # whether to use cached data instead of rescraping (for faster development/testing)
+    cache = True
     # the Selenium Chrome driver
     options = Options()
     options.headless = True
     driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
     # store all of the data
-    json_data = {}
+    json_data = {} if not cache else json.load(open(COURSES_DATA_NAME, "r"))
     # maps department code to school 
     departmentToSchoolMapping = getDepartmentToSchoolMapping(driver)
     # debugging information
@@ -418,15 +419,22 @@ if __name__ == "__main__":
     conflictFile.write("Following courses have conflicting AND/OR logic in their prerequisites\n")
     conflictFile.close()
 
-    allCourseURLS = getAllCourseURLS(driver)
-    print("\nParsing Each Course URL...")
-    bar = ProgressBar(len(allCourseURLS), debug)
-    # SCRAPE ALL CLASSES
-    for classURL in allCourseURLS:
-        getAllCourses(scrape(driver, classURL), json_data, departmentToSchoolMapping)
-        bar.inc()
+    # scrape data if not using cache option
+    if not cache:
+        # get urls to scrape
+        allCourseURLS = getAllCourseURLS(driver)
+        print("\nParsing Each Course URL...")
+        bar = ProgressBar(len(allCourseURLS), debug)
+        # populate json_data
+        for classURL in allCourseURLS:
+            getAllCourses(scrape(driver, classURL), json_data, departmentToSchoolMapping)
+            bar.inc()
+        json.dump(json_data, open(COURSES_DATA_NAME, "w"))
+    # set dependencies between each course
     setDependencies(json_data)
+    # set professor history
     setProfessorHistory(json_data)
+    # write data to index into elasticSearch
     writeJsonData(json_data)
 
     # Debug information about school
