@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import "./SearchPage.scss";
 import CourseFilter from "./CourseFilter.js";
 import ProfessorFilter from "./ProfessorFilter.js";
@@ -11,7 +10,7 @@ import {
     SearchkitComponent,
     Hits, HitsStats,
     InitialLoader, SearchBox,
-    SearchkitManager, SearchkitProvider
+    SearchkitManager, SearchkitProvider, SelectedFilters
 } from "searchkit";
 
 const InitialLoaderComponent = props => <div>Fetching course data...</div>;
@@ -21,6 +20,13 @@ const customHitStats = props => (
         <p style={{ textAlign: "right", fontSize: "8pt" }}>{props.hitsCount.value} results found in {props.timeTaken}ms</p>
     </div>
 )
+
+const SelectedFilter = (props) => (
+    <div className={"sk-selected-filters-option sk-selected-filters__item"}>
+      <div className={props.bemBlocks.option("name")}>{props.labelValue}</div>
+      <div className={props.bemBlocks.option("remove-action")} onClick={props.removeFilter}>x</div>
+    </div>
+  )
 
 class SearchPage extends SearchkitComponent {
 
@@ -79,8 +85,8 @@ class SearchPage extends SearchkitComponent {
                                 </a>
                             </Menu>
 
-                            {this.props.match.params.index == "courses" && <CourseFilter />}
-                            {this.props.match.params.index == "professors" && <ProfessorFilter />}
+                            {this.props.match.params.index === "courses" && <CourseFilter />}
+                            {this.props.match.params.index === "professors" && <ProfessorFilter />}
 
                         </div>
 
@@ -94,7 +100,7 @@ class SearchPage extends SearchkitComponent {
                                         searchOnChange={true}
                                         queryFields={this.queryFieldValues[this.props.match.params.index]}
                                         searchThrottleTime={300}
-                                        placeholder={this.props.match.params.index == "courses" ? "Course number, title and description" : "Professor name, title, and department"}
+                                        placeholder={this.props.match.params.index === "courses" ? "Course number, title and description" : "Professor name, title, and department"}
                                     />
                                 </div>
 
@@ -104,9 +110,10 @@ class SearchPage extends SearchkitComponent {
                             </div>
 
 
-                            <div style={{ minHeight: "100vh" }}>
+                            <div style={{ minHeight: "100vh", paddingTop: "80px", marginLeft: "34px" }}>
+                            <SelectedFilters itemComponent={SelectedFilter} />
                                 <Hits
-                                    itemComponent={this.props.match.params.index == "courses" ? CourseHitItem : ProfessorHitItem}
+                                    itemComponent={this.props.match.params.index === "courses" ? CourseHitItem : ProfessorHitItem}
                                     hitsPerPage={20}
                                     highlightFields={this.highlightFieldValues[this.props.match.params.index]}
                                     customHighlight={{
@@ -120,7 +127,7 @@ class SearchPage extends SearchkitComponent {
 
                             <Pagination showNumbers={true} />
 
-                            <footer class="footer">
+                            <footer className="footer">
                                 <div>
                                     <a href="https://github.com/icssc-projects">Github</a>
                                     <a href="/">API</a>
@@ -128,7 +135,7 @@ class SearchPage extends SearchkitComponent {
                                     <a href="/">Team</a>
                                     <a href="/">FAQ</a>
                                 </div>
-                                <div class="copyright">
+                                <div className="copyright">
                                     <p>Made with ♥ by <a href="https://studentcouncil.ics.uci.edu/">ICSSC Project Committee</a></p>
                                 </div>
                             </footer>
