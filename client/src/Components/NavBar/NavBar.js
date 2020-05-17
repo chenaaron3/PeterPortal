@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icon } from "semantic-ui-react";
+import { Icon, Popup, Grid, Label, Header } from "semantic-ui-react";
 // import {useCookies} from 'react-cookie';
 
 import { ReactComponent as CogIcon } from "../../Assets/cog.svg";
@@ -47,7 +47,7 @@ class NavBar extends React.Component {
                 <img alt="PeterPortal" id="peterportal-logo" src={Logo}></img>
               </a>
             </div>
-            <div>
+            <div style={{display: "flex"}}>
               <div className={"school-term_container"}>
                 <p className={"school-term"} style={{ marginBottom: "-1px" }}>
                   {this.state.week}
@@ -56,7 +56,25 @@ class NavBar extends React.Component {
             </div>
           </div>
 
-
+          <div style={{margin: "auto 12px"}}>
+          <Popup style={{padding: "36px", width: "400px"}} position='bottom right' trigger={<Label as='a' color='yellow' image>alpha<Label.Detail>v1</Label.Detail></Label>} flowing  hoverable >
+              <Grid centered columns={1}>
+                <Grid.Column textAlign='left'>
+                  <Header as='h4'>Alpha Disclaimer</Header>
+                  <p>
+                  Please note that this is an alpha version of PeterPortal, which is still undergoing development. 
+                  Some content on this web application may not be accurate. Users are encouraged to double check details.
+                  <br/>
+                  <br/> 
+                  Should you encounter any bugs, glitches, lack of functionality or other problems on the application, 
+                  please let us know immediately so we can rectify these accordingly. Your help in this regard is greatly appreciated.
+                  </p>
+                  <a class="ui button" href="https://github.com/icssc-projects/PeterPortal/issues/new"><Icon name='github'/>Report an issue</a>
+                </Grid.Column>
+          
+                </Grid>
+              </Popup>
+              </div>
           <NavItem userPicture={this.state.picture} icon={<Icon name="user outline" />}>
             <DropdownMenu name={this.state.name} picture={this.state.picture}/>
           </NavItem>

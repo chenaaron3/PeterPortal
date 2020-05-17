@@ -3,11 +3,15 @@
 
 # Basic Workflow:
 A. Generate Professor JSON -> Generate Course JSON  
-    - Note: Must generate Professor JSON before Course JSON. Course scraper needs professor teaching history data.
+    - Note: Must generate Professor and Prerequisite JSON before Course JSON. Course scraper needs prerequisite and professor teaching history data.
 B. Deploy the Professor/Course JSON Data to ElasticSearch
 
 ## Deployment Commands:
-1. Complete Reset: 'python professorScraper.py && python courseScraper.py && python deleteelasticcloud.py professors && python deleteelasticcloud.py courses && deployelasticcloud.py professors && deployelasticcloud.py courses'
+1. Complete Reset: 'python prerequisiteScraper.py && python professorScraper.py && python courseScraper.py && python deleteelasticcloud.py professors && python deleteelasticcloud.py courses && deployelasticcloud.py professors && deployelasticcloud.py courses'
+
+## Generate Prerequisite JSON:
+1. cd into script
+2. Run 'python prerequisiteScraper.py'
 
 ## Generate Professor JSON:
 1. cd into script
