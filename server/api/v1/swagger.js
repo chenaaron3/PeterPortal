@@ -38,7 +38,8 @@ const options = {
            path.join(__dirname, "parameters.yaml"), 
            path.join(__dirname, "courses.js"), 
            path.join(__dirname, "professors.js"), 
-           path.join(__dirname, "schedule.js")]
+           path.join(__dirname, "schedule.js"),
+           path.join(__dirname, "gradeDistribution.js")]
 };
 const specs = swaggerJsdoc(options);
 router.use("/", swaggerUi.serve);

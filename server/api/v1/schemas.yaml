@@ -139,3 +139,68 @@ components:
       minimum: 0
       maximum: 5
       example: 2.2
+    GradeDetails:
+      type: object
+      properties:
+        AcadTerm: 
+          type: string
+          example: "Spring 2016"
+        courseCode:
+          type: number
+          example: 36640
+        sectionNum:
+          type: string
+          example: "A"
+        instructor:
+          type: string
+          example: "THORNTON A."
+        classType:
+          type: string
+          example: "LEC"
+        GradeACount:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 67
+        GradeBCount:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 86
+        GradeCCount:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 50
+        GradeDCount:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 29
+        GradeFCount:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 16
+        GradePCount:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 1
+        GradeNPCount:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 2
+        GradeWCount:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 4
+        GradeGPACount:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 3
+        
+          
