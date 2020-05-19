@@ -352,7 +352,7 @@ def setReliablePrerequisites(json_data:dict):
             # rewrite the prerequisite data
             json_data[courseID]["data"]["prerequisiteJSON"] = prerequisite_data[courseID]["prerequisiteJSON"]
             json_data[courseID]["data"]["prerequisiteList"] = prerequisite_data[courseID]["prerequisiteList"]
-            json_data[courseID]["data"]["prerequisite"] = prerequisite_data[courseID]["courseReqs"]
+            json_data[courseID]["data"]["prerequisite"] = prerequisite_data[courseID]["fullReqs"]
         bar.inc()
 
 # json_data: collection of class information generated from getAllCourses

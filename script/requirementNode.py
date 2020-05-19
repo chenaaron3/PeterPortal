@@ -65,10 +65,21 @@ class Node:
                     return True
             return False
     
+    # type # go first, type &| go later
+    def sortKey(self):
+        if self.type == "?":
+            return (-1, -1)
+        elif self.type == "#":
+            return (0, len(self.values[0]), self.values[0])
+        elif self.type == "&":
+            return (1, len(self.values))
+        elif self.type == "|":
+            return (2, len(self.values))
+
     def prettyPrint(self):
         # if origin only has 1 value
         if self.type == "?":
-            return str(self.values[0])
+            return self.values[0].prettyPrint()
         # if is value node
         elif self.type == "#":
             return str(self.values[0])
@@ -76,18 +87,22 @@ class Node:
         elif self.type == "&":
             # print within ()
             res = '( '
-            for i in range(len(self.values)):
-                res += " AND " if i != 0 else ""
-                res += self.values[i].prettyPrint()
+            count = 0
+            for val in sorted(self.values, key = (lambda x: x.sortKey())):
+                res += " AND " if count != 0 else ""
+                res += val.prettyPrint()
+                count += 1
             res += " )"
             return res
         # if is or node    
         elif self.type == "|":
             # print within ()
             res = '( '
-            for i in range(len(self.values)):
-                res += " OR " if i != 0 else ""
-                res += self.values[i].prettyPrint()
+            count = 0
+            for val in sorted(self.values, key = (lambda x: x.sortKey())):
+                res += " OR " if count != 0 else ""
+                res += val.prettyPrint()
+                count += 1
             res += " )"
             return res
         # should never reach here
@@ -109,18 +124,22 @@ class Node:
         elif self.type == "&":
             # print within []
             res = '{"AND":['
-            for i in range(len(self.values)):
-                res += "," if i != 0 else ""
-                res += str(self.values[i])
+            count = 0
+            for val in sorted(self.values, key = (lambda x: x.sortKey())):
+                res += "," if count != 0 else ""
+                res += str(val)
+                count += 1
             res += "]}"
             return res
         # if is or node    
         elif self.type == "|":
             # print within {}
             res = '{"OR":['
-            for i in range(len(self.values)):
-                res += "," if i != 0 else ""
-                res += str(self.values[i])
+            count = 0
+            for val in sorted(self.values, key = (lambda x: x.sortKey())):
+                res += "," if count != 0 else ""
+                res += str(val)
+                count += 1
             res += "]}"
             return res
         # should never reach here
