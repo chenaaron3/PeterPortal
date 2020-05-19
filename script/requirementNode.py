@@ -9,8 +9,13 @@ class Node:
         # if &| nodes only have 1 value, set them to their child
 
     def collapse(self):
-        if self.type == "#" or self.type == "?":
+        if self.type == "#":
             return False
+        elif self.type == "?":
+            if len(self.values) == 1:
+                lonelyChild = self.values[0]
+                self.type = lonelyChild.type
+                self.values = lonelyChild.values
         elif self.type == "|" or self.type == "&":
             collasped = False
             for node in self.values:
