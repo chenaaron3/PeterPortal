@@ -78,6 +78,8 @@ def scrapePrerequisitePage(department, prerequisite_data):
             # if has enough terms to reduce
             if cnfNode.type == "&":
                 reduced = reduceCNFNode(cnfNode)
+            # remove redundant impurities
+            cnfNode.collapse()
             # consistent formatting
             courseReqs = cnfNode.prettyPrint()
             # trim outer parentheses
