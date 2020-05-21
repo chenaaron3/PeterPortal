@@ -82,8 +82,8 @@ def scrapePrerequisitePage(department, prerequisite_data):
             cnfNode.collapse()
             # consistent formatting
             courseReqs = cnfNode.prettyPrint()
-            # trim outer parentheses
-            if courseReqs[0] == "(" and courseReqs[-1] == ")":
+            # trim outer parentheses if is an AND node
+            if courseReqs[0] == "(" and courseReqs[-1] == ")" and cnfNode.type == "&":
                 courseReqs = courseReqs[2:-2]
             prerequisite_data[courseID]["courseReqs"] = courseReqs
             prerequisite_data[courseID]["fullReqs"] = courseReqs
@@ -92,6 +92,7 @@ def scrapePrerequisitePage(department, prerequisite_data):
                 prerequisite_data[courseID]["fullReqs"] += " AND " + " AND ".join(prerequisite_data[courseID]["specialMinterms"])
             # assign prerequisiteJSON
             prerequisite_data[courseID]["prerequisiteJSON"] = str(cnfNode)
+        # if only have special reqs
         else:
             prerequisite_data[courseID]["prerequisiteJSON"] = ""
 
@@ -171,6 +172,9 @@ def trimSpecialCourse(minterms):
         if minterm.split()[0] != "NO" and all([(True if courseRegex.match(course) else any([True for exception in SPECIAL_PREREQUISITE_WHITE_LIST if exception in course])) for course in minterm.split(" OR ")]):
             courseMinterms.append(minterm)
         else:
+            # add outer parentheses if is an OR clause
+            if " OR " in minterm:
+                minterm = "( " + minterm + " )"
             specialMinterms.append(minterm)
     return (courseMinterms, specialMinterms)
 
@@ -256,7 +260,6 @@ def reduceCNFNode(cnfNode):
     # add back all reduced nodes
     if len(reducedNodes) > 0:
         cnfNode.values += reducedNodes
-        cnfNode.collapse()
     return len(reducedNodes) != 0
 
 # node: the node to reduce (eg. (A | B) & (A | C))

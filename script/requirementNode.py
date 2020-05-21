@@ -12,7 +12,7 @@ class Node:
         if self.type == "#":
             return False
         elif self.type == "?":
-            if len(self.values) == 1:
+            if len(self.values) == 1 and self.values[0].type != "#":
                 lonelyChild = self.values[0]
                 self.type = lonelyChild.type
                 self.values = lonelyChild.values
