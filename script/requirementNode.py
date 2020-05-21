@@ -9,8 +9,13 @@ class Node:
         # if &| nodes only have 1 value, set them to their child
 
     def collapse(self):
-        if self.type == "#" or self.type == "?":
+        if self.type == "#":
             return False
+        elif self.type == "?":
+            if len(self.values) == 1 and self.values[0].type != "#":
+                lonelyChild = self.values[0]
+                self.type = lonelyChild.type
+                self.values = lonelyChild.values
         elif self.type == "|" or self.type == "&":
             collasped = False
             for node in self.values:
@@ -19,6 +24,14 @@ class Node:
                 lonelyChild = self.values[0]
                 self.type = lonelyChild.type
                 self.values = lonelyChild.values
+            else:
+                newValues = []
+                for node in self.values:
+                    if self.type == node.type:
+                        newValues += node.values
+                    else:
+                        newValues.append(node)
+                self.values = newValues
 
     # classHistory: list of classes taken
     # return whether or not this requirement is met
@@ -56,6 +69,50 @@ class Node:
                 if value in node:
                     return True
             return False
+    
+    # type # go first, type &| go later
+    def sortKey(self):
+        if self.type == "?":
+            return (-1, -1)
+        elif self.type == "#":
+            return (0, len(self.values[0]), self.values[0])
+        elif self.type == "&":
+            return (1, len(self.values))
+        elif self.type == "|":
+            return (2, len(self.values))
+
+    def prettyPrint(self):
+        # if origin only has 1 value
+        if self.type == "?":
+            return self.values[0].prettyPrint()
+        # if is value node
+        elif self.type == "#":
+            return str(self.values[0])
+        # if is and node
+        elif self.type == "&":
+            # print within ()
+            res = '( '
+            count = 0
+            for val in sorted(self.values, key = (lambda x: x.sortKey())):
+                res += " AND " if count != 0 else ""
+                res += val.prettyPrint()
+                count += 1
+            res += " )"
+            return res
+        # if is or node    
+        elif self.type == "|":
+            # print within ()
+            res = '( '
+            count = 0
+            for val in sorted(self.values, key = (lambda x: x.sortKey())):
+                res += " OR " if count != 0 else ""
+                res += val.prettyPrint()
+                count += 1
+            res += " )"
+            return res
+        # should never reach here
+        else:
+            print("Node:__str__::Invalid Node Type", self.type)  
 
     # and nodes are surrounded with []
     # or nodes are surrounded with {}
@@ -72,18 +129,22 @@ class Node:
         elif self.type == "&":
             # print within []
             res = '{"AND":['
-            for i in range(len(self.values)):
-                res += "," if i != 0 else ""
-                res += str(self.values[i])
+            count = 0
+            for val in sorted(self.values, key = (lambda x: x.sortKey())):
+                res += "," if count != 0 else ""
+                res += str(val)
+                count += 1
             res += "]}"
             return res
         # if is or node    
         elif self.type == "|":
             # print within {}
             res = '{"OR":['
-            for i in range(len(self.values)):
-                res += "," if i != 0 else ""
-                res += str(self.values[i])
+            count = 0
+            for val in sorted(self.values, key = (lambda x: x.sortKey())):
+                res += "," if count != 0 else ""
+                res += str(val)
+                count += 1
             res += "]}"
             return res
         # should never reach here
