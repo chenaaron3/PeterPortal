@@ -2,7 +2,7 @@ var fs = require('fs')
 var path = require('path');
 var flatCache = require('flat-cache');
 
-let CACHE_DIRECTORY = path.resolve('./api/v1/cache');
+let CACHE_DIRECTORY = path.join(__dirname, 'cache');
 
 // returns if directory existed before
 function checkDirectoryExists(){

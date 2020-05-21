@@ -11,6 +11,7 @@ from requirementNode import Node, nodify
 import courseScraper
 
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
+SPECIAL_PREREQUISITE_WHITE_LIST = ["SAT ", "ACT ", "AP ", "PLACEMENT EXAM or authorization"]
 
 # scrape links
 URL_TO_PREREQUISITE_DATABASE = "https://www.reg.uci.edu/cob/prrqcgi"
@@ -77,10 +78,21 @@ def scrapePrerequisitePage(department, prerequisite_data):
             # if has enough terms to reduce
             if cnfNode.type == "&":
                 reduced = reduceCNFNode(cnfNode)
-                if reduced:
-                    print(courseID)
+            # remove redundant impurities
+            cnfNode.collapse()
+            # consistent formatting
+            courseReqs = cnfNode.prettyPrint()
+            # trim outer parentheses if is an AND node
+            if courseReqs[0] == "(" and courseReqs[-1] == ")" and cnfNode.type == "&":
+                courseReqs = courseReqs[2:-2]
+            prerequisite_data[courseID]["courseReqs"] = courseReqs
+            prerequisite_data[courseID]["fullReqs"] = courseReqs
+            # add specialReqs if any
+            if prerequisite_data[courseID]["specialMinterms"]:
+                prerequisite_data[courseID]["fullReqs"] += " AND " + " AND ".join(prerequisite_data[courseID]["specialMinterms"])
             # assign prerequisiteJSON
             prerequisite_data[courseID]["prerequisiteJSON"] = str(cnfNode)
+        # if only have special reqs
         else:
             prerequisite_data[courseID]["prerequisiteJSON"] = ""
 
@@ -116,9 +128,9 @@ def trimPrerequisite(raw):
     raw = raw.replace("\n", " ")
     # get the minterms
     minterms = raw.split(" AND ")
-    trimTag(minterms)
-    trimDuplicates(minterms)
+    minterms = trimTag(minterms)
     courseMinterms, specialMinterms = trimSpecialCourse(minterms)
+    courseMinterms = trimDuplicates(courseMinterms)
     return {"courseMinterms": courseMinterms, "specialMinterms": specialMinterms, 
         "courseReqs": " AND ".join(courseMinterms), "fullReqs": " AND ".join(courseMinterms + specialMinterms)}
 
@@ -128,17 +140,43 @@ def trimPrerequisite(raw):
 def trimTag(minterms):
     # trim each minterm of their tags
     for i in range(len(minterms)):
-        outerParenthesesRegex = "^\( (?P<content>.*) \)$"
         innerParenthesesRegex = " \([^\)]*\)"
         minterm = minterms[i].strip()
-        outerParentheses = re.match(outerParenthesesRegex, minterm)
         # remove outer parentheses
-        if outerParentheses:
-            minterm = outerParentheses.group("content")
+        if minterm[0] == "(" and minterm[-1] == ")":
+            minterm = minterm[2:-2]
+        # removing possible surrounding parentheses (eg. ( PLACEMENT EXAM or authorization (see SOC comments for authorization policy/instructions) ))
+        courses = []
+        for course in minterm.split(" OR "):
+            if course[0] == "(" and course[-1] == ")":
+                courses.append(course[2:-2])
+            else:
+                courses.append(course)
+        minterm = " OR ".join(courses)
         # remove all inner parentheses tags
         minterm = re.sub(innerParenthesesRegex, "", minterm)
         # assign new minterm
         minterms[i] = minterm
+    return minterms
+
+# classifies course and special minterms
+def trimSpecialCourse(minterms):
+    # all courseIDs should match this regex
+    courseRegex = re.compile(r"^([^a-z]+ )+[A-Z]*[0-9]+[A-Z]*$")
+    courseMinterms = []
+    specialMinterms = []
+    for i in range(len(minterms)):
+        minterm = minterms[i]
+        # if all courses are valid
+        # course not a negation, course matches regex or is an exception
+        if minterm.split()[0] != "NO" and all([(True if courseRegex.match(course) else any([True for exception in SPECIAL_PREREQUISITE_WHITE_LIST if exception in course])) for course in minterm.split(" OR ")]):
+            courseMinterms.append(minterm)
+        else:
+            # add outer parentheses if is an OR clause
+            if " OR " in minterm:
+                minterm = "( " + minterm + " )"
+            specialMinterms.append(minterm)
+    return (courseMinterms, specialMinterms)
 
 # removes the duplicates in each minterm then sorts it
 # Original: ( STATS 67 OR STATS 67 OR STATS 7 OR STATS 7 OR AP STATISTICS )
@@ -151,22 +189,7 @@ def trimDuplicates(minterms):
         courseSet = set([ course for course in minterm.split(" OR ") ])
         # sort and join the courses
         minterms[i] = "( " + " OR ".join(sorted(courseSet, key = lambda x : (len(x), x))) + " )"
-
-# classifies course and special minterms
-def trimSpecialCourse(minterms):
-    # all courseIDs should match this regex
-    courseRegex = re.compile(r"^([^a-z]+ )+[A-Z]*[0-9]+[A-Z]*$")
-    courseMinterms = []
-    specialMinterms = []
-    for i in range(len(minterms)):
-        minterm = minterms[i]
-        # if all courses are valid
-        # course not a negation, course matches regex or is an exception
-        if minterm[2:-2].split()[0] != "NO" and all((True if courseRegex.match(course) else any([True for exception in courseScraper.SPECIAL_PREREQUISITE_WHITE_LIST if exception in course])) for course in minterm[2:-2].split(" OR ")):
-            courseMinterms.append(minterm)
-        else:
-            specialMinterms.append(minterm)
-    return (courseMinterms, specialMinterms)
+    return list(set(minterms))
 
 # courseMinterms: the minterms of a CNF prerequisite
 # returns the node representation of the CNF prerequisite
@@ -237,7 +260,6 @@ def reduceCNFNode(cnfNode):
     # add back all reduced nodes
     if len(reducedNodes) > 0:
         cnfNode.values += reducedNodes
-        cnfNode.collapse()
     return len(reducedNodes) != 0
 
 # node: the node to reduce (eg. (A | B) & (A | C))
