@@ -88,15 +88,9 @@ router.put("/flagged/update", function (req, res) {
 
 // docID: the cache name
 // clears the cache
-<<<<<<< HEAD
 router.get("/clearCache", function(req, res){
     let docID = req.query.docID;
     if(docID){
-=======
-router.delete("/clearCache", function (req, res) {
-    let docID = req.body.docID;
-    if (docID) {
->>>>>>> 2f71fb623ba01e0353383b63d9d5f00619939d3f
         res.send(clearCacheByID(docID));
     }
     else {
