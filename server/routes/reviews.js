@@ -7,25 +7,25 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource reviews');
 });
 
-router.post("/post", function(req, res, next){
-  console.log("Hi Poster!", JSON.stringify(req.body));
-})
 
+//GET reviews for given professor
 router.get('/professor', function(req, res, next)  {
   let sql = `SELECT * FROM reviews AS r WHERE r.prof_id = ${escape(req.query.profID)} AND r.pub_status != 'removed' ORDER BY r.submitted_at DESC`
   executeQuery(sql, function(results) {
     res.json(results);
   });
-})
+});
 
+//GET reviews for given course
 router.get('/course', function(req, res, next)  {
   let sql = `SELECT * FROM reviews AS r WHERE r.course_id = ${escape(req.query.courseID)} AND r.pub_status != 'removed' ORDER BY r.submitted_at DESC`
 
   executeQuery(sql, function(results) {
     res.json(results);
   });
-})
+});
 
+//POST a new review
 router.post('/addReview', function(req, res) {
   const data = {
     text: req.body.text,
@@ -49,6 +49,10 @@ router.post('/addReview', function(req, res) {
   });
 })
 
+//upvote a review
+//upvote will succeed if not yet upvoted
+//upvote is removed if already upvoted
+//upvote will do nothing if downvoted
 router.put('/upVoteReview', function(req, res) {
 
   let sql = `SELECT * FROM votes WHERE user_id=${req.user.userID} AND review_id=${req.body.reviewID}`
@@ -58,7 +62,6 @@ router.put('/upVoteReview', function(req, res) {
     if (results.length == 0) {
       sql = `UPDATE reviews SET up_votes = up_votes + 1 WHERE id = ${req.body.reviewID};
       INSERT INTO votes VALUES(${req.user.userID}, ${req.body.reviewID}, true);`
-
       executeQuery(sql, function(results) {
         res.json(results);
       });
@@ -76,6 +79,10 @@ router.put('/upVoteReview', function(req, res) {
   });
 });
 
+//downvote a review
+//downvote will succeed if not yet downvoted
+//downvote is removed if already downvote
+//downvote will do nothing if upvoted
 router.put('/downVoteReview', function(req, res) {
   let sql = `SELECT * FROM votes WHERE user_id=${req.user.userID} AND review_id=${req.body.reviewID}`
 
@@ -108,7 +115,6 @@ router.post('/flagReview', function(req, res) {
   let sql = `INSERT INTO flagged 
   (user_id, review_id, reason, comments, reported_at, flag_status)
   VALUES(${req.user ? req.user.userID: "NULL"}, ${req.body.reviewID}, ${escape(req.body.reason)}, ${escape(req.body.comments)}, ${escape(req.body.date)}, 'pending')`
-
   executeQuery(sql, function(results) {
     res.json(results);
   });

@@ -13,9 +13,31 @@ router.get('/', function(req, res, next) {
 
 // get the name of the logged in user
 router.get('/getName', function(req, res, next) {
-  console.log("User:", req.user);
   res.json( {name: (req.user ? req.user.name: undefined), 
     picture: (req.user ? req.user.picture: undefined) });
+});
+
+//get the badges of the logged in user
+router.get('/getBadge', function(req, res, next) {
+  if (!req.user) {
+    res.send("User not logged in");
+  }
+  let sql = `SELECT badge_id, badge_name FROM users_badges NATURAL JOIN badges as ub WHERE user_id = ${req.user.userID}`
+  executeQuery(sql, function(results) {
+    res.json(results);
+  });
+});
+
+//get the badges of the logged in user
+router.post('/addBadge', function(req, res, next) {
+  if (!req.user) {
+    res.send("User not logged in");
+  }
+  let sql = `INSERT INTO users_badges
+  VALUES(${req.user.userID}, ${req.body.badgeID})`
+  executeQuery(sql, function(results) {
+    res.json(results);
+  });
 });
 
 // get whether or not a user is logged in
