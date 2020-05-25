@@ -12,13 +12,15 @@ class CoursePage extends React.Component {
 
     this.state = {
       courseData: null,
-      professorHistory: {},
+      professorNames: {},
+      dependenciesNames: {},
+      prerequisiteNames: {},
       loaded: false
     };
   }
 
   componentDidMount() {
-    this.getcourseData(); 
+    this.getcourseData();
   }
 
   getcourseData() {
@@ -34,52 +36,59 @@ class CoursePage extends React.Component {
   }
 
   getProfessorNames() {
-    let prof_json = {}
-    
-    // go through each professor ucinetid
-    console.log(this.state.courseData);
-    for (var i = 0; i < this.state.courseData.professorHistory.length; i++) {    
-      var searchParams = {
-        query: {
-          terms: {
-            _id: [this.state.courseData.professorHistory[i]]
-          }
-        }
-      };
-      var requestHeader = {
-        headers: new Headers({
-          "content-type": "application/json; charset=UTF-8",
-          "content-length": 140
-        }),
-        body: JSON.stringify(searchParams),
-        method: "POST"
-      };   
-      fetch(
-        "/professors/_search",
-        requestHeader
-      )
-      .then(data => {
-        return data.json();
-      })
+    var requestHeader = {
+      headers: new Headers({"content-type": "application/json; charset=UTF-8", "content-length": 140}),
+      method: "GET"
+    };
+
+    fetch("/api/v1/professors/all", requestHeader)
+      .then(data => {return data.json();})
       .then(res => {
-        this.setState({})
-        let prof_data = res.hits.hits[0]._source;
-        prof_json[prof_data.ucinetid] = prof_data.name;
+        let professor_names = {};
+        this.state.courseData.professorHistory.map(i => {
+          professor_names[i] = res.professors[i];
+          return 0;
+        });
+        this.setState({ professorNames: professor_names });
+        this.getCourseNames();
       })
       .catch(e => console.log(e));
-    }
-    console.log(Object.keys(prof_json).length);
-    this.setState({professorHistory: prof_json, loaded: true});
   }
 
+  getCourseNames() {
+    var requestHeader = {
+      headers: new Headers({"content-type": "application/json; charset=UTF-8", "content-length": 140}),
+      method: "GET"
+    };
+
+    fetch("/api/v1/courses/all", requestHeader)
+      .then(data => {return data.json();})
+      .then(res => {
+        let dependencies_names = {};
+        let prerequisite_names = {};
+        this.state.courseData.dependencies.map(i => {
+          dependencies_names[i] = res.courses[i.replace(/\s/g, '')];
+          return 0;
+        });
+        this.state.courseData.prerequisiteList.map(i => {
+          prerequisite_names[i] = res.courses[i.replace(/\s/g, '')];
+          return 0;
+        });
+
+        this.setState({ dependenciesNames: dependencies_names, prerequisiteNames: prerequisite_names, loaded: true });
+      })
+      .catch(e => console.log(e));
+  }
+
+
   render() {
-    if (this.state.loaded) {
+    if (this.state.courseData) {
       return (
         <div className="App" style={{ display: "flex", flexDirection: "column" }}>         
             <div id="course_main-header">
               <Grid.Row className="course_info-container">
                 <Grid.Column width={2} style={{display: "flex", marginRight: "2em"}} >
-                  <span style={{display: "flex", fontSize: "46px", margin: "auto"}}>💻</span>
+                  <span style={{display: "flex", fontSize: "46px", margin: "auto"}}><span role="img" aria-label="laptop">💻</span></span>
                 </Grid.Column>
                 <Grid.Column width={10}>
                   <h1 id="course_id">{this.state.courseData.id}<span id="course_name">{this.state.courseData.name}</span></h1>
@@ -101,18 +110,19 @@ class CoursePage extends React.Component {
                 repeatability={this.state.courseData.repeatability}
                 overlaps={this.state.courseData.overlaps}
                 concurrent={this.state.courseData.concurrent}
-                ge_types={this.state.courseData.ge_types}
-                professorHistory={this.state.professorHistory}
-                professorCount={Object.keys(this.state.professorHistory).length}
+                geTypes={this.state.courseData.ge_types}
+                professorHistory={this.state.professorNames}
               />
             </Grid.Row>
 
             <Grid.Row id="course_prereq-tree" style={{marginTop: "2em"}}>
                 <PrereqTree
                   id={this.state.courseData.id}
-                  dependencies={this.state.courseData.dependencies}
-                  prerequisite={this.state.courseData.prerequisite}
+                  courseName={this.state.courseData.name}
+                  dependencies={this.state.dependenciesNames}
+                  prerequisite={this.state.prerequisiteNames}
                   prerequisiteJSON={this.state.courseData.prerequisiteJSON}
+                  prerequisiteString={this.state.courseData.prerequisite}
                 />
             </Grid.Row>
 

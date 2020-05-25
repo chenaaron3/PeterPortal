@@ -1,13 +1,10 @@
 import React from "react";
 import Review from "./Review.js";
 import AddReview from "./AddReview.js";
-import { Grid, Divider, Button, Header, Image, Modal } from "semantic-ui-react";
+import { Grid, Divider, Button, Modal } from "semantic-ui-react";
 import "./ReviewsModule.scss";
 
-
 class ReviewsModule extends React.Component {
-
-
   constructor(props) {
     super(props);
     this.state = {
@@ -17,11 +14,15 @@ class ReviewsModule extends React.Component {
       open: false
     };
     this.loadMore = this.loadMore.bind(this);
+    this.close = this.close.bind(this)
   }
 
   show = (dimmer) => () => this.setState({ dimmer, open: true })
 
-  close = () => this.setState({ open: false })
+  close() {
+    this.setState({ open: false });
+    this.getReviews();
+  }
 
   loadMore() {
     this.setState((prev) => {
@@ -33,9 +34,7 @@ class ReviewsModule extends React.Component {
     this.getReviews();
   }
 
-  
   getReviews() {
-    console.log(this.props.courseID)
     fetch("/reviews/course?courseID="+ encodeURIComponent(this.props.courseID), {
       method: "GET"
     }).then(data => {return data.json()})
@@ -56,7 +55,7 @@ class ReviewsModule extends React.Component {
       <div className="review-module-container" style={{ marginTop: "36px", marginBottom: "200px" }}>
         <Grid.Row className="feature-label" >
           <div className="review_feature-label">
-            <h2 style={{margin: "0"}}>💬 Review & Discussion</h2>
+            <h2 style={{margin: "0"}}><span role="img" aria-label="speech">💬</span> Review & Discussion</h2>
             <Button className={"add_review-button"} onClick={this.show('inverted')}>Add Review</Button>
           </div>
           <Divider />
@@ -80,14 +79,14 @@ class ReviewsModule extends React.Component {
 
         {this.state.reviews.length === 0 && ( 
         <div>
-          <h1>No reviews found. Be this first!</h1>
+          <h3>No reviews found. Be the first! <span role="img" aria-label="winky face">😉</span></h3>
         </div> )
 
         }
 
         <Modal dimmer={dimmer} open={open} onClose={this.close}>
           <Modal.Content>
-            <AddReview courseID={this.props.courseID} professorHistory={this.props.professorHistory}/>
+            <AddReview modalControllor={this.close} courseID={this.props.courseID} professorHistory={this.props.professorHistory}/>
           </Modal.Content>
         </Modal>
 
