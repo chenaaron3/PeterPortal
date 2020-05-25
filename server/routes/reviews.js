@@ -7,7 +7,10 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource reviews');
 });
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5aa9cfca7635af9d24414c37d328264dbffb585b
 //GET reviews for given professor
 router.get('/professor', function(req, res, next)  {
   let sql = `SELECT * FROM reviews AS r WHERE r.prof_id = ${escape(req.query.profID)} AND r.pub_status != 'removed' ORDER BY r.submitted_at DESC`
@@ -19,12 +22,15 @@ router.get('/professor', function(req, res, next)  {
 //GET reviews for given course
 router.get('/course', function(req, res, next)  {
   let sql = `SELECT * FROM reviews AS r WHERE r.course_id = ${escape(req.query.courseID)} AND r.pub_status != 'removed' ORDER BY r.submitted_at DESC`
-
   executeQuery(sql, function(results) {
     res.json(results);
   });
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5aa9cfca7635af9d24414c37d328264dbffb585b
 //POST a new review
 router.post('/addReview', function(req, res) {
   const data = {
@@ -43,7 +49,6 @@ router.post('/addReview', function(req, res) {
   let sql = `INSERT INTO reviews 
   (body, rating, difficulty, user_id, course_id, prof_id, submitted_at, grade, taken_in, pub_status)
   VALUES( ${escape(data.text)}, ${data.rating}, ${data.difficulty}, ${data.userID}, ${escape(data.courseID)}, ${escape(data.profID)}, ${escape(data.date)}, ${escape(data.grade)}, ${escape(data.takenIn)}, ${escape(data.pubStatus)})`
-
   executeQuery(sql, function(results) {
     res.json(results);
   });
@@ -56,7 +61,6 @@ router.post('/addReview', function(req, res) {
 router.put('/upVoteReview', function(req, res) {
 
   let sql = `SELECT * FROM votes WHERE user_id=${req.user.userID} AND review_id=${req.body.reviewID}`
-
   executeQuery(sql, function(results) {
     //if there is no vote
     if (results.length == 0) {
@@ -66,12 +70,10 @@ router.put('/upVoteReview', function(req, res) {
         res.json(results);
       });
     } else if (!results[0].up) {
-      //trying to upvote but it has been downvoted
       res.send("You already downvoted the review.")
     } else { //if it is a upvote delete it
       sql = `UPDATE reviews SET up_votes = up_votes - 1 WHERE id = ${req.body.reviewID};
       DELETE FROM votes WHERE user_id=${req.user.userID} AND review_id=${req.body.reviewID}`
-
       executeQuery(sql, function(results) {
         res.json(results);
       });
@@ -91,18 +93,15 @@ router.put('/downVoteReview', function(req, res) {
     if (results.length == 0) {
       sql = `UPDATE reviews SET down_votes = down_votes + 1 WHERE id = ${req.body.reviewID};
       INSERT INTO votes VALUES(${req.user.userID}, ${req.body.reviewID}, false);`
-
       executeQuery(sql, function(results) {
         res.json(results);
       });
     } else if (results[0].up) {
       //trying to downvote but it has been upvote
       res.send("You already upvoted the review.")
-
     } else { //if it is a downvote delete it
       sql = `UPDATE reviews SET down_votes = down_votes - 1 WHERE id = ${req.body.reviewID};
       DELETE FROM votes WHERE user_id=${req.user.userID} AND review_id=${req.body.reviewID};`
-
       executeQuery(sql, function(results) {
         res.json(results);
       });
