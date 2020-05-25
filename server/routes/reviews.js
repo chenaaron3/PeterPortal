@@ -7,10 +7,6 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource reviews');
 });
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 5aa9cfca7635af9d24414c37d328264dbffb585b
 //GET reviews for given professor
 router.get('/professor', function(req, res, next)  {
   let sql = `SELECT * FROM reviews AS r WHERE r.prof_id = ${escape(req.query.profID)} AND r.pub_status != 'removed' ORDER BY r.submitted_at DESC`
@@ -27,10 +23,6 @@ router.get('/course', function(req, res, next)  {
   });
 });
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 5aa9cfca7635af9d24414c37d328264dbffb585b
 //POST a new review
 router.post('/addReview', function(req, res) {
   const data = {
