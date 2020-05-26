@@ -22,7 +22,7 @@ router.get('/getBadge', function(req, res, next) {
   if (!req.user) {
     res.send("User not logged in");
   }
-  let sql = `SELECT badge_id, badge_name FROM users_badges NATURAL JOIN badges as ub WHERE user_id = ${req.user.userID}`
+  let sql = `SELECT badge_id, badge_name FROM users_badges NATURAL JOIN badges WHERE user_id = ${req.user.userID}`
   executeQuery(sql, function(results) {
     res.json(results);
   });
@@ -34,7 +34,7 @@ router.post('/addBadge', function(req, res, next) {
     res.send("User not logged in");
   }
   let sql = `INSERT INTO users_badges
-  VALUES(${req.user.userID}, ${req.body.badgeID})`
+  VALUES(${req.user.userID}, ${req.body.badgeID});`
   executeQuery(sql, function(results) {
     res.json(results);
   });
@@ -132,9 +132,7 @@ function successLogin(req, res){
         console.log(results)
       });
     } else {
-      console.log(results)
       req.user['userID'] = results[0].user_id;
-      
     }
   });
   // redirect browser to the page they came from
