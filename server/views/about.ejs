@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.png" />
+
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet"> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,55 +22,133 @@
     content="UC Irvine, UCI, WebSoC, Rate My Professor, AntAlmanac, Catalogue, course planning, schedule, Antplanner"
     />
 
- 
-
-    
-
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <title>PeterPortal</title>
   </head>
   <body>
-    <div id="top-bar">
-      <div id="top-bar-nav-container">
-        <h3 class="top-bar-nav">ABOUT</h3>
-        <h3 class="top-bar-nav">TEAM</h3>
-        <img class="top-bar-nav" src="img/peterportal-banner-logo.svg">
-        <h3 class="top-bar-nav">CONTRIBUTE</h3>
-        <h3 class="top-bar-nav">PRIVARY POLICY</h3>
+    <nav class="navbar">
+      <div class="navbar-innercontainer">
+        <img src="/peterportal-banner-logo.svg" class="p-logo">
+        <div class="navigation-container">
+          <a class="navigation-link" href=""><p>About</p></a>
+          <a class="navigation-link" href=""><p>Team</p></a>
+          <a class="navigation-link" href=""><p>Terms of Service</p></a>
+          <a class="navigation-link" href=""><p>Privacy Policy</p></a>
+          <button class="ui blue basic button">Launch PeterPortal</button>
+        </div>
       </div>
-    </div>
+    </nav>
     <!-- <div id="container">
       <img src="img/peterportal-banner-logo.svg">
     </div> -->
 
-  </body>
-  <script>
+    <div class="content-container">
 
-  var container = $("#container");
+    <div class="about-container">
+      <img src="/p.svg">
+      <p>PeterPortal is a web application aimed to aid UCI students with course planning research. 
+        It offer features such as filtered catalogue/professor search, visual dependency/prerequisite 
+        tree, grade distribution, visual timetable, and professor review. We consolidate public data 
+        available on multiple UCI sources on the application to improve the user experience when planning 
+        their course schedule.</p>
+    </div>
+  
 
-  wrap.on("scroll", function(e) {
-      
-    if (this.scrollTop > 80) {
-      wrap.addClass("fix-search");
-    } else {
-      console.log("hi");
-      wrap.removeClass("fix-search");
-    }
+    <div class="team-subheader">
+      <h2>Core Team</h2>
+    </div>
+
+    <div class="team-galley-container">
+      <div class="team-galley-innercontainer">
+        <div class="team-container">
+          <img class="team-profile" src="/team/monica.jpg"></img>
+          <h3>Monica Bui</h3>
+          <h4>Back-end Developer</h4>
+        </div>
+        <div class="team-container">
+          <img class="team-profile" src="/team/aaron.jpg"></img>
+          <h3>Aaron Chen</h3>
+          <h4>Back-end Developer</h4>
+        </div>
+        <div class="team-container">
+          <img class="team-profile" src="/team/evelyn.jpg"></img>
+          <h3>Evelyn Cheng</h3>
+          <h4>UI/UX Designer</h4>
+        </div>
+        <div class="team-container">
+          <img class="team-profile" src="/team/marawin.jpg"></img>
+          <h3>Marawin Chheang</h3>
+          <h4>Project Manager</h4>
+        </div>
+        <div class="team-container">
+          <img class="team-profile" src="/team/ritika.jpg"></img>
+          <h3>Ritika Choudhury</h3>
+          <h4>Back-end Developer</h4>
+        </div>
+        <div class="team-container">
+          <img class="team-profile" src="/team/raman.jpeg"></img>
+          <h3>Raman Gupta</h3>
+          <h4>Back-end Developer</h4>
+        </div>
+        <div class="team-container">
+          <img style="object-position: 5% 18%;" class="team-profile" src="/team/ryan_h.jpeg"></img>
+          <h3>Ryan Hartanto</h3>
+          <h4>Front-end Developer</h4>
+        </div>
+        <div class="team-container">
+          <img class="team-profile" src="/team/trisha.jpg"></img>
+          <h3>Trisha Le</h3>
+          <h4>UI/UX Designer</h4>
+        </div>
+        <div class="team-container">
+          <img class="team-profile" src="/team/yizhen.jpeg"></img>
+          <h3>Yizhen Liu</h3>
+          <h4>Back-end Developer</h4>
+        </div>
+        <div class="team-container">
+          <img class="team-profile" src="/team/ryan_m.jpg"></img>
+          <h3>Ryan Mohta</h3>
+          <h4>UI/UX Designer</h4>
+        </div>
+
+        <div class="team-container">
+          <img class="team-profile" src="/team/braedon.png"></img>
+          <h3>Braedon Schmidt</h3>
+          <h4>Back-end Developer</h4>
+        </div>
+
+        <div class="team-container">
+          <img class="team-profile" src="/team/mayank.jpg"></img>
+          <h3>Mayank Sharma</h3>
+          <h4>Back-end Developer</h4>
+        </div>
+        <div class="team-container">
+          <img class="team-profile" src="/team/william.JPG"></img>
+          <h3>William Yang</h3>
+          <h4>Back-end Developer</h4>
+        </div>
+    </div>
+
+    </div>
+
+    <div class="team-subheader">
+      <h2>Project Alumni</h2>
+    </div>
+
+    <div class="team-galley-container">
+      <div class="team-galley-innercontainer">
+        <div class="team-container">
+          <img style="object-position: 5% 18%;" class="team-profile" src="/team/rona.jpg"></img>
+          <h3>Rona Chan</h3>
+          <h4>Front-end Developer</h4>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
     
-  });
 
-  </script>
+  </body>
+
 </html>
