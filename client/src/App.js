@@ -6,6 +6,7 @@ import CoursePage from "./Components/CoursePage/CoursePage";
 import ProfessorPage from "./Components/ProfessorPage/ProfessorPage";
 import NavBar from "./Components/NavBar/NavBar";
 import ErrorPage from "./Components/ErrorPage/ErrorPage";
+import LegalPage from "./Components/Misc/LegalPage";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 class App extends React.Component {
@@ -22,6 +23,7 @@ class App extends React.Component {
           <Route path="/search/:index" component={SearchPage} />
           <Route path="/course/:id" component={CoursePage} />
           <Route path="/professor/:id" component={ProfessorPage} />
+          <Route path="/legal" component={LegalPage} />
           <Route component={ErrorPage} />
 
         </Switch>
