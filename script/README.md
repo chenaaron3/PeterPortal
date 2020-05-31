@@ -2,12 +2,18 @@
     pip install beautifulsoup4 selenium elasticsearch requests progressbar python-dotenv gspread oauth2client
 
 # Basic Workflow:
-A. Generate Professor JSON -> Generate Course JSON  
-    - Note: Must generate Professor JSON before Course JSON. Course scraper needs professor teaching history data.
+A. Generate Prerequisite JSON -> Generate Professor JSON -> Generate Course JSON  
+    - Note: Must generate Professor and Prerequisite JSON before Course JSON. Course scraper needs prerequisite and professor teaching history data.
 B. Deploy the Professor/Course JSON Data to ElasticSearch
+C. Add previously missing professors to ElasticSearch.
+D. Assign terms for each course.
 
 ## Deployment Commands:
-1. Complete Reset: 'python professorScraper.py && python courseScraper.py && python deleteelasticcloud.py professors && python deleteelasticcloud.py courses && deployelasticcloud.py professors && deployelasticcloud.py courses'
+1. Complete Reset: 'python prerequisiteScraper.py && python professorScraper.py && python courseScraper.py && python deleteelasticcloud.py professors && python deleteelasticcloud.py courses && deployelasticcloud.py professors && deployelasticcloud.py courses'
+
+## Generate Prerequisite JSON:
+1. cd into script
+2. Run 'python prerequisiteScraper.py'
 
 ## Generate Professor JSON:
 1. cd into script
@@ -16,6 +22,16 @@ B. Deploy the Professor/Course JSON Data to ElasticSearch
 ## Generate Course JSON:
 1. cd into script
 2. Run 'python courseScraper.py'
+
+## Add Missing Professors:
+1. cd into script
+2. Open the link in MISSING_PROF_SHEET_URL
+3. Delete all values under the status column
+4. Run 'python fillMissingInfo.py'
+
+## Assign Terms for Courses:
+1. Login to Peter-Portal as an admin
+2. Hit the admin/assignTerms endpoint (will take a while)
 
 ## Cloud Deploy Data (in Bulk) to AWS ElasticSearch:  
 1. cd into script
