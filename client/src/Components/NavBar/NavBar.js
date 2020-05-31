@@ -57,7 +57,7 @@ class NavBar extends React.Component {
           </div>
 
           <div style={{margin: "auto 12px"}}>
-          <Popup style={{padding: "36px", width: "400px"}} position='bottom right' trigger={<Label as='a' color='yellow' image>alpha<Label.Detail>v1</Label.Detail></Label>} flowing  hoverable >
+          <Popup style={{padding: "36px", width: "400px"}} position='bottom right' trigger={<Label as='a' color='yellow' image>alpha<Label.Detail>v1.1</Label.Detail></Label>} flowing  hoverable >
               <Grid centered columns={1}>
                 <Grid.Column textAlign='left'>
                   <Header as='h4'>Alpha Disclaimer</Header>
