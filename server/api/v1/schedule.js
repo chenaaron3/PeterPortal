@@ -64,8 +64,12 @@ router.get("/:term/:id", function (req, res, next) {
  */
 router.get("/getTerms", function(req, res){
   let pastYears = req.query.pastYears;
+  res.json(getTerms(pastYears));
+})
+
+function getTerms(pastYears){
   if(!pastYears)
-    pastYears = 1;
+  pastYears = 1;
   let d = new Date();
   let year = d.getFullYear();
   terms = [];
@@ -74,8 +78,8 @@ router.get("/getTerms", function(req, res){
           terms.push(`${y} ${TERM_SEASONS[i]}`);
       }
   }
-  res.json(terms);
-})
+  return terms
+}
 
 /**
  * @swagger
@@ -95,4 +99,4 @@ router.get("/getTerms", function(req, res){
  */
 router.get("/getWeek", getWeek)
 
-module.exports = router;
+module.exports = {scheduleRouter: router, getTerms: getTerms};
