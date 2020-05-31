@@ -172,6 +172,7 @@ function DropdownMenu(props) {
               Log In using Facebook
             </DropdownItem>
           </a>
+          <p style={{color: "gray", textAlign: "center", padding: "0.5rem 1rem"}}>By logging in, you agree to our <a href="/legal">privacy policy</a>.</p>
         </div>
       </CSSTransition>
 
