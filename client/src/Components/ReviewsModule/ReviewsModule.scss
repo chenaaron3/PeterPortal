@@ -171,3 +171,20 @@
     margin-left: auto;
   }
 }
+
+.review_tag {
+  background-color: #f4f4f4;
+  margin: 0.2rem 0.5rem 0.2rem 0;
+  padding: 0.3rem 0.5rem;
+  display: inline-block;
+  width: fit-content;
+  font-weight: 800;
+  color: gray;
+  text-transform: uppercase;
+}
+
+.review_tag:hover {
+  background-color: #60A3D1;
+  cursor: pointer;
+  color: white;
+}

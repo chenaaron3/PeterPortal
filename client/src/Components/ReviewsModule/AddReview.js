@@ -28,6 +28,19 @@ const gradeReceived = [
   { key: "IP", value: "IP", text: "IP" },
 ];
 
+const tagOptions = [
+  "Emphasis on Easy", 
+  "Attendance Mandatory",
+  "Made me Cry",
+  "Heavy workload",
+  "Heavy reading",
+  "Learned a LOT",
+  "Absolutely Outstanding",
+  "Group Projects",
+  "Thicc curve",
+  "Praise the Professor"
+]
+
 class AddReview extends React.Component {
     constructor(props) {
         super(props);
@@ -206,6 +219,14 @@ class AddReview extends React.Component {
               
               onChange={(event, data) => {this.setState({text: data.value})}}
                />
+
+              <div style={{display: "block"}}>
+              {
+                tagOptions.map((tag) => (
+                  <div class={"review_tag"} onClick={e => console.log("clicked")}><span>{tag}</span></div>
+                ))
+              }
+              </div>
 
               <ReCAPTCHA ref={recaptchaRef} sitekey="6Le6rfIUAAAAAOdqD2N-QUEW9nEtfeNyzkXucLm4" onChange={(value)=>{this.setState({verified:value})}}/>
               <Button onClick={this.addReview}>Submit</Button>              
