@@ -18,7 +18,7 @@ router.get('/getName', function(req, res, next) {
 });
 
 //get the badges of the logged in user
-router.get('/getBadge', function(req, res, next) {
+router.get('/getBadges', function(req, res, next) {
   if (!req.user) {
     res.send("User not logged in");
   }
