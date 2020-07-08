@@ -104,7 +104,7 @@ def addMissingProfessor(ucinetid:str, name:str, department:str, status:str):
             professorScraper.getCourseHistory(driver, res, name)
             # if found any new classes
             if len(res["courseHistory"]) > len(oldHistory):
-                # approve before indexing
+                # approve before indexing if the names do not match
                 if not status == ADMIN_APPROVE_STATUS and not validateName(res["name"], name):
                     return "NEED ADMIN APPROVAL TO UPDATE"
                 # find added classes
@@ -116,9 +116,15 @@ def addMissingProfessor(ucinetid:str, name:str, department:str, status:str):
                 return f"UPDATED: Added {addedClasses}."
             else:
                 return "NO EFFECT: Professor recieved no updates. Maybe the entered name or department is wrong."
-        # otherwise mark as duplicate
+        # already scraped given department for given professor
         else:
-            return "DUPLICATE: Professor with given department already exists in database."
+            history = list(res["courseHistory"])
+            updateCount = updateProfessorHistory(ucinetid, history)
+            # check if course index is updated
+            if updateCount:
+                return f"SYNCED: {updateCount} courses added {ucinetid} into their professor history."
+            else:
+                return "DUPLICATE: Professor with given department already exists in database."
     # if not already indexed
     else:
         # look up ucinetid from the directory
@@ -166,8 +172,9 @@ def validateName(directoryName:str, givenName:str):
 
 # ucinetid: netid for professor that taught the courses in coursesIDs (eg. "psheu")
 # courseIDs: list of courses to update (eg. ["EECS 116", "EECS 159B", "EECS 199"])
-# returns nothing, directly alters data on elastic search
+# returns how many courses were updated, directly alters data on elastic search
 def updateProfessorHistory(ucinetid:str, courseIDs:list):
+    count = 0
     for courseID in courseIDs:
         courseID = courseID.replace(" ","")
         url = elasticEndpointURL + f"/courses/_doc/{courseID}"
@@ -177,10 +184,13 @@ def updateProfessorHistory(ucinetid:str, courseIDs:list):
             res = res["_source"]
             # if not already recorded
             if ucinetid not in res["professorHistory"]:
+                # increase count
+                count += 1
                 # add professor
                 res["professorHistory"].append(ucinetid)
                 # reindex
                 index(url, res)
+    return count
 
 # url: the url to send the request to
 # data: the data to index

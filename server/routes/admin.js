@@ -1,14 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var { executeQuery, escape } = require('../config/database.js');
-var {clearCacheByID, clearCacheAll, statistics} = require('../api/v1/cache');
+var { clearCacheByID, clearCacheAll, statistics } = require('../api/v1/cache');
+var { getTerms } = require("../api/v1/schedule")
 var fetch = require("node-fetch");
 const WebSocAPI = require("websoc-api");
 const dotenv = require('dotenv');
 dotenv.config();
 
 const REVIEW_STATUSES = ["published", "removed", "unverified"];
-const TERM_SEASONS = ['Winter', 'Spring', 'Summer1','Summer10wk', 'Summer2',  'Fall']
+const TERM_SEASONS = ['Winter', 'Spring', 'Summer1', 'Summer10wk', 'Summer2', 'Fall']
 
 router.use('*', function (req, res, next) {
     if (req.session.passport && req.session.passport.admin) {
@@ -16,12 +17,13 @@ router.use('*', function (req, res, next) {
         next();
     }
     else {
-        if(process.env.NODE_ENV == "development"){
+        if (process.env.NODE_ENV == "development") {
             next();
         }
-        else{
-            res.status(401).send("You must be have administrative priviledge! Please login with Github first!")
-        }        
+        else {
+            res.render('admin_home');
+            console.log("Access Restricted")
+        }
     }
 });
 
@@ -87,39 +89,62 @@ router.put("/flagged/update", function (req, res) {
 
 // docID: the cache name
 // clears the cache
-router.delete("/clearCache", function(req, res){
-    let docID = req.body.docID;
+router.get("/clearCache", function(req, res){
+    let docID = req.query.docID;
     if(docID){
         res.send(clearCacheByID(docID));
     }
-    else{
+    else {
         res.send(clearCacheAll());
     }
 })
 
 // reports hits and misses for the cache
-router.get("/cache", function(req, res){
+router.get("/cache", function (req, res) {
     res.json(statistics());
 })
+
+// pastYears: how many years to go in the past
+// assign terms for the past years
+router.get("/assignTerms", function (req, res){
+    let pastYears = req.query.pastYears;
+    terms = getTerms(pastYears);
+    count = 0;
+    finish = terms.length;
+    results = {}
+    terms.forEach( term => {
+        assignTerm(term, (status, text) => {
+            results[term] = [status, text];
+            if(++count == finish)
+                res.json(results);
+        });
+    });
+});
 
 // term: the year + season (eg. "2020 Fall")
 // adds to the term field for each course in elasticsearch index
 router.get("/assignTerm", function (req, res) {
     let term = req.query.term;
-    if(!term){
+    if (!term) {
         res.status(400).send("Please provide a term!");
         return;
     }
-    if(!term.match(/^[0-9]{4} [^ ]*$/)){
+    if (!term.match(/^[0-9]{4} [^ ]*$/)) {
         res.status(400).send("Bad format!");
         return;
     }
     let split = term.split(" ")
     let season = split[1];
-    if (!TERM_SEASONS.includes(season)){
+    if (!TERM_SEASONS.includes(season)) {
         res.status(400).send(`Must provide a valid season! Given: ${season}. Expected: ${TERM_SEASONS}`);
         return;
     }
+    assignTerm(term, (status, text) => {
+        res.status(status).send(text);
+    });
+});
+
+function assignTerm(term, callback) {
     getAllCourses((err, courses) => {
         if (err) console.log(err);
         let updateJSON = ""
@@ -132,16 +157,15 @@ router.get("/assignTerm", function (req, res) {
             departments.add(courseData.department)
             courseToData[courseData.courseID] = courseData
             // if no terms list
-            if(!courseData["terms"]){
+            if (!courseData["terms"]) {
                 console.log(courseData)
                 ++hits;
                 courseData["terms"] = []
-                updateJSON +=  `{ "update" : {"_id" : "${courseData.courseID}", "_index" : "courses"}}\n{ "doc" : {"terms" : ${JSON.stringify(courseData.terms)}}}\n`
+                updateJSON += `{ "update" : {"_id" : "${courseData.courseID}", "_index" : "courses"}}\n{ "doc" : {"terms" : ${JSON.stringify(courseData.terms)}}}\n`
             }
         });
         let count = 0
         let finish = departments.size
-        // if no terms, give it an empty list
         // search up each department on websoc
         departments.forEach(department => {
             // get available courses for a department
@@ -151,20 +175,20 @@ router.get("/assignTerm", function (req, res) {
                     // get the associated data
                     let courseData = courseToData[availableCourse]
                     // if this course is indexed
-                    if(courseData){
+                    if (courseData) {
                         ++hits;
                         // add the term if it is not already included
                         if (!courseData["terms"].includes(term)) {
                             courseData["terms"].push(term);
                             // add to the bulk json
-                            updateJSON +=  `{ "update" : {"_id" : "${courseData.courseID}", "_index" : "courses"}}\n{ "doc" : {"terms" : ${JSON.stringify(courseData.terms)}}}\n`
+                            updateJSON += `{ "update" : {"_id" : "${courseData.courseID}", "_index" : "courses"}}\n{ "doc" : {"terms" : ${JSON.stringify(courseData.terms)}}}\n`
                         }
                     }
                 });
                 // finished all departments
-                if(++count == finish){
+                if (++count == finish) {
                     // if theres anything to update
-                    if(updateJSON){
+                    if (updateJSON) {
                         // bulk update
                         fetch(`${process.env.ELASTIC_ENDPOINT_URL}/_bulk`, {
                             method: 'POST',
@@ -173,21 +197,22 @@ router.get("/assignTerm", function (req, res) {
                             },
                             body: updateJSON
                         }).then(r => r.json())
-                        .then(j => res.send(`Successfully added ${term} to ${j.items.length} courses!`))
+                            .then(j => callback(200, `Successfully added ${term} to ${j.items.length} courses!`))
                     }
-                    else{
-                        if(hits){
-                            res.status(400).send(`${hits} courses were found, but they were already assigned ${term}!`);
+                    else {
+                        if (hits) {
+                            callback(400, `${hits} courses were found, but they were already assigned ${term}!`);
                         }
-                        else{
-                            res.status(400).send("No hits were found! Invalid term!");
+                        else {
+                            callback(400, "No hits were found! Invalid term!");
                         }
                     }
                 }
             });
         });
     });
-});
+}
+
 
 // gets all existing courses from elastic search
 function getAllCourses(callback) {
