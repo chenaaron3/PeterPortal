@@ -3,6 +3,7 @@ import React from "react";
 import ReviewsModule from "../ReviewsModule/ReviewsModule.js";
 import CourseInfo from "./CourseInfo.js";
 import PrereqTree from "./PrereqTree.js";
+import GradeDist from "../GradeDist/GradeDist.js";
 import { Grid } from "semantic-ui-react";
 import "./CoursePage.scss";
 
@@ -133,7 +134,7 @@ class CoursePage extends React.Component {
                />
             </Grid.Row>
             
-            <GradeDist />
+            <GradeDist courseData={this.state.courseData}/>
 
             {/* <Grid.Row className="course_content-container course_prereq-tree-container">
               <Card>
