@@ -14,7 +14,6 @@ PeterPortal is a web application aimed to aid UCI students with course discovery
 - Visual schedule of classes
 - Professors rating/review
 
-## Development
 <h3>
   <span>
   This project is built with
@@ -23,11 +22,5 @@ PeterPortal is a web application aimed to aid UCI students with course discovery
     <img src="https://cdn.freebiesupply.com/logos/large/2x/elastic-elasticsearch-logo-png-transparent.png" alt="Elasticsearch" height="18"/>
   </span>
 </h3>
-
-After cloning the project repo, run `npm install` on the PeterPortal directory to install all required NodeJS dependencies for both the React client and Express server of the application.
-
-__To start the development server for the React client__, run `npm run start-server-dev` in the terminal from the PeterPortal directory. The React development server will run and listen for changes on `localhost:3000`.
-
-__To start the development server for the Express API and server__, install [Nodemon](https://nodemon.io/) and then run `npm run start-server-dev` in the terminal from the PeterPortal directory. The Express server will run and listen for changes on `localhost:5000`.
 
 
