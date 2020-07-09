@@ -134,7 +134,9 @@ class CoursePage extends React.Component {
                />
             </Grid.Row>
             
-            <GradeDist courseData={this.state.courseData}/>
+            <Grid.Row id="course_grade" style={{marginTop: "2em"}}>
+                <GradeDist courseData={this.state.courseData} />
+            </Grid.Row>
 
             {/* <Grid.Row className="course_content-container course_prereq-tree-container">
               <Card>

@@ -4,7 +4,20 @@ import { ResponsiveBarCanvas } from '@nivo/bar'
 export default class Chart extends React.Component {
   constructor(props) {
     super(props);
+    this.theme = {
+      tooltip: {
+        container: { background: "#212529",
+                     color: "#ffffff",
+                     fontSize: "0.6vw",
+                     outline: "none",
+                     margin: 0,
+                     padding: "0.5em"
+                   }
+      }
+    };
+    
     this.getClassData = this.getClassData.bind(this);
+    this.styleTooltip = this.styleTooltip.bind(this);
   }
   
   getClassData() {
@@ -56,13 +69,26 @@ export default class Chart extends React.Component {
     ];
   }
   
+  /*
+   * Indicate how the tooltip should look like when users hover over the bar
+   * Code is slightly modified from: https://codesandbox.io/s/nivo-scatterplot-
+   * vs-bar-custom-tooltip-7u6qg?file=/src/index.js:1193-1265
+   */
+  styleTooltip(event) {
+    return (
+      <div style={this.theme.tooltip.container}>
+        <strong>{event.data.grade}</strong>
+        <br />
+        <em>Total: {event.data.number}</em>
+      </div>
+    );
+  }
+  
   render() {
     return (
       <ResponsiveBarCanvas
         data={this.getClassData()}
-        keys={
-          ['number']
-        }
+        keys={ ["number"] }
         indexBy="grade"
         margin={{
           top: 50,
@@ -76,22 +102,22 @@ export default class Chart extends React.Component {
           tickSize: 5,
           tickPadding: 5, 
           tickRotation: 0, 
-          legend: '', 
+          legend: "", 
           legendOffset: 36
         }}
         axisBottom={{
           tickSize: 10,
           tickPadding: 5,
           tickRotation: 0,
-          legend: 'Grade',
-          legendPosition: 'middle',
+          legend: "Grade",
+          legendPosition: "middle",
           legendOffset: 36
         }}
-        enableGridX={false}
-        enableGridY={false}
         enableLabel={true}
         colors="#5E9EC1"
         isInteractive={true}
+        theme={this.theme}
+        tooltip={this.styleTooltip}
       />);
   }
 }
