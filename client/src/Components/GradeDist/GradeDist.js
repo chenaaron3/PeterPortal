@@ -104,23 +104,7 @@ export default class GradeDist extends React.Component {
   createQuarterEntries() {
     let quarters = new Set(), result = [];
     this.state.gradeDistData.forEach(data => quarters.add(data.AcadTerm));
-
-    for (let quarter of quarters) {
-      let breakdown = quarter.split(" ");
-      switch (breakdown[0]) {
-        case "Fall":
-          result.push({ value: quarter, text: quarter });
-          continue;
-        case "Winter":
-          result.push({ value: quarter, text: quarter });
-          continue;
-        case "Spring":
-          result.push({ value: quarter, text: quarter });
-          continue;
-        default:
-          result.push({ value: quarter, text: quarter });
-      };
-    }
+    quarters.forEach(quarter => result.push({ value: quarter, text: quarter }));
     return result;
   }
   
