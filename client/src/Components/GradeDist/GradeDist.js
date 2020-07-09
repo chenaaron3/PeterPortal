@@ -5,6 +5,10 @@ import "./GradeDist.scss"
 
 
 export default class GradeDist extends React.Component {
+  /*
+   * Initialize a GradeDist block on the webpage.
+   * @param props attributes received from the parent element
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -18,6 +22,9 @@ export default class GradeDist extends React.Component {
     this.updateCurrentProf = this.updateCurrentProf.bind(this);
   }
   
+  /*
+   * Asychronously get the course data from the API.
+   */
   componentDidMount() {
     const HEADER = {
       headers: new Headers({
@@ -26,17 +33,16 @@ export default class GradeDist extends React.Component {
       }),
       method: "GET"
     };
-    
-    console.log(this.props.courseData.id.split(" ").join(""));
 
     fetch(`/api/v1/gradeDistribution/${this.props.courseData.id.split(" ").join("")}`, HEADER)
       .then(response => response.json())
-      .then(data => {
-        this.setState({ gradeDistData: data });
-        console.log(data);
-      });
+      .then(data => this.setState({ gradeDistData: data }));
   }
   
+  /*
+   * Display the entire GradeDist block.
+   * @return a JSX block rendering the GradeDist block
+   */
   render() {
     if (this.state.gradeDistData !== null) { 
       return (
@@ -83,10 +89,18 @@ export default class GradeDist extends React.Component {
         </div>
       );
     } else {
-        return <h1>Loading..</h1>;
+        return (
+          <h1>
+            If you still cannot see the data after a long time, please contact us.
+          </h1>
+        );
     }
   }
-
+  
+  /*
+   * Create an array of objects to feed into the quarter dropdown menu.
+   * @return an array of JSON objects recording each quarter
+   */
   createQuarterEntries() {
     let quarters = new Set(), result = [];
     this.state.gradeDistData.forEach(data => quarters.add(data.AcadTerm));
@@ -110,6 +124,10 @@ export default class GradeDist extends React.Component {
     return result;
   }
   
+  /*
+   * Create an array of objects to feed into the professor dropdown menu.
+   * @return an array of JSON objects recording professor's names
+   */
   createProfEntries() {
     let professors = new Set(), result = [];
     this.state.gradeDistData
@@ -121,10 +139,20 @@ export default class GradeDist extends React.Component {
     return result;
   }
 
+  /*
+   * Record what is in the quarter dropdown menu at the moment.
+   * @param event an event object recording the mouse movement, etc.
+   * @param status details about the status in the dropdown menu
+   */
   updateCurrentQuarter(event, status) {
     this.setState({currentQuarter: status.value});
   }
-  
+
+  /*
+   * Record what is in the professor dropdown menu at the moment.
+   * @param event an event object recording the mouse movement, etc.
+   * @param status details about the status in the dropdown menu
+   */
   updateCurrentProf(event, status) {
     this.setState({currentProf: status.value});
   }

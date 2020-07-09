@@ -2,11 +2,15 @@ import React from 'react';
 import { ResponsiveBarCanvas } from '@nivo/bar'
 
 export default class Chart extends React.Component {
+  /*
+   * Initialize the grade distribution chart on the webpage.
+   * @param props attributes received from the parent element
+   */
   constructor(props) {
     super(props);
     this.theme = {
       tooltip: {
-        container: { background: "#212529",
+        container: { background: "rgba(0,0,0,.87)",
                      color: "#ffffff",
                      fontSize: "0.6vw",
                      outline: "none",
@@ -20,23 +24,26 @@ export default class Chart extends React.Component {
     this.styleTooltip = this.styleTooltip.bind(this);
   }
   
+  /*
+   * Create an array of objects to feed into the chart.
+   * @return an array of JSON objects detailing the grades for each class
+   */
   getClassData() {
-    let matches = this.props.gradeData.filter(
-      data => data.AcadTerm === this.props.quarter
-        && data.instructor === this.props.professor);
     let gradeACount = 0, gradeBCount = 0, gradeCCount = 0, gradeDCount = 0,
       gradeFCount = 0, gradePCount = 0, gradeNPCount = 0;
       
-    matches.forEach(match => {
-      gradeACount += match.gradeACount;
-      gradeBCount += match.gradeBCount;
-      gradeCCount += match.gradeCCount;
-      gradeDCount += match.gradeDCount;
-      gradeFCount += match.gradeFCount;
-      gradePCount += match.gradePCount;
-      gradeNPCount += match.gradeNPCount;
+    this.props.gradeData.forEach(data => {
+      if (data.AcadTerm === this.props.quarter
+        && data.instructor === this.props.professor) {
+          gradeACount += data.gradeACount;
+          gradeBCount += data.gradeBCount;
+          gradeCCount += data.gradeCCount;
+          gradeDCount += data.gradeDCount;
+          gradeFCount += data.gradeFCount;
+          gradePCount += data.gradePCount;
+          gradeNPCount += data.gradeNPCount;
+      }
     });
-    
     return [
       {
         "grade": "A",
@@ -73,6 +80,8 @@ export default class Chart extends React.Component {
    * Indicate how the tooltip should look like when users hover over the bar
    * Code is slightly modified from: https://codesandbox.io/s/nivo-scatterplot-
    * vs-bar-custom-tooltip-7u6qg?file=/src/index.js:1193-1265
+   * @param event an event object recording the mouse movement, etc.
+   * @return a JSX block styling the chart
    */
   styleTooltip(event) {
     return (
@@ -84,6 +93,10 @@ export default class Chart extends React.Component {
     );
   }
   
+  /*
+   * Display the grade distribution chart.
+   * @return a JSX block rendering the chart
+   */
   render() {
     return (
       <ResponsiveBarCanvas
@@ -114,10 +127,11 @@ export default class Chart extends React.Component {
           legendOffset: 36
         }}
         enableLabel={true}
-        colors="#5E9EC1"
+        colors="#5e9ec1"
         isInteractive={true}
         theme={this.theme}
         tooltip={this.styleTooltip}
-      />);
+      />
+    );
   }
 }
