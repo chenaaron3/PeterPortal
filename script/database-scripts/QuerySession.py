@@ -1,10 +1,10 @@
 import pymysql
 
-host = "peterportal-db.ct5u3rsfgr88.us-west-1.rds.amazonaws.com"
-port = 3306
-dbname = "peterportal"
-user = "peter"
-password = "anteater"
+host = "thing"
+port = "number"
+dbname = "name"
+user = "user"
+password = "pass"
 
 class QuerySession():
 
