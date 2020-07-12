@@ -1,0 +1,146 @@
+ACENG . . . . . .Academic English and ESL
+AFAM . . . . . . . African American Studies
+ANATOMY . . . .Anatomy and Neurobiology
+ANESTH . . . . . Anesthesiology
+ANTHRO . . . . . Anthropology
+ARABIC . . . . . .Arabic
+ARMN . . . . . . .Armenian Studies
+ART . . . . . . . . .Art
+ARTHIS . . . . . .Art History
+ARTS . . . . . . . Arts
+ARTSHUM . . . . Arts and Humanities
+ASIANAM . . . . Asian American Studies
+BANA . . . . . . . Business Analytics
+BATS . . . . . . . Biomedical and Translational Science
+BIOSCI . . . . . .Biological Sciences
+BIOCHEM . . . . Biological Chemistry
+BME . . . . . . . . Biomedical Engineering
+BSEMD . . . . . .Bio Sci & Educational Media Design
+CAMPREC . . . .Campus Recreation
+CBE . . . . . . . . Chemical and Biomolecular Engineering
+CBEMS . . . . . .Chemical Engineering and Materials Science
+CEM . . . . . . . . Community and Environmental Medicine
+CHC/LAT . . . . . Chicano/Latino Studies
+CHEM . . . . . . .Chemistry
+CHINESE . . . . .Chinese
+CLASSIC . . . . .Classics
+CLT&THY . . . . .Culture & Theory
+COGS . . . . . . . Cognitive Sciences
+COMLIT . . . . . Comparative Literature
+COMPSCI . . . . Computer Science
+CRITISM . . . . . Criticism
+CRM/LAW . . . . Criminology, Law and Society
+CSE . . . . . . . . Computer Science and Engineering
+DANCE . . . . . . Dance
+DERM . . . . . . .Dermatology
+DEVBIO . . . . . Developmental and Cell Biology
+DRAMA . . . . . .Drama
+EASIAN . . . . . East Asian Languages and Literatures
+EARTHSS . . . . Earth System Science
+EAS . . . . . . . . East Asian Studies
+ECOEVO . . . . Ecology and Evolutionary Biology
+ECON . . . . . . . Economics
+ECPS . . . . . . . Embedded and Cyber-Physical Systems
+EDAFF . . . . . .Educational Affairs (Sch of Med)
+EDUC . . . . . . . Education
+EECS . . . . . . . Electrical Engineering and Computer Science
+EHS . . . . . . . . Environmental Health Sciences
+ENGLISH . . . . .English
+ENGR . . . . . . . Engineering
+ENGRCEE . . . .Civil and Environmental Engineering
+ENGRMAE . . . .Mechanical and Aerospace Engineering
+ENGRMSE . . . .Materials Science and Engineering
+EPIDEM . . . . . .Epidemiology
+ERMED . . . . . Emergency Medicine
+EUROST . . . . .European Studies
+FAMMED . . . . Family Medicine
+FIN . . . . . . . . . Finance
+FLM&MDA . . . .Film and Media Studies
+FRENCH . . . . . French
+GEN&SEX . . . . Gender and Sexuality Studies
+GERMAN . . . . .German
+GLBLME . . . . .Global Middle East Studies
+GLBLCLT . . . . .Global Cultures
+GREEK . . . . . . Greek
+HEBREW . . . . .Hebrew
+HINDI . . . . . . . .Hindi
+HISTORY . . . . .History
+HUMAN . . . . . .Humanities
+HUMARTS . . . . Humanities and Arts
+I&CSCI . . . . . . Information and Computer Science
+IN4MATX . . . . . Informatics
+INNO . . . . . . . .Masters of Innovation and Entrepreneurship
+INTMED . . . . . Internal Medicine
+INTLST . . . . . . International Studies
+ITALIAN . . . . . .Italian
+JAPANSE . . . . Japanese
+KOREAN . . . . .Korean
+LATIN . . . . . . . Latin
+LAW . . . . . . . . Law
+LINGUIS . . . . . .Linguistics
+LITJRN . . . . . . Literary Journalism
+LPS . . . . . . . . .Logic and Philosophy of Science
+LSCI . . . . . . . . Language Science
+M&MG . . . . . . .Microbiology and Molecular Genetics
+MATH . . . . . . . Mathematics
+MED . . . . . . . . Medicine
+MEDED . . . . . Medical Education
+MEDHUM . . . . Medical Humanities
+MGMT . . . . . . .Management
+MGMTEP . . . . Executive MBA
+MGMTFE . . . . Fully Employed MBA
+MGMTHC . . . . Health Care MBA
+MGMTMBA . . . Management MBA
+MGMTPHD . . . .Management PhD
+MICBIO . . . . . .Microbiology
+MOLBIO . . . . . Molecular Biology and Biochemistry
+MPAC . . . . . . .Accounting
+MUSIC . . . . . . .Music
+NETSYS . . . . .Networked Systems
+NEURBIO . . . . .Neurobiology and Behavior
+NEUROL . . . . . Neurology
+NURSCI . . . . . Nursing Science
+OB/GYN . . . . . Obstetrics and Gynecology
+OPHTHAL . . . . Ophthalmology
+PATH . . . . . . . Pathology and Laboratory Medicine
+PEDGEN . . . . Pediatrics Genetics
+PEDS . . . . . . . Pediatrics
+PERSIAN . . . . .Persian
+PHARM . . . . . .Medical Pharmacology
+PHILOS . . . . . .Philosophy
+PHRMSCI . . . . Pharmaceutical Sciences
+PHYSCI . . . . . Physical Sciences
+PHYSICS . . . . .Physics
+PHYSIO . . . . . .Physiology and Biophysics
+PLASTIC . . . . . Plastic Surgery
+PM&R . . . . . . .Physical Medicine and Rehabilitation
+POLSCI . . . . . Political Science
+PORTUG . . . . . Portuguese
+PP&D . . . . . . . Planning Policy and Design
+PSCI . . . . . . . .Psychological Science
+PSYBEH . . . . .Psychology and Social Behavior
+PSYCH . . . . . . Psychology
+PUBPOL . . . . .Public Policy
+PUBHLTH . . . . Public Health
+RADIO . . . . . . .Radiology
+RELSTD . . . . . Religious Studies
+ROTC . . . . . . . Reserve Officers Training Corps
+RUSSIAN . . . . .Russian
+SOCSCI . . . . . Social Sciences
+SOCECOL . . . . Social Ecology
+SOCIOL . . . . . .Sociology
+SPANISH . . . . .Spanish
+SPPS . . . . . . . Social Policy and Public Service
+STATS . . . . . . .Statistics
+SURGERY . . . .Surgery
+SWE . . . . . . . .Software Engineering
+TAGALOG . . . . Tagalog
+TOX . . . . . . . . .Toxicology
+UCDC . . . . . . . UC Washington DC
+UNIAFF . . . . . .Student Affairs (University Affairs)
+UNISTU . . . . . .Div of Undergrad Educ (Univ Studies)
+UPPP . . . . . . . Urban Planning and Public Policy
+VIETMSE . . . . .Vietnamese
+VISSTD . . . . . .Visual Studies
+WOMNST . . . . Women's Studies
+WRITING . . . . . Writing
