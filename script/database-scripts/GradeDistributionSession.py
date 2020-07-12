@@ -26,6 +26,3 @@ class GradeDistributionSession(QuerySession):
 if __name__ == '__main__':
     gds = GradeDistributionSession()
     gds.insert_row("Spring 2020", "I&CSCI33", 36620, "A", "PATTIS, R.", "LEC", 125, 72, 31, 16, 33, 1, 0, 1, 2.84);
-
-# user: mank
-# pass: iK2@v^J|SvJ[
