@@ -15,6 +15,10 @@ for line in f:
         else:
             values[14] = float(values[14])
 
+        values[1] = values[1].upper()
+        values[3] = values[3].upper()
+        values[4] = values[4].upper()
+
         data_list.append(values)
     else:
         print(f"did not include {line}")
