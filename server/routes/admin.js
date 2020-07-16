@@ -21,7 +21,8 @@ router.use('*', function (req, res, next) {
             next();
         }
         else {
-            res.status(401).send("You must be have administrative priviledge! Please login with Github first!")
+            res.render('admin_home');
+            console.log("Access Restricted")
         }
     }
 });

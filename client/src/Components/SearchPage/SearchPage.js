@@ -131,10 +131,11 @@ class SearchPage extends SearchkitComponent {
                             <footer className="footer">
                                 <div>
                                     <a href="https://github.com/icssc-projects">Github</a>
-                                    <a href="/">API</a>
-                                    <a href="/">About</a>
-                                    <a href="/">Team</a>
-                                    <a href="/">FAQ</a>
+                                    <a href="/api/v1">API</a>
+                                    <a href="/about">About</a>
+                                    <a href="/about#team">Team</a>
+                                    <a href="/legal">Terms</a>
+                                    <a href="/legal">Privacy Policy</a>
                                 </div>
                                 <div className="copyright">
                                     <p>Made with ♥ by <a href="https://studentcouncil.ics.uci.edu/">ICSSC Project Committee</a></p>
