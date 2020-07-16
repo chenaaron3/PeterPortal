@@ -23,8 +23,10 @@ class Review extends React.Component {
           body: JSON.stringify(body),
         }).then(data => {return data.json()})
         .then(res => {
-          this.props.getReviews()
-        }).catch(() => {
+          console.log(this.props.reviewData)
+          this.props.getReviews(this.props.reviewData.course_id)
+        }).catch((err) => {
+          console.log(err)
           console.log("No Course Found")
         });
       } else {

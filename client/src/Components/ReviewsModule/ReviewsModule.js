@@ -14,7 +14,8 @@ class ReviewsModule extends React.Component {
       open: false
     };
     this.loadMore = this.loadMore.bind(this);
-    this.close = this.close.bind(this)
+    this.close = this.close.bind(this);
+    this.getReviews = this.getReviews.bind(this);
   }
 
   show = (dimmer) => () => this.setState({ dimmer, open: true })
