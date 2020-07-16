@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var getWeek = require("./week");
+var {getCourse} = require("./courses")
 var ScheduleParser = require("./schedule-parser.js");
 const WebSocAPI = require("websoc-api");
 

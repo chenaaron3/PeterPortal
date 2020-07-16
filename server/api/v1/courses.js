@@ -260,4 +260,4 @@ router.get("/avgDifficulties/:courseID", function (req, res, next) {
     });
 })
 
-module.exports = router;
+module.exports = {coursesRouter: router, getCourse: getCourse};

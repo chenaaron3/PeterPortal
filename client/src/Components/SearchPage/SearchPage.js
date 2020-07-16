@@ -62,6 +62,7 @@ class SearchPage extends SearchkitComponent {
     }
 
     render() {
+        console.log(this.props.match.params.index);
         let searchkit = new SearchkitManager("/" + this.props.match.params.index);
         return (
             <SearchkitProvider searchkit={searchkit}>

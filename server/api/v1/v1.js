@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 
 var swaggerRouter = require("./swagger");
-var coursesRouter = require("./courses");
+var {coursesRouter} = require("./courses");
 var professorsRouter = require("./professors");
 var gradeRouter = require("./gradeDistribution")
 var {scheduleRouter} = require("./schedule")
