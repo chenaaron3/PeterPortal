@@ -127,15 +127,15 @@ class CoursePage extends React.Component {
                 />
             </Grid.Row>
 
+            <Grid.Row id="course_grade" style={{marginTop: "2em"}}>
+                <GradeDist courseData={this.state.courseData} />
+            </Grid.Row>
+
             <Grid.Row id="course_review" style={{marginTop: "2em"}}>
               <ReviewsModule
                courseID={this.props.match.params.id}
                professorHistory={this.state.courseData.professorHistory ? this.state.courseData.professorHistory : []}
                />
-            </Grid.Row>
-            
-            <Grid.Row id="course_grade" style={{marginTop: "2em"}}>
-                <GradeDist courseData={this.state.courseData} />
             </Grid.Row>
 
             {/* <Grid.Row className="course_content-container course_prereq-tree-container">

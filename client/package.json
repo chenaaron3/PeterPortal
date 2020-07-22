@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@antv/g2plot": "^1.1.12",
     "@nivo/bar": "^0.61.1",
+    "@nivo/pie": "^0.62.0",
     "@sentry/browser": "^5.15.5",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",

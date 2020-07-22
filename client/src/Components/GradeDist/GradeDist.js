@@ -1,6 +1,7 @@
 import React from 'react';
 import { Divider, Dropdown, Grid } from "semantic-ui-react";
 import Chart from './Chart';
+import Pie from './Pie.jsx';
 import "./GradeDist.scss"
 
 
@@ -14,9 +15,12 @@ export default class GradeDist extends React.Component {
     this.state = {
       gradeDistData: null,
       currentQuarter: "",
-      currentProf: ""
+      currentProf: "",
+      profEntries: null,
+      quarterEntries: null
     };
-    
+
+
     this.createQuarterEntries = this.createQuarterEntries.bind(this);
     this.updateCurrentQuarter = this.updateCurrentQuarter.bind(this);
     this.updateCurrentProf = this.updateCurrentProf.bind(this);
@@ -36,7 +40,12 @@ export default class GradeDist extends React.Component {
 
     fetch(`/api/v1/gradeDistribution/${this.props.courseData.id.split(" ").join("")}`, HEADER)
       .then(response => response.json())
-      .then(data => this.setState({ gradeDistData: data }));
+      .then(data => {
+        this.setState({ gradeDistData: data }, () => {console.log(this.state.gradeDistData); this.createProfEntries()});
+        this.createQuarterEntries();
+      });
+
+    
   }
   
   /*
@@ -56,35 +65,44 @@ export default class GradeDist extends React.Component {
           </Grid.Row>
 
           <Grid.Row columns={2} id="menu">
+            <Grid.Column style={{marginRight: "1rem"}}>
+              <Dropdown
+                placeholder='Professor'
+                scrolling
+                selection
+                options={this.state.profEntries}
+                value={this.state.currentProf}
+                onChange={this.updateCurrentProf}
+              />
+            </Grid.Column>
+
             <Grid.Column>
               <Dropdown
                 placeholder="Quarter"
-                search
                 scrolling
                 selection
-                options={this.createQuarterEntries()}
+                options={this.state.quarterEntries}
+                value={this.state.currentQuarter}
                 onChange={this.updateCurrentQuarter}
-              />
-            </Grid.Column>
-            
-            <Grid.Column>
-              <Dropdown
-                placeholder='Professor'
-                search
-                scrolling
-                selection
-                options={this.createProfEntries()}
-                onChange={this.updateCurrentProf}
               />
             </Grid.Column>
           </Grid.Row>
               
           <Grid.Row id="chart">
-            <Chart
-              gradeData={this.state.gradeDistData}
-              quarter={this.state.currentQuarter}
-              professor={this.state.currentProf}
-            />
+            <div className={"grade_distribution_chart-container chart"}>
+              <Chart
+                gradeData={this.state.gradeDistData}
+                quarter={this.state.currentQuarter}
+                professor={this.state.currentProf}
+              />
+            </div>
+            <div className={"grade_distribution_chart-container pie"}>
+              <Pie
+                gradeData={this.state.gradeDistData}
+                quarter={this.state.currentQuarter}
+                professor={this.state.currentProf}
+                />
+            </div>
           </Grid.Row>
         </div>
       );
@@ -103,9 +121,13 @@ export default class GradeDist extends React.Component {
    */
   createQuarterEntries() {
     let quarters = new Set(), result = [];
-    this.state.gradeDistData.forEach(data => quarters.add(data.AcadTerm));
+
+    this.state.gradeDistData
+      .filter(entry => entry.instructor === this.state.currentProf)
+      .forEach(data => quarters.add(data.AcadTerm));
     quarters.forEach(quarter => result.push({ value: quarter, text: quarter }));
-    return result;
+
+    this.setState({quarterEntries: result, currentQuarter: result[0].value});
   }
   
   /*
@@ -114,13 +136,15 @@ export default class GradeDist extends React.Component {
    */
   createProfEntries() {
     let professors = new Set(), result = [];
+
     this.state.gradeDistData
-      .filter(entry => entry.AcadTerm === this.state.currentQuarter)
       .forEach(match => professors.add(match.instructor));
+      
     professors.forEach(professor => result.push(
       { value: professor, text: professor }
     ));
-    return result;
+
+    this.setState({profEntries: result, currentProf: result[0].value});
   }
 
   /*
@@ -138,6 +162,6 @@ export default class GradeDist extends React.Component {
    * @param status details about the status in the dropdown menu
    */
   updateCurrentProf(event, status) {
-    this.setState({currentProf: status.value});
+    this.setState({currentProf: status.value}, () => {this.createQuarterEntries()})
   }
 }

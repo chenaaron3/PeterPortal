@@ -1,5 +1,8 @@
 import React from 'react';
-import { ResponsiveBarCanvas } from '@nivo/bar'
+import { ResponsiveBar } from '@nivo/bar'
+
+const colors = { 'A': "#60A3D1", 'B': "#81C284", 'C': "#F5D77F", 'D': "#ECAD6D", 'F': "#E8966D", 'P': "#EBEBEB", 'NP': "#EBEBEB"  }
+const getColor = bar => colors[bar.id]
 
 export default class Chart extends React.Component {
   /*
@@ -12,10 +15,9 @@ export default class Chart extends React.Component {
       tooltip: {
         container: { background: "rgba(0,0,0,.87)",
                      color: "#ffffff",
-                     fontSize: "0.6vw",
+                     fontSize: "1.2rem",
                      outline: "none",
                      margin: 0,
-                     padding: "0.5em"
                    }
       }
     };
@@ -31,7 +33,7 @@ export default class Chart extends React.Component {
   getClassData() {
     let gradeACount = 0, gradeBCount = 0, gradeCCount = 0, gradeDCount = 0,
       gradeFCount = 0, gradePCount = 0, gradeNPCount = 0;
-      
+    
     this.props.gradeData.forEach(data => {
       if (data.AcadTerm === this.props.quarter
         && data.instructor === this.props.professor) {
@@ -44,34 +46,49 @@ export default class Chart extends React.Component {
           gradeNPCount += data.gradeNPCount;
       }
     });
+    
     return [
       {
-        "grade": "A",
-        "number": gradeACount
+        "id": "A",
+        "label": "A",
+        "A": gradeACount,
+        "color": "#2484C6"
       },
       {
-        "grade": "B",
-        "number": gradeBCount
+        "id": "B",
+        "label": "B",
+        "B": gradeBCount,
+        "color": "#54B058"
       },
       {
-        "grade": "C",
-        "number": gradeCCount
+        "id": "C",
+        "label": "C",
+        "C": gradeCCount,
+        "color": "#F9CE50"
       },
       {
-        "grade": "D",
-        "number": gradeDCount
+        "id": "D",
+        "label": "D",
+        "D": gradeDCount,
+        "color": "#ED9237"
       },
       {
-        "grade": "F",
-        "number": gradeFCount
+        "id": "F",
+        "label": "F",
+        "F": gradeFCount,
+        "color": "#E67237"
       },
       {
-        "grade": "P",
-        "number": gradePCount
+        "id": "P",
+        "label": "P",
+        "P": gradePCount,
+        "color": "#4AB486"
       },
       {
-        "grade": "NP",
-        "number": gradeNPCount
+        "id": "NP",
+        "label": "NP",
+        "NP": gradeNPCount,
+        "color": "#E36436"
       },
     ];
   }
@@ -86,9 +103,9 @@ export default class Chart extends React.Component {
   styleTooltip(event) {
     return (
       <div style={this.theme.tooltip.container}>
-        <strong>{event.data.grade}</strong>
-        <br />
-        <em>Total: {event.data.number}</em>
+        <strong>
+          {event.data.label}: {eval("event.data." + event.data.label)}
+        </strong>
       </div>
     );
   }
@@ -99,25 +116,17 @@ export default class Chart extends React.Component {
    */
   render() {
     return (
-      <ResponsiveBarCanvas
+      <ResponsiveBar
         data={this.getClassData()}
-        keys={ ["number"] }
-        indexBy="grade"
+        keys={ ["A", "B", "C", "D", "F", "P", "NP"] }
+        indexBy="label"
         margin={{
           top: 50,
-          right: 60,
+          right: 30,
           bottom: 50,
-          left: 60
+          left: 30
         }}
-        padding={0.2}
         layout="vertical"
-        axisTop={{
-          tickSize: 5,
-          tickPadding: 5, 
-          tickRotation: 0, 
-          legend: "", 
-          legendOffset: 36
-        }}
         axisBottom={{
           tickSize: 10,
           tickPadding: 5,
@@ -126,9 +135,8 @@ export default class Chart extends React.Component {
           legendPosition: "middle",
           legendOffset: 36
         }}
-        enableLabel={true}
-        colors="#5e9ec1"
-        isInteractive={true}
+        enableLabel={false}
+        colors={getColor}
         theme={this.theme}
         tooltip={this.styleTooltip}
       />

@@ -4,7 +4,7 @@
   width: 1000px;
   display: flex;
   flex-direction: column;
-  margin: 36px auto 200px;
+  margin: 36px auto;
 }
 
 #grade-dist-label {
@@ -19,3 +19,16 @@
 #chart {
   height: 30em;
 }
+
+.grade_distribution_chart-container {
+  display: inline-flex;
+  height: 400px;
+}
+
+.chart {
+  width: 65%;
+}
+
+.pie {
+  width: 35%;
+} 
