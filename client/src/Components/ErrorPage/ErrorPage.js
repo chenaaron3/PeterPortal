@@ -45,7 +45,7 @@ class ErrorPage extends React.Component {
                     <h1>Uh Oh!</h1>
                     <h3 style={{fontWeight: 400}}>Looks like the page you are looking for might have been removed had its name changed or is temporarily unavailble. </h3>
 
-                    <a href="/"><h4 style={{marginTop: "calc(2rem - .14285714em)"}}><span role="img" aria-label="sparkle">✨</span> Back to PeterPortal</h4></a>
+                    <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/`}><h4 style={{marginTop: "calc(2rem - .14285714em)"}}><span role="img" aria-label="sparkle">✨</span> Back to PeterPortal</h4></a>
                 </div>
             </div>
 

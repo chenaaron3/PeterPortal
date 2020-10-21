@@ -70,14 +70,14 @@ class SearchPage extends SearchkitComponent {
                     <div className="search-page">
                         <div className="sidebar-container">
                             <Menu pointing secondary vertical className="mode-switcher">
-                                <a href="/search/courses">
+                                <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/search/courses`}>
                                     <Menu.Item
                                         name="courses"
                                         icon="book"
                                         active={this.props.match.params.index === "courses"}
                                     />
                                 </a>
-                                <a href="/search/professors">
+                                <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/search/professors`}>
                                     <Menu.Item
                                         name="professors"
                                         icon="graduation cap"
@@ -131,10 +131,10 @@ class SearchPage extends SearchkitComponent {
                             <footer className="footer">
                                 <div>
                                     <a href="https://github.com/icssc-projects">Github</a>
-                                    <a href="/">API</a>
-                                    <a href="/">About</a>
-                                    <a href="/">Team</a>
-                                    <a href="/">FAQ</a>
+                                    <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/`}>API</a>
+                                    <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/`}>About</a>
+                                    <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/`}>Team</a>
+                                    <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/`}>FAQ</a>
                                 </div>
                                 <div className="copyright">
                                     <p>Made with ♥ by <a href="https://studentcouncil.ics.uci.edu/">ICSSC Project Committee</a></p>

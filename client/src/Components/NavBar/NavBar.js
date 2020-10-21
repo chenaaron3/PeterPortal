@@ -43,7 +43,7 @@ class NavBar extends React.Component {
             }}
           >
             <div className="peterportal-logo-container">
-              <a href="/">
+              <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/`}>
                 <img alt="PeterPortal" id="peterportal-logo" src={Logo}></img>
               </a>
             </div>
@@ -136,7 +136,7 @@ function DropdownMenu(props) {
               {props.name}
             </DropdownItem>
 
-          <a href="/users/logout">  
+          <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/users/logout`}>  
             <DropdownItem leftIcon={<Icon name="log out" />}>
               Log Out
             </DropdownItem>
@@ -156,7 +156,7 @@ function DropdownMenu(props) {
       >
         <div className="menu">
           <DropdownItem leftIcon={<ArrowIcon />} goToMenu="main"></DropdownItem>
-          <a href="/users/auth/google"> 
+          <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/users/auth/google`}> 
             <DropdownItem
               className="google-login"
               leftIcon={<Icon name="google" />}
@@ -164,7 +164,7 @@ function DropdownMenu(props) {
               Log In using Google
             </DropdownItem>
           </a>
-          <a href="/users/auth/facebook"> 
+          <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/users/auth/facebook`}> 
             <DropdownItem
               className="facebook-login"
               leftIcon={<Icon name="facebook f" />}

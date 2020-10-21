@@ -81,7 +81,7 @@ class CourseInfo extends React.Component {
                 return (
                   <p className="list-item" key={index}>
                     <a
-                      href={"/professor/" + key}
+                      href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/professor/` + key}
                       className="list-item"
                     >
                       {this.props.professorHistory[key]}

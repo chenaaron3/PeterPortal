@@ -17,7 +17,7 @@ class Tree extends React.Component {
               trigger={
                 <div className="prereq-node-branch">
                   <a
-                    href={"/course/" + prerequisite.replace(/\s+/g, "")}
+                    href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/course/` + prerequisite.replace(/\s+/g, "")}
                     role="button"
                     className={"node ui basic button"}
                   >
@@ -106,7 +106,7 @@ class PrereqTree extends React.Component {
                                   <div className="dependency-node">
                                     <a
                                       href={
-                                        "/course/" +
+                                        `${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/course/` +
                                         dependency.replace(/\s+/g, "")
                                       }
                                       role="button"
@@ -142,7 +142,7 @@ class PrereqTree extends React.Component {
             <Popup
               trigger={
                 <div className="course-node_container" style={{ margin: "auto" }}>
-                  <a href="/" role="button" className={"node ui button course-node"}>
+                  <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/`} role="button" className={"node ui button course-node"}>
                     {this.props.id}
                   </a>
                 </div>

@@ -6,7 +6,7 @@ const CourseHitItem = (props) => (
   <div>
     <div style={{ display: "flex" }}>
       <div>
-        <a href={"/course/" + props.result._id}>
+        <a href={`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/course/` + props.result._id}>
           <h3>
             <span
               className={props.bemBlocks.item("id_department")}
