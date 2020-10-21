@@ -11,7 +11,8 @@ var pool = mysql.createPool({
     password : process.env.DB_PASSWORD,
     multipleStatements: true,
     connectionLimit: 20,
-    database : 'peterportal'
+    database : 'peterportal',
+    insecureAuth : true
 });
 
 var getConnection = function(callback) {
