@@ -33,7 +33,7 @@ class ProfessorPage extends React.Component {
     };
 
     fetch(
-      "/professors/_search",
+      `${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/professors/_search`,
       requestHeader
     )
       .then(data => {

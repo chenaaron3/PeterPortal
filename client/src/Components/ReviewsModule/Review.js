@@ -6,7 +6,7 @@ import Moment from 'react-moment';
 
 class Review extends React.Component {
   vote = (direction) => {
-    fetch("/users/loggedIn", {method: "GET"}).then((res)=> {
+    fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/users/loggedIn`, {method: "GET"}).then((res)=> {
       return res.json();
     }).then((data) => {
       if (data.status) {
@@ -17,7 +17,7 @@ class Review extends React.Component {
           'Content-Type': 'application/json',
         };
         console.log(body);
-        fetch(`/reviews/${direction}VoteReview`, {
+        fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/reviews/${direction}VoteReview`, {
           method: "PUT",
           headers: requestHeader,
           body: JSON.stringify(body),

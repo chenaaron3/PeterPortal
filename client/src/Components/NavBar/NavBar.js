@@ -15,7 +15,7 @@ class NavBar extends React.Component {
   constructor(props) {
     super(props);
     // const [cookies, setCookie] = useCookies(['name']);
-    fetch("/users/getName", { method: "GET" })
+    fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/users/getName`, { method: "GET" })
       .then((res) => {
         return res.json();
       })
@@ -23,7 +23,7 @@ class NavBar extends React.Component {
         this.setState({ name: data.name, picture: data.picture });
       });
 
-    fetch("/api/v1/schedule/getWeek", { method: "GET" })
+    fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/api/v1/schedule/getWeek`, { method: "GET" })
       .then((res) => res.text())
       .then((text) => this.setState({ week: text }));
   }

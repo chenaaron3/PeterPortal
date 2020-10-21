@@ -35,7 +35,7 @@ class ReviewsModule extends React.Component {
   }
 
   getReviews() {
-    fetch("/reviews/course?courseID="+ encodeURIComponent(this.props.courseID), {
+    fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/reviews/course?courseID=`+ encodeURIComponent(this.props.courseID), {
       method: "GET"
     }).then(data => {return data.json()})
     .then(res => {

@@ -39,7 +39,7 @@ class CourseFilter extends React.Component {
   }
 
   getTerms = () => {
-    fetch(`/api/v1/schedule/getTerms`)
+    fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/api/v1/schedule/getTerms`)
       .then(res => res.json())
       .then(terms => {
         terms.reverse();

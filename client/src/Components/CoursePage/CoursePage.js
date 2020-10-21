@@ -29,7 +29,7 @@ class CoursePage extends React.Component {
       method: "GET"
     };
 
-    fetch("/api/v1/courses/" + this.props.match.params.id, requestHeader)
+    fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/api/v1/courses/` + this.props.match.params.id, requestHeader)
       .then(data => {return data.json();})
       .then(res => {this.setState({ courseData: res }); this.getProfessorNames();})
       .catch(e => console.log(e));
@@ -41,7 +41,7 @@ class CoursePage extends React.Component {
       method: "GET"
     };
 
-    fetch("/api/v1/professors/all", requestHeader)
+    fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/api/v1/professors/all`, requestHeader)
       .then(data => {return data.json();})
       .then(res => {
         let professor_names = {};
@@ -61,7 +61,7 @@ class CoursePage extends React.Component {
       method: "GET"
     };
 
-    fetch("/api/v1/courses/all", requestHeader)
+    fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/api/v1/courses/all`, requestHeader)
       .then(data => {return data.json();})
       .then(res => {
         let dependencies_names = {};

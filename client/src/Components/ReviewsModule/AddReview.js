@@ -55,7 +55,7 @@ class AddReview extends React.Component {
     getTerms() {
         let termOptions = [];
         const range = 5;
-        fetch(`/api/v1/schedule/getTerms?pastYears=${range}`)
+        fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/api/v1/schedule/getTerms?pastYears=${range}`)
         .then(res => res.json())
         .then(terms => {
         terms.forEach(term => {
@@ -90,7 +90,7 @@ class AddReview extends React.Component {
             method: "POST"
           };   
           fetch(
-            "/professors/_search",
+            `${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/professors/_search`,
             requestHeader
           )
           .then(data => {   
@@ -126,7 +126,7 @@ class AddReview extends React.Component {
           'Content-Type': 'application/json',
         };
 
-        fetch("/reviews/addReview", {
+        fetch(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/reviews/addReview`, {
           method: "POST",
           headers: requestHeader,
           body: JSON.stringify(queryParams),
