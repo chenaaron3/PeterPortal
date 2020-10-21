@@ -63,7 +63,7 @@ class SearchPage extends SearchkitComponent {
 
     render() {
         console.log(this.props.match.params.index);
-        let searchkit = new SearchkitManager("/" + this.props.match.params.index);
+        let searchkit = new SearchkitManager(`${process.env.NODE_ENV == "production" ? process.env.REACT_APP_SUBDIRECTORY : ""}/` + this.props.match.params.index);
         return (
             <SearchkitProvider searchkit={searchkit}>
                 <div className="App" style={{ display: "flex", flexDirection: "row" }}>
