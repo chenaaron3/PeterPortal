@@ -1,7 +1,6 @@
 List of Schools:
 Claire Trevor School of the Arts
 Department of Pharmaceutical Sciences
-Division of Undergraduate Education
 Donald Bren School of Information and Computer Sciences
 Interdisciplinary Studies
 Program in Public Health
@@ -15,3 +14,4 @@ School of Social Sciences
 Sue and Bill Gross School of Nursing
 The Henry Samueli School of Engineering
 The Paul Merage School of Business
+Unaffiliated

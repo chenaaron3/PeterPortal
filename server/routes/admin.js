@@ -223,7 +223,7 @@ function getAllCourses(callback) {
         },
         body:
             JSON.stringify({
-                "_source": ["id", "terms", "id_department"],
+                "_source": ["id", "terms", "department"],
                 "query": {
                     "match_all": {}
                 },
@@ -234,8 +234,9 @@ function getAllCourses(callback) {
             // process and return data
             var array_result = []
             result.hits.hits.forEach((e) => {
-                array_result.push({ courseID: e._source.id.replace(/ /g, ''), terms: e._source.terms, department: e._source.id_department })
+                array_result.push({ courseID: e._source.id.replace(/ /g, ''), terms: e._source.terms, department: e._source.department })
             })
+            console.log(`${array_result.length} courses found`);
             callback(null, array_result);
         })
         .catch((err) => callback(err, null));
@@ -262,6 +263,7 @@ function getAvailableCourses(department, term, callback) {
                     }
                 }
             }
+            console.log(`${availableCourses.length} courses available`)
             callback(availableCourses);
         })
 }

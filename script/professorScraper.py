@@ -12,16 +12,19 @@ import os
 import platform
 import io
 import datetime
+from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 
 import courseScraper
 from progressBar import ProgressBar
 
 PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'chromedriver' + (".exe" if platform.system() == 'Windows' else "")))
 # links
-URL_TO_ALL_COURSES = "http://catalogue.uci.edu/allcourses/"
+URL_TO_ALL_SCHOOLS = "http://catalogue.uci.edu/schoolsandprograms/"
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
 URL_TO_DIRECTORY = "https://directory.uci.edu/"
 URL_TO_INSTRUCT_HISTORY = "http://www.reg.uci.edu/perl/InstructHist"
@@ -53,10 +56,10 @@ def scrape(driver, url):
 def getFacultyLinks(driver):
     print(f"\nCollecting Faculty Links from Sidebar...")
     # get the soup object for catalogue
-    catalogueSoup = scrape(driver, URL_TO_ALL_COURSES)
+    catalogueSoup = scrape(driver, URL_TO_ALL_SCHOOLS)
     faculty_links = {}
     # all links in sidebar
-    lis = catalogueSoup.find(id="/").find_all("li")
+    lis = catalogueSoup.find(id="textcontainer").find_all("h4")
     bar = ProgressBar(len(lis), False)
     # look through all the links in the sidebar
     for possibleSchoolLink in lis:
@@ -64,7 +67,7 @@ def getFacultyLinks(driver):
         schoolUrl = CATALOGUE_BASE_URL + possibleSchoolLink.a['href'] + "#faculty"
         schoolSoup = scrape(driver, schoolUrl)
         # get the school name
-        school = unicodedata.normalize("NFKD", schoolSoup.find(id="content").h1.getText())
+        school = unicodedata.normalize("NFKD", schoolSoup.find(id="contentarea").h1.getText())
         # if this school has the "Faculty" tab
         if schoolSoup.find(id="facultytab") != None:
             # add school faculty page
@@ -186,7 +189,10 @@ def getDirectoryInfo(driver, query):
     data = {'uciKey': query}
     # first search through post request
     response = requests.post(URL_TO_DIRECTORY, data = data, headers = {'Content-Type': 'application/x-www-form-urlencoded'})
-    json_data = response.json()
+    try:
+        json_data = response.json()
+    except Exception:
+        json_data = []
     info = {"name":"","ucinetid":"","phone":"","title":"","department":""}
     # if post request has results
     if (len(json_data) > 1):
@@ -197,31 +203,45 @@ def getDirectoryInfo(driver, query):
             return None
         result = results[0][1]
         # parse the information
-        info = {"name":result['Name'],"ucinetid":result['UCInetID'], "phone":result['Phone Number'],"title":result['Title'],"department":result['Department']}
+        info = {"name":result['Name'],"ucinetid":result['UCInetID'], "phone":result['Phone'],"title":result['Title'],"department":result['Department']}
     # if post request has no results
     else:
         # use selenium to make a request
-        new_url = URL_TO_DIRECTORY +'query/'+ urllib.parse.quote(query)
+        new_url = URL_TO_DIRECTORY +'query/'+ urllib.parse.quote(query) + "?filter=staff"
         driver.get(new_url)
         # wait for results to load
         try:
             WebDriverWait(driver, 1).until(
-                EC.presence_of_element_located((By.TAG_NAME, "tr"))
+                EC.presence_of_element_located((By.ID, "accordion"))
             )
+            # filter results by staff
+            advancedFilter = driver.find_element_by_xpath('/html/body/div[2]/div/div[4]/div[2]/div/div[2]/strong/a')
+            advancedFilter.click()
+            staffFilter = driver.find_element_by_xpath('/html/body/div[2]/div/div[4]/div[2]/div/div[1]/label[3]/input')
+            staffFilter.click()
+            time.sleep(.25)
             html = driver.page_source
             # construct soup for search result
             search_soup = BeautifulSoup(html, 'html.parser')
-            txt_url = search_soup.find("tbody").tr.td.find('a').get('href') + '.txt'
-            # construct soup for detailed page
-            info_soup = scrape(driver, URL_TO_DIRECTORY + txt_url)
+            search_results = search_soup.find(id="accordion").find("tbody").find_all("tr")     
             # parse name, netid, phone, title, department
-            for line in info_soup.body.text.strip().split("\n"):
-                segments = line.split(": ")
-                category, entry = segments[0].lower(), segments[1]
-                if category in info:
-                    info[category] = entry
+            for line in search_results:
+                tds = line.find_all("td")
+                if len(tds) >= 2:
+                    category = tds[0].getText().lower()
+                    entry = tds[1].getText().strip()
+                    if category in info:
+                        info[category] = entry
+        except AttributeError:
+            # try stripping off middle name
+            name = query.split(" ")
+            if len(name) > 2:
+                subQuery = name[0] + " " + name[-1] 
+                return getDirectoryInfo(driver, subQuery)
+            return None
         # if no results loaded
-        except Exception:
+        except Exception as e:
+            print(query, str(e))
             return None
     return info
 
@@ -232,9 +252,10 @@ def getDirectoryInfo(driver, query):
 def getCourseHistory(driver, query:dict, socName=""):
     # set of courseHistory
     courseHistory = set()
-    # reformat name to Lastname, First Initial (Kei Akagi => Akagi, K.)
+    # reformat name to Lastname, First Initial, Middle Initial (Kei Akagi => Akagi, K.)
     normalName = query["name"]
-    reformatName = normalName.split()[-1] + ", " + normalName[0] + "."
+    normalNameSplit = normalName.split()
+    reformatName = normalNameSplit[-1] + ", " + normalName[0] + "."
     if socName != "":
         reformatName = socName
     # make get request to Instructor History page
@@ -242,8 +263,23 @@ def getCourseHistory(driver, query:dict, socName=""):
               "action":"Submit",
               "input_name":reformatName,
               "term_yyyyst":"ANY",
-              "start_row":""}
+              "start_row":"",}
     historySoup = scrape(driver, URL_TO_INSTRUCT_HISTORY + "?" + urllib.parse.urlencode(PARAMS))
+    # tables = historySoup.find_all("tbody")
+    # # look for table that has "Results for ____"
+    # for table in tables:
+    #     # dont want nested tables
+    #     if table.find("tbody"):
+    #         continue
+    #     # check if rows have desired content
+    #     tableRows = table.find_all("td")
+    #     if len(tableRows) >= 2:
+    #         if "results for" not in tableRows[0].getText().lower():
+    #             continue
+    #         else:
+    #             options = list(map(lambda x: x.getText().strip(), tableRows[1:]))
+    #             print("Options:", str(options))
+    #             break
     # parse the first page
     parseHistoryPage.firstEntry = ""
     shouldContinue = parseHistoryPage(historySoup, query["relatedDepartments"], courseHistory)
@@ -331,7 +367,6 @@ if __name__ == "__main__":
     fmissing = io.open(MISSING_NAME, "w", encoding="utf-8")
     fquestionable = io.open(QUESTIONABLE_NAME, "w", encoding="utf-8")
     ffound = io.open(FOUND_NAME, "w", encoding="utf-8")
-    fprofessorData = io.open(PROFESSOR_DATA_NAME, "w", encoding="utf-8")
 
     # maps faculty ucnetid to their information
     facultyDictionary = {}
@@ -339,7 +374,8 @@ if __name__ == "__main__":
     # the Selenium Chrome driver
     options = Options()
     options.headless = True
-    driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    # driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
 
     # dictionary of faculty links to the school name
     faculty_links = getFacultyLinks(driver)
@@ -369,6 +405,7 @@ if __name__ == "__main__":
     writeToJson()
 
     # debug output
+    fprofessorData = io.open(PROFESSOR_DATA_NAME, "w", encoding="utf-8")
     fprofessorData.write(json.dumps(facultyDictionary))
     print(hits, misses)
     print(hits / (hits + misses))

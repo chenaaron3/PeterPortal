@@ -1,5 +1,5 @@
 # Python Dependencies:  
-    pip install beautifulsoup4 selenium elasticsearch requests progressbar python-dotenv gspread oauth2client
+    pip install beautifulsoup4 selenium elasticsearch requests progressbar python-dotenv gspread oauth2client webdriver-manager
 
 # Basic Workflow:
 A. Generate Prerequisite JSON -> Generate Professor JSON -> Generate Course JSON  
@@ -110,5 +110,3 @@ D. Assign terms for each course.
         Solution: update npm to latest version
     Error: UnicodeEncodeError: 'charmap' codec can't encode character '\u2013' in position 105: character maps to <undefined>
         Solution: run 'chcp 65001' in terminal
-
-

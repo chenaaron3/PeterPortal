@@ -1,8 +1,10 @@
 import unicodedata
 import re
 from bs4 import BeautifulSoup
+from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 import json
 import os
 import platform
@@ -20,6 +22,7 @@ PATH_TO_SELENIUM_DRIVER = os.path.abspath(os.path.join(os.path.dirname( __file__
 # scrape links
 CATALOGUE_BASE_URL = "http://catalogue.uci.edu"
 URL_TO_ALL_COURSES = CATALOGUE_BASE_URL + "/allcourses/"
+URL_TO_ALL_SCHOOLS = CATALOGUE_BASE_URL + "/schoolsandprograms/"
 
 # output file names
 GENERATE_JSON_NAME = "resources/all_courses.json"
@@ -71,11 +74,17 @@ def getDepartmentToSchoolMapping(driver):
                "ARMN":"School of Humanities",
                "BSEMD":"School of Biological Sciences",
                "ECPS":"The Henry Samueli School of Engineering",
-               "BANA":"The Paul Merage School of Business"}
+               "BANA":"The Paul Merage School of Business",
+               "SPPS": "School of Social Sciences",
+               "UCDC": "Unaffiliated",
+               "ROTC": "Unaffiliated",
+               "NET SYS": "Donald Bren School of Information and Computer Sciences",
+               "UNI STU": "Unaffiliated",
+               "UNI AFF": "Unaffiliated"}
     # get the soup object for catalogue
-    catalogueSoup = scrape(driver, URL_TO_ALL_COURSES)
+    catalogueSoup = scrape(driver, URL_TO_ALL_SCHOOLS)
     # get all li from sidebar
-    lis = catalogueSoup.find(id="/").find_all("li")
+    lis = catalogueSoup.find(id="textcontainer").find_all("h4")
     bar = ProgressBar(len(lis), debug)
     # look through all the links in the sidebar
     for possibleSchoolLink in lis:
@@ -83,7 +92,7 @@ def getDepartmentToSchoolMapping(driver):
         schoolUrl = CATALOGUE_BASE_URL + possibleSchoolLink.a['href'] + "#courseinventory"
         schoolSoup = scrape(driver, schoolUrl)
         # get the school name
-        school = normalizeString(schoolSoup.find(id="content").h1.getText())
+        school = normalizeString(schoolSoup.find(id="contentarea").h1.getText())
         if debug: print("School:", school)
         # if this school has the "Courses" tab
         if schoolSoup.find(id="courseinventorytab") != None:
@@ -152,7 +161,7 @@ def getAllCourseURLS(driver):
 # returns nothing, scrapes all courses in a department page and stores information into a dictionary
 def getAllCourses(soup, json_data:dict, departmentToSchoolMapping:dict):
     # department name
-    department = normalizeString(soup.find(id="content").h1.get_text())
+    department = normalizeString(soup.find(id="contentarea").h1.get_text())
     # strip off department id
     department = department[:department.find("(")].strip()
     if debug: print("Department:", department)
@@ -424,12 +433,13 @@ def testRequirements(targetClass, takenClasses, expectedValue):
 if __name__ == "__main__":
     # whether to print out info
     debug = False
-    # whether to use cached data instead of rescraping (for faster development/testing)
-    cache = True
+    # whether to use cached data instead of rescraping (for faster development/testing for prerequisite/professor)
+    cache = False
     # the Selenium Chrome driver
     options = Options()
     options.headless = True
-    driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    # driver = Chrome(executable_path=PATH_TO_SELENIUM_DRIVER, options=options)
 
     # store all of the data
     json_data = {} if not cache else json.load(open(COURSES_DATA_NAME, "r"))

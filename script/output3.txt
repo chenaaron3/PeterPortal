@@ -1,0 +1,13 @@
+ 
+
+Collecting Faculty Links from Sidebar...
+
+TOTAL PROGRESS:
+
+
+Now Scraping http://catalogue.uci.edu/clairetrevorschoolofthearts/#faculty...
+Hits: 123 Misses: 5
+TOTAL PROGRESS:
+
+
+Now Scraping http://catalogue.uci.edu/schoolofbiologicalsciences/#faculty...
