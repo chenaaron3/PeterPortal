@@ -88,9 +88,9 @@ router.put("/flagged/update", function (req, res) {
 
 // docID: the cache name
 // clears the cache
-router.get("/clearCache", function(req, res){
+router.get("/clearCache", function (req, res) {
     let docID = req.query.docID;
-    if(docID){
+    if (docID) {
         res.send(clearCacheByID(docID));
     }
     else {
@@ -105,24 +105,22 @@ router.get("/cache", function (req, res) {
 
 // pastYears: how many years to go in the past
 // assign terms for the past years
-router.get("/assignTerms", function (req, res){
+router.get("/assignTerms", async function (req, res) {
     let pastYears = req.query.pastYears;
     terms = getTerms(pastYears);
     count = 0;
     finish = terms.length;
-    results = {}
-    terms.forEach( term => {
-        assignTerm(term, (status, text) => {
-            results[term] = [status, text];
-            if(++count == finish)
-                res.json(results);
-        });
-    });
+    res.json("Assigning Terms");
+    for (let i = 0; i < terms.length; ++i) {
+        let term = terms[i];
+        let results = await assignTerm(term);
+        console.log(results);
+    }
 });
 
 // term: the year + season (eg. "2020 Fall")
 // adds to the term field for each course in elasticsearch index
-router.get("/assignTerm", function (req, res) {
+router.get("/assignTerm", async function (req, res) {
     let term = req.query.term;
     if (!term) {
         res.status(400).send("Please provide a term!");
@@ -138,78 +136,79 @@ router.get("/assignTerm", function (req, res) {
         res.status(400).send(`Must provide a valid season! Given: ${season}. Expected: ${TERM_SEASONS}`);
         return;
     }
-    assignTerm(term, (status, text) => {
-        res.status(status).send(text);
-    });
+    let results = await assignTerm(term);
+    res.status(results["status"]).send(results["message"]);
 });
 
-function assignTerm(term, callback) {
-    getAllCourses((err, courses) => {
-        if (err) console.log(err);
-        let updateJSON = ""
-        let hits = 0;
-        // maps a department to a list of courses
-        let departments = new Set()
-        // maps a course to its data
-        let courseToData = {}
-        courses.forEach((courseData) => {
-            departments.add(courseData.department)
-            courseToData[courseData.courseID] = courseData
-            // if no terms list
-            if (!courseData["terms"]) {
-                console.log(courseData)
-                ++hits;
-                courseData["terms"] = []
-                updateJSON += `{ "update" : {"_id" : "${courseData.courseID}", "_index" : "courses"}}\n{ "doc" : {"terms" : ${JSON.stringify(courseData.terms)}}}\n`
-            }
-        });
-        let count = 0
-        let finish = departments.size
-        // search up each department on websoc
-        departments.forEach(department => {
-            // get available courses for a department
-            getAvailableCourses(department, term, (availableCourses) => {
-                // go through each available course
-                availableCourses.forEach(availableCourse => {
-                    // get the associated data
-                    let courseData = courseToData[availableCourse]
-                    // if this course is indexed
-                    if (courseData) {
-                        ++hits;
-                        // add the term if it is not already included
-                        if (!courseData["terms"].includes(term)) {
-                            courseData["terms"].push(term);
-                            // add to the bulk json
-                            updateJSON += `{ "update" : {"_id" : "${courseData.courseID}", "_index" : "courses"}}\n{ "doc" : {"terms" : ${JSON.stringify(courseData.terms)}}}\n`
+function assignTerm(term) {
+    return new Promise(resolve => {
+        getAllCourses((err, courses) => {
+            if (err) console.log(err);
+            let updateJSON = ""
+            let hits = 0;
+            // maps a department to a list of courses
+            let departments = new Set()
+            // maps a course to its data
+            let courseToData = {}
+            courses.forEach((courseData) => {
+                departments.add(courseData.department)
+                courseToData[courseData.courseID] = courseData
+                // if no terms list
+                if (!courseData["terms"]) {
+                    console.log(courseData)
+                    ++hits;
+                    courseData["terms"] = []
+                    updateJSON += `{ "update" : {"_id" : "${courseData.courseID}", "_index" : "courses"}}\n{ "doc" : {"terms" : ${JSON.stringify(courseData.terms)}}}\n`
+                }
+            });
+            let count = 0
+            let finish = departments.size
+            // search up each department on websoc
+            departments.forEach(department => {
+                // get available courses for a department
+                getAvailableCourses(department, term, (availableCourses) => {
+                    // go through each available course
+                    availableCourses.forEach(availableCourse => {
+                        // get the associated data
+                        let courseData = courseToData[availableCourse]
+                        // if this course is indexed
+                        if (courseData) {
+                            ++hits;
+                            // add the term if it is not already included
+                            if (!courseData["terms"].includes(term)) {
+                                courseData["terms"].push(term);
+                                // add to the bulk json
+                                updateJSON += `{ "update" : {"_id" : "${courseData.courseID}", "_index" : "courses"}}\n{ "doc" : {"terms" : ${JSON.stringify(courseData.terms)}}}\n`
+                            }
+                        }
+                    });
+                    // finished all departments
+                    if (++count == finish) {
+                        // if theres anything to update
+                        if (updateJSON) {
+                            // bulk update
+                            fetch(`${process.env.ELASTIC_ENDPOINT_URL}/_bulk`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: updateJSON
+                            }).then(r => r.json())
+                                .then(j => resolve({ status: 200, message: `Successfully added ${term} to ${j.items.length} courses!` }))
+                        }
+                        else {
+                            if (hits) {
+                                resolve({ status: 400, message: `${hits} courses were found, but they were already assigned ${term}!` });
+                            }
+                            else {
+                                resolve({ status: 400, message: "No hits were found! Invalid term!" });
+                            }
                         }
                     }
                 });
-                // finished all departments
-                if (++count == finish) {
-                    // if theres anything to update
-                    if (updateJSON) {
-                        // bulk update
-                        fetch(`${process.env.ELASTIC_ENDPOINT_URL}/_bulk`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: updateJSON
-                        }).then(r => r.json())
-                            .then(j => callback(200, `Successfully added ${term} to ${j.items.length} courses!`))
-                    }
-                    else {
-                        if (hits) {
-                            callback(400, `${hits} courses were found, but they were already assigned ${term}!`);
-                        }
-                        else {
-                            callback(400, "No hits were found! Invalid term!");
-                        }
-                    }
-                }
             });
         });
-    });
+    })
 }
 
 
@@ -263,8 +262,12 @@ function getAvailableCourses(department, term, callback) {
                     }
                 }
             }
-            console.log(`${availableCourses.length} courses available`)
+            // console.log(`${availableCourses.length} courses available`)
             callback(availableCourses);
+        })
+        .catch(err => {
+            console.log("WEBSOC ERROR:" + err);
+            callback([]);
         })
 }
 
